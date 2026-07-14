@@ -85,6 +85,7 @@ class BullSdk extends BaseEntrypoint<BullSdkApi, BullSdkApiImpl, BullSdkWire> {
   @override
   Future<void> executeRustInitializers() async {
     await api.bitboxApiInitApp();
+    await api.crateApiSimpleInitApp();
   }
 
   @override
@@ -95,7 +96,7 @@ class BullSdk extends BaseEntrypoint<BullSdkApi, BullSdkApiImpl, BullSdkWire> {
   String get codegenVersion => '2.12.0';
 
   @override
-  int get rustContentHash => 224052533;
+  int get rustContentHash => -1362716144;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -816,6 +817,8 @@ abstract class BullSdkApi extends BaseApi {
   Uint8List? bitboxApiGetUsbWriteDataWrapper({required String serialNumber});
 
   Future<void> bitboxApiInitApp();
+
+  Future<void> crateApiSimpleInitApp();
 
   Future<Joined> bbqrJoinJoinedFrbOverrideTryFromParts({
     required List<String> parts,
@@ -6511,6 +6514,27 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   TaskConstMeta get kBitboxApiInitAppConstMeta =>
+      const TaskConstMeta(debugName: "init_app", argNames: []);
+
+  @override
+  Future<void> crateApiSimpleInitApp() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          return wire.wire__crate__api__simple__init_app(port_);
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_unit,
+          decodeErrorData: null,
+        ),
+        constMeta: kCrateApiSimpleInitAppConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiSimpleInitAppConstMeta =>
       const TaskConstMeta(debugName: "init_app", argNames: []);
 
   @override

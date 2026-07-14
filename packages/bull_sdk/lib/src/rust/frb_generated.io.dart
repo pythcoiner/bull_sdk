@@ -7733,6 +7733,17 @@ class BullSdkWire implements BaseWire {
   late final _wire__bitbox__api__init_app = _wire__bitbox__api__init_appPtr
       .asFunction<void Function(int)>();
 
+  void wire__crate__api__simple__init_app(int port_) {
+    return _wire__crate__api__simple__init_app(port_);
+  }
+
+  late final _wire__crate__api__simple__init_appPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>(
+        'frbgen_bull_sdk_wire__crate__api__simple__init_app',
+      );
+  late final _wire__crate__api__simple__init_app =
+      _wire__crate__api__simple__init_appPtr.asFunction<void Function(int)>();
+
   void wire__bbqr__join__joined_frb_override_try_from_parts(
     int port_,
     ffi.Pointer<wire_cst_list_String> parts,
