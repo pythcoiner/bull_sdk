@@ -7,9 +7,10 @@ import '../../../api/simple.dart';
 import '../../../frb_generated.dart';
 import 'error.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
+import 'secrets.dart';
 import 'types.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_receiver_is_total_eq`, `clone`, `eq`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_fields_are_eq`, `clone`, `eq`
 
 /// Bitcoin-Liquid Swap Class
 class ChainSwap {
@@ -156,12 +157,11 @@ class ChainSwap {
   );
 
   /// Used to create the class when starting a chain swap between Bitcoin and Liquid.
-  /// Note: The mnemonic should be your wallets mnemonic, the library will derive the keys for the swap from the appropriate path.
+  /// Note: The swap_master_key should be a SwapMasterKey. The refund key uses the given index, and the claim key uses index + 1.
   /// The client is expected to manage (increment) the use of index to ensure keys are not reused.
   static Future<ChainSwap> newSwap({
     required ChainSwapDirection direction,
-    required String mnemonic,
-    String? passphrase,
+    required SwapMasterKey swapMasterKey,
     required BigInt index,
     required BigInt amount,
     required bool isTestnet,
@@ -171,8 +171,7 @@ class ChainSwap {
     String? referralId,
   }) => BullSdk.instance.api.boltzApiChainSwapChainSwapNewSwap(
     direction: direction,
-    mnemonic: mnemonic,
-    passphrase: passphrase,
+    swapMasterKey: swapMasterKey,
     index: index,
     amount: amount,
     isTestnet: isTestnet,

@@ -10,13 +10,6 @@ import 'frb_generated.dart';
 import 'frb_generated.io.dart'
     if (dart.library.js_interop) 'frb_generated.web.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
-import 'third_party/ark_wallet/ark/balance.dart';
-import 'third_party/ark_wallet/ark/client.dart';
-import 'third_party/ark_wallet/ark/esplora.dart';
-import 'third_party/ark_wallet/ark/server_info.dart';
-import 'third_party/ark_wallet/ark/settle.dart';
-import 'third_party/ark_wallet/ark/storage.dart';
-import 'third_party/ark_wallet/ark/utils.dart';
 import 'third_party/bbqr/continuous_join.dart';
 import 'third_party/bbqr/encode.dart';
 import 'third_party/bbqr/file_type.dart';
@@ -28,12 +21,18 @@ import 'third_party/boltz/api/btc_ln.dart';
 import 'third_party/boltz/api/chain_swap.dart';
 import 'third_party/boltz/api/error.dart';
 import 'third_party/boltz/api/fees.dart';
+import 'third_party/boltz/api/invoice.dart';
 import 'third_party/boltz/api/lbtc_ln.dart';
 import 'third_party/boltz/api/lnurl.dart';
+import 'third_party/boltz/api/restore.dart';
+import 'third_party/boltz/api/secrets.dart';
 import 'third_party/boltz/api/swap_status.dart';
 import 'third_party/boltz/api/transactions.dart';
 import 'third_party/boltz/api/types.dart';
 import 'third_party/dart_bbqr/api.dart';
+import 'third_party/dart_bwk/api/regtest.dart';
+import 'third_party/dart_bwk/api/sp_account.dart';
+import 'third_party/dart_bwk/api/types.dart';
 import 'third_party/lwk/api/blockchain.dart';
 import 'third_party/lwk/api/descriptor.dart';
 import 'third_party/lwk/api/error.dart';
@@ -86,6 +85,7 @@ class BullSdk extends BaseEntrypoint<BullSdkApi, BullSdkApiImpl, BullSdkWire> {
   @override
   Future<void> executeRustInitializers() async {
     await api.bitboxApiInitApp();
+    await api.crateApiSimpleInitApp();
   }
 
   @override
@@ -96,7 +96,7 @@ class BullSdk extends BaseEntrypoint<BullSdkApi, BullSdkApiImpl, BullSdkWire> {
   String get codegenVersion => '2.12.0';
 
   @override
-  int get rustContentHash => 1662695056;
+  int get rustContentHash => -593266635;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -108,68 +108,6 @@ class BullSdk extends BaseEntrypoint<BullSdkApi, BullSdkApiImpl, BullSdkWire> {
 }
 
 abstract class BullSdkApi extends BaseApi {
-  Future<ArkBalance> arkWalletArkClientArkWalletBalance({
-    required ArkWallet that,
-  });
-
-  String arkWalletArkClientArkWalletBoardingAddress({required ArkWallet that});
-
-  Future<bool> arkWalletArkClientArkWalletCanSettleBoarding({
-    required ArkWallet that,
-  });
-
-  Future<String> arkWalletArkClientArkWalletCollaborativeRedeem({
-    required ArkWallet that,
-    required String address,
-    required PlatformInt64 sats,
-    required bool selectRecoverableVtxos,
-  });
-
-  Future<BoardingSettlement> arkWalletArkClientArkWalletGetBoardingStatus({
-    required ArkWallet that,
-  });
-
-  Future<ArkWallet> arkWalletArkClientArkWalletInit({
-    required List<int> secretKey,
-    required String network,
-    required String esplora,
-    required String server,
-    required String boltz,
-  });
-
-  String arkWalletArkClientArkWalletOffchainAddress({required ArkWallet that});
-
-  String arkWalletArkClientArkWalletOnchainAddress({required ArkWallet that});
-
-  Future<String> arkWalletArkClientArkWalletSendOffChain({
-    required ArkWallet that,
-    required String address,
-    required PlatformInt64 sats,
-  });
-
-  Future<String> arkWalletArkClientArkWalletSendOnChain({
-    required ArkWallet that,
-    required String address,
-    required PlatformInt64 sats,
-  });
-
-  ServerInfo arkWalletArkClientArkWalletServerInfo({required ArkWallet that});
-
-  Future<void> arkWalletArkClientArkWalletSettle({
-    required ArkWallet that,
-    required bool selectRecoverableVtxos,
-  });
-
-  Future<BoardingSettlement>
-  arkWalletArkClientArkWalletSettleBoardingTransactions({
-    required ArkWallet that,
-    required bool selectRecoverableVtxos,
-  });
-
-  Future<List<ArkTransaction>> arkWalletArkClientArkWalletTransactionHistory({
-    required ArkWallet that,
-  });
-
   Future<ContinuousJoiner> bbqrContinuousJoinContinuousJoinerDefault();
 
   Future<ContinuousJoinResult>
@@ -179,16 +117,6 @@ abstract class BullSdkApi extends BaseApi {
   });
 
   Future<ContinuousJoiner> bbqrContinuousJoinContinuousJoinerNew();
-
-  Future<void> arkWalletArkEsploraEsploraClientCheckConnection({
-    required EsploraClient that,
-  });
-
-  Future<EsploraClient> arkWalletArkEsploraEsploraClientNew({
-    required String url,
-  });
-
-  Future<InMemoryDb> arkWalletArkStorageInMemoryDbDefault();
 
   BigInt lwkApiTransactionLiquidTransactionFee({
     required LiquidTransaction that,
@@ -359,6 +287,135 @@ abstract class BullSdkApi extends BaseApi {
     required PartiallySignedElementsTransaction that,
   });
 
+  bool dartBwkApiSpAccountSpAccountBackendOnline({required SpAccount that});
+
+  int dartBwkApiSpAccountSpAccountBlockHeight({required SpAccount that});
+
+  Future<void> dartBwkApiSpAccountSpAccountBroadcast({
+    required SpAccount that,
+    required String txHex,
+  });
+
+  Future<void> dartBwkApiSpAccountSpAccountClearScanState({
+    required SpAccount that,
+  });
+
+  List<SpCoinView> dartBwkApiSpAccountSpAccountCoins({required SpAccount that});
+
+  BigInt dartBwkApiSpAccountSpAccountConfirmedBalance({
+    required SpAccount that,
+  });
+
+  Future<SpAccount> dartBwkApiSpAccountSpAccountCreateFromMnemonic({
+    required String name,
+    required SpNetwork network,
+    required String mnemonic,
+    required String blindbitUrl,
+    required String electrumUrl,
+    required String dataDir,
+    int? birthdayHeight,
+    BigInt? dustLimit,
+  });
+
+  Future<SpAccount>
+  dartBwkApiSpAccountSpAccountCreateFromMnemonicWithScanRuntime({
+    required String name,
+    required SpNetwork network,
+    required String mnemonic,
+    required String blindbitUrl,
+    required String electrumUrl,
+    required String dataDir,
+    int? birthdayHeight,
+    BigInt? dustLimit,
+    int? fetchConcurrencyFactor,
+    int? matchConcurrencyFactor,
+  });
+
+  Future<void> dartBwkApiSpAccountSpAccountDispose({required SpAccount that});
+
+  Future<Uint8List> dartBwkApiSpAccountSpAccountFinalizePsbt({
+    required SpAccount that,
+    required TxSimulation simulation,
+  });
+
+  Stream<SpNotification> dartBwkApiSpAccountSpAccountInit({
+    required SpAccount that,
+  });
+
+  bool dartBwkApiSpAccountSpAccountIsScanning({required SpAccount that});
+
+  int? dartBwkApiSpAccountSpAccountLastScannedHeight({required SpAccount that});
+
+  Future<SpAccount> dartBwkApiSpAccountSpAccountLoad({
+    required String name,
+    required String dataDir,
+  });
+
+  int dartBwkApiSpAccountSpAccountMinBirthdayHeight({required SpAccount that});
+
+  String dartBwkApiSpAccountSpAccountName({required SpAccount that});
+
+  SpNetwork dartBwkApiSpAccountSpAccountNetwork({required SpAccount that});
+
+  Future<String> dartBwkApiSpAccountSpAccountNewTaprootAddress({
+    required SpAccount that,
+  });
+
+  Future<TxSimulation> dartBwkApiSpAccountSpAccountPreparePsbt({
+    required SpAccount that,
+    required List<RecipientView> recipients,
+    required BigInt feerateSatVb,
+  });
+
+  Future<void> dartBwkApiSpAccountSpAccountRestartElectrum({
+    required SpAccount that,
+  });
+
+  Future<void> dartBwkApiSpAccountSpAccountScanOnce({
+    required SpAccount that,
+    int? startHeight,
+  });
+
+  void dartBwkApiSpAccountSpAccountSetBlindbitUrl({
+    required SpAccount that,
+    required String url,
+  });
+
+  void dartBwkApiSpAccountSpAccountSetElectrumUrl({
+    required SpAccount that,
+    required String url,
+  });
+
+  Future<Uint8List> dartBwkApiSpAccountSpAccountSignPsbt({
+    required SpAccount that,
+    required List<int> psbt,
+  });
+
+  String dartBwkApiSpAccountSpAccountSpAddress({required SpAccount that});
+
+  Future<void> dartBwkApiSpAccountSpAccountStartElectrum({
+    required SpAccount that,
+  });
+
+  Future<void> dartBwkApiSpAccountSpAccountStopScan({required SpAccount that});
+
+  BigInt dartBwkApiSpAccountSpAccountSubAccountBalance({
+    required SpAccount that,
+    required SubAccountKind kind,
+  });
+
+  SpBalanceView dartBwkApiSpAccountSpAccountUnifiedBalance({
+    required SpAccount that,
+  });
+
+  Future<List<UnifiedCoinView>> dartBwkApiSpAccountSpAccountUnifiedCoins({
+    required SpAccount that,
+  });
+
+  Future<List<SpPaymentView>> dartBwkApiSpAccountSpAccountUnifiedHistory({
+    required SpAccount that,
+  });
+
   Future<Address> lwkApiWalletWalletAddress({
     required Wallet that,
     required int index,
@@ -366,7 +423,9 @@ abstract class BullSdkApi extends BaseApi {
 
   Future<Address> lwkApiWalletWalletAddressLastUnused({required Wallet that});
 
-  Future<List<Balance>> lwkApiWalletWalletBalances({required Wallet that});
+  Future<List<WalletBalance>> lwkApiWalletWalletBalances({
+    required Wallet that,
+  });
 
   Future<String> lwkApiWalletWalletBlindingKey({required Wallet that});
 
@@ -376,6 +435,14 @@ abstract class BullSdkApi extends BaseApi {
     required String outAddress,
     required double feeRate,
     required String asset,
+  });
+
+  Future<String> lwkApiWalletWalletBuildCustomTx({
+    required Wallet that,
+    required List<OutPoint> utxos,
+    required List<TxOutputSpec> outputs,
+    String? drainTo,
+    required double feeRate,
   });
 
   Future<String> lwkApiWalletWalletBuildLbtcTx({
@@ -391,9 +458,16 @@ abstract class BullSdkApi extends BaseApi {
     required BigInt sats,
     required String outAddress,
     required String asset,
-    required Network network,
+    required LiquidNetwork network,
     String? baseUrl,
     required bool isSendAll,
+  });
+
+  Future<List<String>> lwkApiWalletWalletConsolidate({
+    required Wallet that,
+    required double feeRate,
+    int? highUtxoThreshold,
+    int? maximumInputs,
   });
 
   Future<PsetAmounts> lwkApiWalletWalletDecodeTx({
@@ -404,21 +478,21 @@ abstract class BullSdkApi extends BaseApi {
   Future<String> lwkApiWalletWalletDescriptor({required Wallet that});
 
   Future<Wallet> lwkApiWalletWalletInit({
-    required Network network,
+    required LiquidNetwork network,
     required String dbpath,
     required Descriptor descriptor,
   });
 
   Future<String> lwkApiWalletWalletSignTx({
     required Wallet that,
-    required Network network,
+    required LiquidNetwork network,
     required String pset,
     required String mnemonic,
   });
 
   Future<String> lwkApiWalletWalletSignedPsetWithExtraDetails({
     required Wallet that,
-    required Network network,
+    required LiquidNetwork network,
     required String pset,
     required String mnemonic,
   });
@@ -436,12 +510,14 @@ abstract class BullSdkApi extends BaseApi {
   Future<List<TxOut>> lwkApiWalletWalletUtxos({required Wallet that});
 
   Future<Address> lwkApiTypesAddressAddressFromScript({
-    required Network network,
+    required LiquidNetwork network,
     required String script,
     String? blindingKey,
   });
 
-  Future<Network> lwkApiTypesAddressValidate({required String addressString});
+  Future<LiquidNetwork> lwkApiTypesAddressValidate({
+    required String addressString,
+  });
 
   Future<String> lwkApiBlockchainBlockchainBroadcastSignedPset({
     required String electrumUrl,
@@ -519,8 +595,7 @@ abstract class BullSdkApi extends BaseApi {
   });
 
   Future<BtcLnSwap> boltzApiBtcLnBtcLnSwapNewReverse({
-    required String mnemonic,
-    String? passphrase,
+    required SwapMasterKey swapMasterKey,
     required BigInt index,
     required BigInt outAmount,
     String? outAddress,
@@ -532,8 +607,7 @@ abstract class BullSdkApi extends BaseApi {
   });
 
   Future<BtcLnSwap> boltzApiBtcLnBtcLnSwapNewSubmarine({
-    required String mnemonic,
-    String? passphrase,
+    required SwapMasterKey swapMasterKey,
     required BigInt index,
     required String invoice,
     required Chain network,
@@ -632,8 +706,7 @@ abstract class BullSdkApi extends BaseApi {
 
   Future<ChainSwap> boltzApiChainSwapChainSwapNewSwap({
     required ChainSwapDirection direction,
-    required String mnemonic,
-    String? passphrase,
+    required SwapMasterKey swapMasterKey,
     required BigInt index,
     required BigInt amount,
     required bool isTestnet,
@@ -677,13 +750,13 @@ abstract class BullSdkApi extends BaseApi {
 
   Future<bool> bitboxApiConfirmPairing({required String serialNumber});
 
-  Future<DecodedInvoice> boltzApiTypesDecodedInvoiceFromString({
+  Future<DecodedInvoice> boltzApiInvoiceDecodedInvoiceFromString({
     required String s,
     String? boltzUrl,
   });
 
   Future<Descriptor> lwkApiDescriptorDescriptorNewConfidential({
-    required Network network,
+    required LiquidNetwork network,
     required String mnemonic,
   });
 
@@ -713,8 +786,8 @@ abstract class BullSdkApi extends BaseApi {
 
   Future<bool> bbqrFileTypeFileTypeIsKnownFiletype({required int byte});
 
-  PlatformInt64 lwkApiTypesGetBalanceByAssetId({
-    required List<Balance> balances,
+  BigInt lwkApiTypesGetBalanceByAssetId({
+    required List<WalletBalance> balances,
     required String assetId,
   });
 
@@ -728,11 +801,13 @@ abstract class BullSdkApi extends BaseApi {
 
   String lwkApiTypesGetLbtcAssetId();
 
-  PlatformInt64 lwkApiTypesGetLbtcBalance({required List<Balance> balances});
+  BigInt lwkApiTypesGetLbtcBalance({required List<WalletBalance> balances});
 
   String lwkApiTypesGetLtestAssetId();
 
-  PlatformInt64 lwkApiTypesGetLtestBalance({required List<Balance> balances});
+  BigInt lwkApiTypesGetLtestBalance({required List<WalletBalance> balances});
+
+  Future<RegtestDefaults> dartBwkApiRegtestGetRegtestDefaults();
 
   Future<String> bitboxApiGetRootFingerprint({required String serialNumber});
 
@@ -744,21 +819,10 @@ abstract class BullSdkApi extends BaseApi {
 
   Future<void> bitboxApiInitApp();
 
+  Future<void> crateApiSimpleInitApp();
+
   Future<Joined> bbqrJoinJoinedFrbOverrideTryFromParts({
     required List<String> parts,
-  });
-
-  Future<KeyPair> boltzApiTypesKeyPairGenerate({
-    required String mnemonic,
-    String? passphrase,
-    required Chain network,
-    required BigInt index,
-    required SwapType swapType,
-  });
-
-  Future<KeyPair> boltzApiTypesKeyPairNew({
-    required String secretKey,
-    required String publicKey,
   });
 
   Future<LBtcSwapScriptStr> boltzApiTypesLBtcSwapScriptStrNew({
@@ -831,8 +895,7 @@ abstract class BullSdkApi extends BaseApi {
   });
 
   Future<LbtcLnSwap> boltzApiLbtcLnLbtcLnSwapNewReverse({
-    required String mnemonic,
-    String? passphrase,
+    required SwapMasterKey swapMasterKey,
     required BigInt index,
     required BigInt outAmount,
     String? outAddress,
@@ -844,8 +907,7 @@ abstract class BullSdkApi extends BaseApi {
   });
 
   Future<LbtcLnSwap> boltzApiLbtcLnLbtcLnSwapNewSubmarine({
-    required String mnemonic,
-    String? passphrase,
+    required SwapMasterKey swapMasterKey,
     required BigInt index,
     required String invoice,
     required Chain network,
@@ -886,12 +948,43 @@ abstract class BullSdkApi extends BaseApi {
     required String invoice,
   });
 
-  Future<PreImage> boltzApiTypesPreImageGenerate();
+  Future<PreImage> boltzApiSecretsPreImageFromInvoiceStr({
+    required String invoice,
+  });
 
-  Future<PreImage> boltzApiTypesPreImageNew({
+  Future<PreImage> boltzApiSecretsPreImageNew({
     required String value,
     required String sha256,
     required String hash160,
+  });
+
+  Future<List<ChainSwap>> boltzApiRestoreRestoreChainSwaps({
+    required SwapMasterKey swapMasterKey,
+    required String btcElectrumUrl,
+    required String lbtcElectrumUrl,
+    required String boltzUrl,
+  });
+
+  Future<List<BtcLnSwap>> boltzApiRestoreRestoreLnBtcSwaps({
+    required SwapMasterKey swapMasterKey,
+    required String electrumUrl,
+    required String boltzUrl,
+  });
+
+  Future<List<LbtcLnSwap>> boltzApiRestoreRestoreLnLbtcSwaps({
+    required SwapMasterKey swapMasterKey,
+    required String electrumUrl,
+    required String boltzUrl,
+  });
+
+  Future<PlatformInt64> boltzApiRestoreRestoreSwapIndex({
+    required SwapMasterKey swapMasterKey,
+    required String boltzUrl,
+  });
+
+  Future<List<RestoredSwapSummary>> boltzApiRestoreRestoreSwapSummaries({
+    required SwapMasterKey swapMasterKey,
+    required String boltzUrl,
   });
 
   void bitboxApiSetUsbReadDataWrapper({
@@ -914,6 +1007,12 @@ abstract class BullSdkApi extends BaseApi {
   Future<SplitOptions> bbqrSplitSplitOptionsDefault();
 
   Future<String?> bitboxApiStartPairing({required String serialNumber});
+
+  Future<SwapMasterKey> boltzApiSecretsSwapMasterKeyCreate({
+    required String walletMnemonic,
+    String? walletPassphrase,
+    required Network network,
+  });
 
   String boltzApiSwapStatusSwapStatusAsString({required SwapStatus that});
 
@@ -939,13 +1038,18 @@ abstract class BullSdkApi extends BaseApi {
     required SwapStreamStatus that,
   });
 
+  Future<void> dartBwkApiSpAccountTestBlindbitUrl({required String url});
+
+  Future<void> dartBwkApiSpAccountTestElectrumUrl({required String url});
+
   Transaction boltzApiSwapStatusTransactionFromJson({required String json});
 
   String boltzApiSwapStatusTransactionToJson({required Transaction that});
 
-  bool arkWalletArkUtilsUtilsIsArk({required String address});
-
-  bool arkWalletArkUtilsUtilsIsBtc({required String address});
+  Future<SpRecipientAddressKind> dartBwkApiSpAccountValidateRecipientAddress({
+    required String address,
+    required SpNetwork network,
+  });
 
   Future<String> bitboxApiVerifyAddress({
     required String serialNumber,
@@ -955,14 +1059,6 @@ abstract class BullSdkApi extends BaseApi {
   });
 
   Future<BigInt> bbqrQrVersionDataCapacity({required Version that});
-
-  RustArcIncrementStrongCountFnType
-  get rust_arc_increment_strong_count_ArkWallet;
-
-  RustArcDecrementStrongCountFnType
-  get rust_arc_decrement_strong_count_ArkWallet;
-
-  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_ArkWalletPtr;
 
   RustArcIncrementStrongCountFnType
   get rust_arc_increment_strong_count_ContinuousJoinResult;
@@ -983,23 +1079,6 @@ abstract class BullSdkApi extends BaseApi {
   get rust_arc_decrement_strong_count_ContinuousJoinerPtr;
 
   RustArcIncrementStrongCountFnType
-  get rust_arc_increment_strong_count_EsploraClient;
-
-  RustArcDecrementStrongCountFnType
-  get rust_arc_decrement_strong_count_EsploraClient;
-
-  CrossPlatformFinalizerArg
-  get rust_arc_decrement_strong_count_EsploraClientPtr;
-
-  RustArcIncrementStrongCountFnType
-  get rust_arc_increment_strong_count_InMemoryDb;
-
-  RustArcDecrementStrongCountFnType
-  get rust_arc_decrement_strong_count_InMemoryDb;
-
-  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_InMemoryDbPtr;
-
-  RustArcIncrementStrongCountFnType
   get rust_arc_increment_strong_count_LiquidTransaction;
 
   RustArcDecrementStrongCountFnType
@@ -1017,6 +1096,14 @@ abstract class BullSdkApi extends BaseApi {
   CrossPlatformFinalizerArg
   get rust_arc_decrement_strong_count_PartiallySignedElementsTransactionPtr;
 
+  RustArcIncrementStrongCountFnType
+  get rust_arc_increment_strong_count_SpAccount;
+
+  RustArcDecrementStrongCountFnType
+  get rust_arc_decrement_strong_count_SpAccount;
+
+  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_SpAccountPtr;
+
   RustArcIncrementStrongCountFnType get rust_arc_increment_strong_count_Wallet;
 
   RustArcDecrementStrongCountFnType get rust_arc_decrement_strong_count_Wallet;
@@ -1031,498 +1118,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     required super.generalizedFrbRustBinding,
     required super.portManager,
   });
-
-  @override
-  Future<ArkBalance> arkWalletArkClientArkWalletBalance({
-    required ArkWallet that,
-  }) {
-    return handler.executeNormal(
-      NormalTask(
-        callFfi: (port_) {
-          var arg0 =
-              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArkWallet(
-                that,
-              );
-          return wire.wire__ark_wallet__ark__client__ArkWallet_balance(
-            port_,
-            arg0,
-          );
-        },
-        codec: DcoCodec(
-          decodeSuccessData: dco_decode_ark_balance,
-          decodeErrorData: dco_decode_AnyhowException,
-        ),
-        constMeta: kArkWalletArkClientArkWalletBalanceConstMeta,
-        argValues: [that],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kArkWalletArkClientArkWalletBalanceConstMeta =>
-      const TaskConstMeta(debugName: "ArkWallet_balance", argNames: ["that"]);
-
-  @override
-  String arkWalletArkClientArkWalletBoardingAddress({required ArkWallet that}) {
-    return handler.executeSync(
-      SyncTask(
-        callFfi: () {
-          var arg0 =
-              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArkWallet(
-                that,
-              );
-          return wire.wire__ark_wallet__ark__client__ArkWallet_boarding_address(
-            arg0,
-          );
-        },
-        codec: DcoCodec(
-          decodeSuccessData: dco_decode_String,
-          decodeErrorData: dco_decode_AnyhowException,
-        ),
-        constMeta: kArkWalletArkClientArkWalletBoardingAddressConstMeta,
-        argValues: [that],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kArkWalletArkClientArkWalletBoardingAddressConstMeta =>
-      const TaskConstMeta(
-        debugName: "ArkWallet_boarding_address",
-        argNames: ["that"],
-      );
-
-  @override
-  Future<bool> arkWalletArkClientArkWalletCanSettleBoarding({
-    required ArkWallet that,
-  }) {
-    return handler.executeNormal(
-      NormalTask(
-        callFfi: (port_) {
-          var arg0 =
-              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArkWallet(
-                that,
-              );
-          return wire
-              .wire__ark_wallet__ark__client__ArkWallet_can_settle_boarding(
-                port_,
-                arg0,
-              );
-        },
-        codec: DcoCodec(
-          decodeSuccessData: dco_decode_bool,
-          decodeErrorData: dco_decode_AnyhowException,
-        ),
-        constMeta: kArkWalletArkClientArkWalletCanSettleBoardingConstMeta,
-        argValues: [that],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kArkWalletArkClientArkWalletCanSettleBoardingConstMeta =>
-      const TaskConstMeta(
-        debugName: "ArkWallet_can_settle_boarding",
-        argNames: ["that"],
-      );
-
-  @override
-  Future<String> arkWalletArkClientArkWalletCollaborativeRedeem({
-    required ArkWallet that,
-    required String address,
-    required PlatformInt64 sats,
-    required bool selectRecoverableVtxos,
-  }) {
-    return handler.executeNormal(
-      NormalTask(
-        callFfi: (port_) {
-          var arg0 =
-              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArkWallet(
-                that,
-              );
-          var arg1 = cst_encode_String(address);
-          var arg2 = cst_encode_i_64(sats);
-          var arg3 = cst_encode_bool(selectRecoverableVtxos);
-          return wire
-              .wire__ark_wallet__ark__client__ArkWallet_collaborative_redeem(
-                port_,
-                arg0,
-                arg1,
-                arg2,
-                arg3,
-              );
-        },
-        codec: DcoCodec(
-          decodeSuccessData: dco_decode_String,
-          decodeErrorData: dco_decode_AnyhowException,
-        ),
-        constMeta: kArkWalletArkClientArkWalletCollaborativeRedeemConstMeta,
-        argValues: [that, address, sats, selectRecoverableVtxos],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kArkWalletArkClientArkWalletCollaborativeRedeemConstMeta =>
-      const TaskConstMeta(
-        debugName: "ArkWallet_collaborative_redeem",
-        argNames: ["that", "address", "sats", "selectRecoverableVtxos"],
-      );
-
-  @override
-  Future<BoardingSettlement> arkWalletArkClientArkWalletGetBoardingStatus({
-    required ArkWallet that,
-  }) {
-    return handler.executeNormal(
-      NormalTask(
-        callFfi: (port_) {
-          var arg0 =
-              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArkWallet(
-                that,
-              );
-          return wire
-              .wire__ark_wallet__ark__client__ArkWallet_get_boarding_status(
-                port_,
-                arg0,
-              );
-        },
-        codec: DcoCodec(
-          decodeSuccessData: dco_decode_boarding_settlement,
-          decodeErrorData: dco_decode_AnyhowException,
-        ),
-        constMeta: kArkWalletArkClientArkWalletGetBoardingStatusConstMeta,
-        argValues: [that],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kArkWalletArkClientArkWalletGetBoardingStatusConstMeta =>
-      const TaskConstMeta(
-        debugName: "ArkWallet_get_boarding_status",
-        argNames: ["that"],
-      );
-
-  @override
-  Future<ArkWallet> arkWalletArkClientArkWalletInit({
-    required List<int> secretKey,
-    required String network,
-    required String esplora,
-    required String server,
-    required String boltz,
-  }) {
-    return handler.executeNormal(
-      NormalTask(
-        callFfi: (port_) {
-          var arg0 = cst_encode_list_prim_u_8_loose(secretKey);
-          var arg1 = cst_encode_String(network);
-          var arg2 = cst_encode_String(esplora);
-          var arg3 = cst_encode_String(server);
-          var arg4 = cst_encode_String(boltz);
-          return wire.wire__ark_wallet__ark__client__ArkWallet_init(
-            port_,
-            arg0,
-            arg1,
-            arg2,
-            arg3,
-            arg4,
-          );
-        },
-        codec: DcoCodec(
-          decodeSuccessData:
-              dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArkWallet,
-          decodeErrorData: dco_decode_AnyhowException,
-        ),
-        constMeta: kArkWalletArkClientArkWalletInitConstMeta,
-        argValues: [secretKey, network, esplora, server, boltz],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kArkWalletArkClientArkWalletInitConstMeta =>
-      const TaskConstMeta(
-        debugName: "ArkWallet_init",
-        argNames: ["secretKey", "network", "esplora", "server", "boltz"],
-      );
-
-  @override
-  String arkWalletArkClientArkWalletOffchainAddress({required ArkWallet that}) {
-    return handler.executeSync(
-      SyncTask(
-        callFfi: () {
-          var arg0 =
-              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArkWallet(
-                that,
-              );
-          return wire.wire__ark_wallet__ark__client__ArkWallet_offchain_address(
-            arg0,
-          );
-        },
-        codec: DcoCodec(
-          decodeSuccessData: dco_decode_String,
-          decodeErrorData: dco_decode_AnyhowException,
-        ),
-        constMeta: kArkWalletArkClientArkWalletOffchainAddressConstMeta,
-        argValues: [that],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kArkWalletArkClientArkWalletOffchainAddressConstMeta =>
-      const TaskConstMeta(
-        debugName: "ArkWallet_offchain_address",
-        argNames: ["that"],
-      );
-
-  @override
-  String arkWalletArkClientArkWalletOnchainAddress({required ArkWallet that}) {
-    return handler.executeSync(
-      SyncTask(
-        callFfi: () {
-          var arg0 =
-              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArkWallet(
-                that,
-              );
-          return wire.wire__ark_wallet__ark__client__ArkWallet_onchain_address(
-            arg0,
-          );
-        },
-        codec: DcoCodec(
-          decodeSuccessData: dco_decode_String,
-          decodeErrorData: dco_decode_AnyhowException,
-        ),
-        constMeta: kArkWalletArkClientArkWalletOnchainAddressConstMeta,
-        argValues: [that],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kArkWalletArkClientArkWalletOnchainAddressConstMeta =>
-      const TaskConstMeta(
-        debugName: "ArkWallet_onchain_address",
-        argNames: ["that"],
-      );
-
-  @override
-  Future<String> arkWalletArkClientArkWalletSendOffChain({
-    required ArkWallet that,
-    required String address,
-    required PlatformInt64 sats,
-  }) {
-    return handler.executeNormal(
-      NormalTask(
-        callFfi: (port_) {
-          var arg0 =
-              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArkWallet(
-                that,
-              );
-          var arg1 = cst_encode_String(address);
-          var arg2 = cst_encode_i_64(sats);
-          return wire.wire__ark_wallet__ark__client__ArkWallet_send_off_chain(
-            port_,
-            arg0,
-            arg1,
-            arg2,
-          );
-        },
-        codec: DcoCodec(
-          decodeSuccessData: dco_decode_String,
-          decodeErrorData: dco_decode_AnyhowException,
-        ),
-        constMeta: kArkWalletArkClientArkWalletSendOffChainConstMeta,
-        argValues: [that, address, sats],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kArkWalletArkClientArkWalletSendOffChainConstMeta =>
-      const TaskConstMeta(
-        debugName: "ArkWallet_send_off_chain",
-        argNames: ["that", "address", "sats"],
-      );
-
-  @override
-  Future<String> arkWalletArkClientArkWalletSendOnChain({
-    required ArkWallet that,
-    required String address,
-    required PlatformInt64 sats,
-  }) {
-    return handler.executeNormal(
-      NormalTask(
-        callFfi: (port_) {
-          var arg0 =
-              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArkWallet(
-                that,
-              );
-          var arg1 = cst_encode_String(address);
-          var arg2 = cst_encode_i_64(sats);
-          return wire.wire__ark_wallet__ark__client__ArkWallet_send_on_chain(
-            port_,
-            arg0,
-            arg1,
-            arg2,
-          );
-        },
-        codec: DcoCodec(
-          decodeSuccessData: dco_decode_String,
-          decodeErrorData: dco_decode_AnyhowException,
-        ),
-        constMeta: kArkWalletArkClientArkWalletSendOnChainConstMeta,
-        argValues: [that, address, sats],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kArkWalletArkClientArkWalletSendOnChainConstMeta =>
-      const TaskConstMeta(
-        debugName: "ArkWallet_send_on_chain",
-        argNames: ["that", "address", "sats"],
-      );
-
-  @override
-  ServerInfo arkWalletArkClientArkWalletServerInfo({required ArkWallet that}) {
-    return handler.executeSync(
-      SyncTask(
-        callFfi: () {
-          var arg0 =
-              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArkWallet(
-                that,
-              );
-          return wire.wire__ark_wallet__ark__client__ArkWallet_server_info(
-            arg0,
-          );
-        },
-        codec: DcoCodec(
-          decodeSuccessData: dco_decode_server_info,
-          decodeErrorData: dco_decode_AnyhowException,
-        ),
-        constMeta: kArkWalletArkClientArkWalletServerInfoConstMeta,
-        argValues: [that],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kArkWalletArkClientArkWalletServerInfoConstMeta =>
-      const TaskConstMeta(
-        debugName: "ArkWallet_server_info",
-        argNames: ["that"],
-      );
-
-  @override
-  Future<void> arkWalletArkClientArkWalletSettle({
-    required ArkWallet that,
-    required bool selectRecoverableVtxos,
-  }) {
-    return handler.executeNormal(
-      NormalTask(
-        callFfi: (port_) {
-          var arg0 =
-              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArkWallet(
-                that,
-              );
-          var arg1 = cst_encode_bool(selectRecoverableVtxos);
-          return wire.wire__ark_wallet__ark__client__ArkWallet_settle(
-            port_,
-            arg0,
-            arg1,
-          );
-        },
-        codec: DcoCodec(
-          decodeSuccessData: dco_decode_unit,
-          decodeErrorData: dco_decode_AnyhowException,
-        ),
-        constMeta: kArkWalletArkClientArkWalletSettleConstMeta,
-        argValues: [that, selectRecoverableVtxos],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kArkWalletArkClientArkWalletSettleConstMeta =>
-      const TaskConstMeta(
-        debugName: "ArkWallet_settle",
-        argNames: ["that", "selectRecoverableVtxos"],
-      );
-
-  @override
-  Future<BoardingSettlement>
-  arkWalletArkClientArkWalletSettleBoardingTransactions({
-    required ArkWallet that,
-    required bool selectRecoverableVtxos,
-  }) {
-    return handler.executeNormal(
-      NormalTask(
-        callFfi: (port_) {
-          var arg0 =
-              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArkWallet(
-                that,
-              );
-          var arg1 = cst_encode_bool(selectRecoverableVtxos);
-          return wire
-              .wire__ark_wallet__ark__client__ArkWallet_settle_boarding_transactions(
-                port_,
-                arg0,
-                arg1,
-              );
-        },
-        codec: DcoCodec(
-          decodeSuccessData: dco_decode_boarding_settlement,
-          decodeErrorData: dco_decode_AnyhowException,
-        ),
-        constMeta:
-            kArkWalletArkClientArkWalletSettleBoardingTransactionsConstMeta,
-        argValues: [that, selectRecoverableVtxos],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta
-  get kArkWalletArkClientArkWalletSettleBoardingTransactionsConstMeta =>
-      const TaskConstMeta(
-        debugName: "ArkWallet_settle_boarding_transactions",
-        argNames: ["that", "selectRecoverableVtxos"],
-      );
-
-  @override
-  Future<List<ArkTransaction>> arkWalletArkClientArkWalletTransactionHistory({
-    required ArkWallet that,
-  }) {
-    return handler.executeNormal(
-      NormalTask(
-        callFfi: (port_) {
-          var arg0 =
-              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArkWallet(
-                that,
-              );
-          return wire
-              .wire__ark_wallet__ark__client__ArkWallet_transaction_history(
-                port_,
-                arg0,
-              );
-        },
-        codec: DcoCodec(
-          decodeSuccessData: dco_decode_list_ark_transaction,
-          decodeErrorData: dco_decode_AnyhowException,
-        ),
-        constMeta: kArkWalletArkClientArkWalletTransactionHistoryConstMeta,
-        argValues: [that],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kArkWalletArkClientArkWalletTransactionHistoryConstMeta =>
-      const TaskConstMeta(
-        debugName: "ArkWallet_transaction_history",
-        argNames: ["that"],
-      );
 
   @override
   Future<ContinuousJoiner> bbqrContinuousJoinContinuousJoinerDefault() {
@@ -1611,90 +1206,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
 
   TaskConstMeta get kBbqrContinuousJoinContinuousJoinerNewConstMeta =>
       const TaskConstMeta(debugName: "ContinuousJoiner_new", argNames: []);
-
-  @override
-  Future<void> arkWalletArkEsploraEsploraClientCheckConnection({
-    required EsploraClient that,
-  }) {
-    return handler.executeNormal(
-      NormalTask(
-        callFfi: (port_) {
-          var arg0 =
-              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerEsploraClient(
-                that,
-              );
-          return wire
-              .wire__ark_wallet__ark__esplora__EsploraClient_check_connection(
-                port_,
-                arg0,
-              );
-        },
-        codec: DcoCodec(
-          decodeSuccessData: dco_decode_unit,
-          decodeErrorData: dco_decode_AnyhowException,
-        ),
-        constMeta: kArkWalletArkEsploraEsploraClientCheckConnectionConstMeta,
-        argValues: [that],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kArkWalletArkEsploraEsploraClientCheckConnectionConstMeta =>
-      const TaskConstMeta(
-        debugName: "EsploraClient_check_connection",
-        argNames: ["that"],
-      );
-
-  @override
-  Future<EsploraClient> arkWalletArkEsploraEsploraClientNew({
-    required String url,
-  }) {
-    return handler.executeNormal(
-      NormalTask(
-        callFfi: (port_) {
-          var arg0 = cst_encode_String(url);
-          return wire.wire__ark_wallet__ark__esplora__EsploraClient_new(
-            port_,
-            arg0,
-          );
-        },
-        codec: DcoCodec(
-          decodeSuccessData:
-              dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerEsploraClient,
-          decodeErrorData: dco_decode_AnyhowException,
-        ),
-        constMeta: kArkWalletArkEsploraEsploraClientNewConstMeta,
-        argValues: [url],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kArkWalletArkEsploraEsploraClientNewConstMeta =>
-      const TaskConstMeta(debugName: "EsploraClient_new", argNames: ["url"]);
-
-  @override
-  Future<InMemoryDb> arkWalletArkStorageInMemoryDbDefault() {
-    return handler.executeNormal(
-      NormalTask(
-        callFfi: (port_) {
-          return wire.wire__ark_wallet__ark__storage__InMemoryDb_default(port_);
-        },
-        codec: DcoCodec(
-          decodeSuccessData:
-              dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInMemoryDb,
-          decodeErrorData: null,
-        ),
-        constMeta: kArkWalletArkStorageInMemoryDbDefaultConstMeta,
-        argValues: [],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kArkWalletArkStorageInMemoryDbDefaultConstMeta =>
-      const TaskConstMeta(debugName: "InMemoryDb_default", argNames: []);
 
   @override
   BigInt lwkApiTransactionLiquidTransactionFee({
@@ -2981,6 +2492,1105 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
       );
 
   @override
+  bool dartBwkApiSpAccountSpAccountBackendOnline({required SpAccount that}) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          var arg0 =
+              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+                that,
+              );
+          return wire.wire__dart_bwk__api__sp_account__SpAccount_backend_online(
+            arg0,
+          );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_bool,
+          decodeErrorData: dco_decode_String,
+        ),
+        constMeta: kDartBwkApiSpAccountSpAccountBackendOnlineConstMeta,
+        argValues: [that],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountSpAccountBackendOnlineConstMeta =>
+      const TaskConstMeta(
+        debugName: "SpAccount_backend_online",
+        argNames: ["that"],
+      );
+
+  @override
+  int dartBwkApiSpAccountSpAccountBlockHeight({required SpAccount that}) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          var arg0 =
+              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+                that,
+              );
+          return wire.wire__dart_bwk__api__sp_account__SpAccount_block_height(
+            arg0,
+          );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_u_32,
+          decodeErrorData: dco_decode_String,
+        ),
+        constMeta: kDartBwkApiSpAccountSpAccountBlockHeightConstMeta,
+        argValues: [that],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountSpAccountBlockHeightConstMeta =>
+      const TaskConstMeta(
+        debugName: "SpAccount_block_height",
+        argNames: ["that"],
+      );
+
+  @override
+  Future<void> dartBwkApiSpAccountSpAccountBroadcast({
+    required SpAccount that,
+    required String txHex,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          var arg0 =
+              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+                that,
+              );
+          var arg1 = cst_encode_String(txHex);
+          return wire.wire__dart_bwk__api__sp_account__SpAccount_broadcast(
+            port_,
+            arg0,
+            arg1,
+          );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_unit,
+          decodeErrorData: dco_decode_String,
+        ),
+        constMeta: kDartBwkApiSpAccountSpAccountBroadcastConstMeta,
+        argValues: [that, txHex],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountSpAccountBroadcastConstMeta =>
+      const TaskConstMeta(
+        debugName: "SpAccount_broadcast",
+        argNames: ["that", "txHex"],
+      );
+
+  @override
+  Future<void> dartBwkApiSpAccountSpAccountClearScanState({
+    required SpAccount that,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          var arg0 =
+              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+                that,
+              );
+          return wire
+              .wire__dart_bwk__api__sp_account__SpAccount_clear_scan_state(
+                port_,
+                arg0,
+              );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_unit,
+          decodeErrorData: dco_decode_String,
+        ),
+        constMeta: kDartBwkApiSpAccountSpAccountClearScanStateConstMeta,
+        argValues: [that],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountSpAccountClearScanStateConstMeta =>
+      const TaskConstMeta(
+        debugName: "SpAccount_clear_scan_state",
+        argNames: ["that"],
+      );
+
+  @override
+  List<SpCoinView> dartBwkApiSpAccountSpAccountCoins({
+    required SpAccount that,
+  }) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          var arg0 =
+              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+                that,
+              );
+          return wire.wire__dart_bwk__api__sp_account__SpAccount_coins(arg0);
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_list_sp_coin_view,
+          decodeErrorData: dco_decode_String,
+        ),
+        constMeta: kDartBwkApiSpAccountSpAccountCoinsConstMeta,
+        argValues: [that],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountSpAccountCoinsConstMeta =>
+      const TaskConstMeta(debugName: "SpAccount_coins", argNames: ["that"]);
+
+  @override
+  BigInt dartBwkApiSpAccountSpAccountConfirmedBalance({
+    required SpAccount that,
+  }) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          var arg0 =
+              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+                that,
+              );
+          return wire
+              .wire__dart_bwk__api__sp_account__SpAccount_confirmed_balance(
+                arg0,
+              );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_u_64,
+          decodeErrorData: dco_decode_String,
+        ),
+        constMeta: kDartBwkApiSpAccountSpAccountConfirmedBalanceConstMeta,
+        argValues: [that],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountSpAccountConfirmedBalanceConstMeta =>
+      const TaskConstMeta(
+        debugName: "SpAccount_confirmed_balance",
+        argNames: ["that"],
+      );
+
+  @override
+  Future<SpAccount> dartBwkApiSpAccountSpAccountCreateFromMnemonic({
+    required String name,
+    required SpNetwork network,
+    required String mnemonic,
+    required String blindbitUrl,
+    required String electrumUrl,
+    required String dataDir,
+    int? birthdayHeight,
+    BigInt? dustLimit,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          var arg0 = cst_encode_String(name);
+          var arg1 = cst_encode_sp_network(network);
+          var arg2 = cst_encode_String(mnemonic);
+          var arg3 = cst_encode_String(blindbitUrl);
+          var arg4 = cst_encode_String(electrumUrl);
+          var arg5 = cst_encode_String(dataDir);
+          var arg6 = cst_encode_opt_box_autoadd_u_32(birthdayHeight);
+          var arg7 = cst_encode_opt_box_autoadd_u_64(dustLimit);
+          return wire
+              .wire__dart_bwk__api__sp_account__SpAccount_create_from_mnemonic(
+                port_,
+                arg0,
+                arg1,
+                arg2,
+                arg3,
+                arg4,
+                arg5,
+                arg6,
+                arg7,
+              );
+        },
+        codec: DcoCodec(
+          decodeSuccessData:
+              dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount,
+          decodeErrorData: dco_decode_String,
+        ),
+        constMeta: kDartBwkApiSpAccountSpAccountCreateFromMnemonicConstMeta,
+        argValues: [
+          name,
+          network,
+          mnemonic,
+          blindbitUrl,
+          electrumUrl,
+          dataDir,
+          birthdayHeight,
+          dustLimit,
+        ],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountSpAccountCreateFromMnemonicConstMeta =>
+      const TaskConstMeta(
+        debugName: "SpAccount_create_from_mnemonic",
+        argNames: [
+          "name",
+          "network",
+          "mnemonic",
+          "blindbitUrl",
+          "electrumUrl",
+          "dataDir",
+          "birthdayHeight",
+          "dustLimit",
+        ],
+      );
+
+  @override
+  Future<SpAccount>
+  dartBwkApiSpAccountSpAccountCreateFromMnemonicWithScanRuntime({
+    required String name,
+    required SpNetwork network,
+    required String mnemonic,
+    required String blindbitUrl,
+    required String electrumUrl,
+    required String dataDir,
+    int? birthdayHeight,
+    BigInt? dustLimit,
+    int? fetchConcurrencyFactor,
+    int? matchConcurrencyFactor,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          var arg0 = cst_encode_String(name);
+          var arg1 = cst_encode_sp_network(network);
+          var arg2 = cst_encode_String(mnemonic);
+          var arg3 = cst_encode_String(blindbitUrl);
+          var arg4 = cst_encode_String(electrumUrl);
+          var arg5 = cst_encode_String(dataDir);
+          var arg6 = cst_encode_opt_box_autoadd_u_32(birthdayHeight);
+          var arg7 = cst_encode_opt_box_autoadd_u_64(dustLimit);
+          var arg8 = cst_encode_opt_box_autoadd_u_32(fetchConcurrencyFactor);
+          var arg9 = cst_encode_opt_box_autoadd_u_32(matchConcurrencyFactor);
+          return wire
+              .wire__dart_bwk__api__sp_account__SpAccount_create_from_mnemonic_with_scan_runtime(
+                port_,
+                arg0,
+                arg1,
+                arg2,
+                arg3,
+                arg4,
+                arg5,
+                arg6,
+                arg7,
+                arg8,
+                arg9,
+              );
+        },
+        codec: DcoCodec(
+          decodeSuccessData:
+              dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount,
+          decodeErrorData: dco_decode_String,
+        ),
+        constMeta:
+            kDartBwkApiSpAccountSpAccountCreateFromMnemonicWithScanRuntimeConstMeta,
+        argValues: [
+          name,
+          network,
+          mnemonic,
+          blindbitUrl,
+          electrumUrl,
+          dataDir,
+          birthdayHeight,
+          dustLimit,
+          fetchConcurrencyFactor,
+          matchConcurrencyFactor,
+        ],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta
+  get kDartBwkApiSpAccountSpAccountCreateFromMnemonicWithScanRuntimeConstMeta =>
+      const TaskConstMeta(
+        debugName: "SpAccount_create_from_mnemonic_with_scan_runtime",
+        argNames: [
+          "name",
+          "network",
+          "mnemonic",
+          "blindbitUrl",
+          "electrumUrl",
+          "dataDir",
+          "birthdayHeight",
+          "dustLimit",
+          "fetchConcurrencyFactor",
+          "matchConcurrencyFactor",
+        ],
+      );
+
+  @override
+  Future<void> dartBwkApiSpAccountSpAccountDispose({required SpAccount that}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          var arg0 =
+              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+                that,
+              );
+          return wire.wire__dart_bwk__api__sp_account__SpAccount_dispose(
+            port_,
+            arg0,
+          );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_unit,
+          decodeErrorData: dco_decode_sp_error,
+        ),
+        constMeta: kDartBwkApiSpAccountSpAccountDisposeConstMeta,
+        argValues: [that],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountSpAccountDisposeConstMeta =>
+      const TaskConstMeta(debugName: "SpAccount_dispose", argNames: ["that"]);
+
+  @override
+  Future<Uint8List> dartBwkApiSpAccountSpAccountFinalizePsbt({
+    required SpAccount that,
+    required TxSimulation simulation,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          var arg0 =
+              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+                that,
+              );
+          var arg1 = cst_encode_box_autoadd_tx_simulation(simulation);
+          return wire.wire__dart_bwk__api__sp_account__SpAccount_finalize_psbt(
+            port_,
+            arg0,
+            arg1,
+          );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_list_prim_u_8_strict,
+          decodeErrorData: dco_decode_sp_error,
+        ),
+        constMeta: kDartBwkApiSpAccountSpAccountFinalizePsbtConstMeta,
+        argValues: [that, simulation],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountSpAccountFinalizePsbtConstMeta =>
+      const TaskConstMeta(
+        debugName: "SpAccount_finalize_psbt",
+        argNames: ["that", "simulation"],
+      );
+
+  @override
+  Stream<SpNotification> dartBwkApiSpAccountSpAccountInit({
+    required SpAccount that,
+  }) {
+    final sink = RustStreamSink<SpNotification>();
+    handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          var arg0 =
+              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+                that,
+              );
+          var arg1 = cst_encode_StreamSink_sp_notification_Dco(sink);
+          return wire.wire__dart_bwk__api__sp_account__SpAccount_init(
+            arg0,
+            arg1,
+          );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_unit,
+          decodeErrorData: dco_decode_String,
+        ),
+        constMeta: kDartBwkApiSpAccountSpAccountInitConstMeta,
+        argValues: [that, sink],
+        apiImpl: this,
+      ),
+    );
+    return sink.stream;
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountSpAccountInitConstMeta =>
+      const TaskConstMeta(
+        debugName: "SpAccount_init",
+        argNames: ["that", "sink"],
+      );
+
+  @override
+  bool dartBwkApiSpAccountSpAccountIsScanning({required SpAccount that}) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          var arg0 =
+              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+                that,
+              );
+          return wire.wire__dart_bwk__api__sp_account__SpAccount_is_scanning(
+            arg0,
+          );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_bool,
+          decodeErrorData: dco_decode_String,
+        ),
+        constMeta: kDartBwkApiSpAccountSpAccountIsScanningConstMeta,
+        argValues: [that],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountSpAccountIsScanningConstMeta =>
+      const TaskConstMeta(
+        debugName: "SpAccount_is_scanning",
+        argNames: ["that"],
+      );
+
+  @override
+  int? dartBwkApiSpAccountSpAccountLastScannedHeight({
+    required SpAccount that,
+  }) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          var arg0 =
+              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+                that,
+              );
+          return wire
+              .wire__dart_bwk__api__sp_account__SpAccount_last_scanned_height(
+                arg0,
+              );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_opt_box_autoadd_u_32,
+          decodeErrorData: dco_decode_String,
+        ),
+        constMeta: kDartBwkApiSpAccountSpAccountLastScannedHeightConstMeta,
+        argValues: [that],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountSpAccountLastScannedHeightConstMeta =>
+      const TaskConstMeta(
+        debugName: "SpAccount_last_scanned_height",
+        argNames: ["that"],
+      );
+
+  @override
+  Future<SpAccount> dartBwkApiSpAccountSpAccountLoad({
+    required String name,
+    required String dataDir,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          var arg0 = cst_encode_String(name);
+          var arg1 = cst_encode_String(dataDir);
+          return wire.wire__dart_bwk__api__sp_account__SpAccount_load(
+            port_,
+            arg0,
+            arg1,
+          );
+        },
+        codec: DcoCodec(
+          decodeSuccessData:
+              dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount,
+          decodeErrorData: dco_decode_String,
+        ),
+        constMeta: kDartBwkApiSpAccountSpAccountLoadConstMeta,
+        argValues: [name, dataDir],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountSpAccountLoadConstMeta =>
+      const TaskConstMeta(
+        debugName: "SpAccount_load",
+        argNames: ["name", "dataDir"],
+      );
+
+  @override
+  int dartBwkApiSpAccountSpAccountMinBirthdayHeight({required SpAccount that}) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          var arg0 =
+              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+                that,
+              );
+          return wire
+              .wire__dart_bwk__api__sp_account__SpAccount_min_birthday_height(
+                arg0,
+              );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_u_32,
+          decodeErrorData: dco_decode_String,
+        ),
+        constMeta: kDartBwkApiSpAccountSpAccountMinBirthdayHeightConstMeta,
+        argValues: [that],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountSpAccountMinBirthdayHeightConstMeta =>
+      const TaskConstMeta(
+        debugName: "SpAccount_min_birthday_height",
+        argNames: ["that"],
+      );
+
+  @override
+  String dartBwkApiSpAccountSpAccountName({required SpAccount that}) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          var arg0 =
+              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+                that,
+              );
+          return wire.wire__dart_bwk__api__sp_account__SpAccount_name(arg0);
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_String,
+          decodeErrorData: dco_decode_String,
+        ),
+        constMeta: kDartBwkApiSpAccountSpAccountNameConstMeta,
+        argValues: [that],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountSpAccountNameConstMeta =>
+      const TaskConstMeta(debugName: "SpAccount_name", argNames: ["that"]);
+
+  @override
+  SpNetwork dartBwkApiSpAccountSpAccountNetwork({required SpAccount that}) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          var arg0 =
+              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+                that,
+              );
+          return wire.wire__dart_bwk__api__sp_account__SpAccount_network(arg0);
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_sp_network,
+          decodeErrorData: dco_decode_String,
+        ),
+        constMeta: kDartBwkApiSpAccountSpAccountNetworkConstMeta,
+        argValues: [that],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountSpAccountNetworkConstMeta =>
+      const TaskConstMeta(debugName: "SpAccount_network", argNames: ["that"]);
+
+  @override
+  Future<String> dartBwkApiSpAccountSpAccountNewTaprootAddress({
+    required SpAccount that,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          var arg0 =
+              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+                that,
+              );
+          return wire
+              .wire__dart_bwk__api__sp_account__SpAccount_new_taproot_address(
+                port_,
+                arg0,
+              );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_String,
+          decodeErrorData: dco_decode_String,
+        ),
+        constMeta: kDartBwkApiSpAccountSpAccountNewTaprootAddressConstMeta,
+        argValues: [that],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountSpAccountNewTaprootAddressConstMeta =>
+      const TaskConstMeta(
+        debugName: "SpAccount_new_taproot_address",
+        argNames: ["that"],
+      );
+
+  @override
+  Future<TxSimulation> dartBwkApiSpAccountSpAccountPreparePsbt({
+    required SpAccount that,
+    required List<RecipientView> recipients,
+    required BigInt feerateSatVb,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          var arg0 =
+              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+                that,
+              );
+          var arg1 = cst_encode_list_recipient_view(recipients);
+          var arg2 = cst_encode_u_64(feerateSatVb);
+          return wire.wire__dart_bwk__api__sp_account__SpAccount_prepare_psbt(
+            port_,
+            arg0,
+            arg1,
+            arg2,
+          );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_tx_simulation,
+          decodeErrorData: dco_decode_String,
+        ),
+        constMeta: kDartBwkApiSpAccountSpAccountPreparePsbtConstMeta,
+        argValues: [that, recipients, feerateSatVb],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountSpAccountPreparePsbtConstMeta =>
+      const TaskConstMeta(
+        debugName: "SpAccount_prepare_psbt",
+        argNames: ["that", "recipients", "feerateSatVb"],
+      );
+
+  @override
+  Future<void> dartBwkApiSpAccountSpAccountRestartElectrum({
+    required SpAccount that,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          var arg0 =
+              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+                that,
+              );
+          return wire
+              .wire__dart_bwk__api__sp_account__SpAccount_restart_electrum(
+                port_,
+                arg0,
+              );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_unit,
+          decodeErrorData: dco_decode_String,
+        ),
+        constMeta: kDartBwkApiSpAccountSpAccountRestartElectrumConstMeta,
+        argValues: [that],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountSpAccountRestartElectrumConstMeta =>
+      const TaskConstMeta(
+        debugName: "SpAccount_restart_electrum",
+        argNames: ["that"],
+      );
+
+  @override
+  Future<void> dartBwkApiSpAccountSpAccountScanOnce({
+    required SpAccount that,
+    int? startHeight,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          var arg0 =
+              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+                that,
+              );
+          var arg1 = cst_encode_opt_box_autoadd_u_32(startHeight);
+          return wire.wire__dart_bwk__api__sp_account__SpAccount_scan_once(
+            port_,
+            arg0,
+            arg1,
+          );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_unit,
+          decodeErrorData: dco_decode_sp_error,
+        ),
+        constMeta: kDartBwkApiSpAccountSpAccountScanOnceConstMeta,
+        argValues: [that, startHeight],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountSpAccountScanOnceConstMeta =>
+      const TaskConstMeta(
+        debugName: "SpAccount_scan_once",
+        argNames: ["that", "startHeight"],
+      );
+
+  @override
+  void dartBwkApiSpAccountSpAccountSetBlindbitUrl({
+    required SpAccount that,
+    required String url,
+  }) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          var arg0 =
+              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+                that,
+              );
+          var arg1 = cst_encode_String(url);
+          return wire
+              .wire__dart_bwk__api__sp_account__SpAccount_set_blindbit_url(
+                arg0,
+                arg1,
+              );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_unit,
+          decodeErrorData: dco_decode_String,
+        ),
+        constMeta: kDartBwkApiSpAccountSpAccountSetBlindbitUrlConstMeta,
+        argValues: [that, url],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountSpAccountSetBlindbitUrlConstMeta =>
+      const TaskConstMeta(
+        debugName: "SpAccount_set_blindbit_url",
+        argNames: ["that", "url"],
+      );
+
+  @override
+  void dartBwkApiSpAccountSpAccountSetElectrumUrl({
+    required SpAccount that,
+    required String url,
+  }) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          var arg0 =
+              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+                that,
+              );
+          var arg1 = cst_encode_String(url);
+          return wire
+              .wire__dart_bwk__api__sp_account__SpAccount_set_electrum_url(
+                arg0,
+                arg1,
+              );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_unit,
+          decodeErrorData: dco_decode_String,
+        ),
+        constMeta: kDartBwkApiSpAccountSpAccountSetElectrumUrlConstMeta,
+        argValues: [that, url],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountSpAccountSetElectrumUrlConstMeta =>
+      const TaskConstMeta(
+        debugName: "SpAccount_set_electrum_url",
+        argNames: ["that", "url"],
+      );
+
+  @override
+  Future<Uint8List> dartBwkApiSpAccountSpAccountSignPsbt({
+    required SpAccount that,
+    required List<int> psbt,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          var arg0 =
+              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+                that,
+              );
+          var arg1 = cst_encode_list_prim_u_8_loose(psbt);
+          return wire.wire__dart_bwk__api__sp_account__SpAccount_sign_psbt(
+            port_,
+            arg0,
+            arg1,
+          );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_list_prim_u_8_strict,
+          decodeErrorData: dco_decode_String,
+        ),
+        constMeta: kDartBwkApiSpAccountSpAccountSignPsbtConstMeta,
+        argValues: [that, psbt],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountSpAccountSignPsbtConstMeta =>
+      const TaskConstMeta(
+        debugName: "SpAccount_sign_psbt",
+        argNames: ["that", "psbt"],
+      );
+
+  @override
+  String dartBwkApiSpAccountSpAccountSpAddress({required SpAccount that}) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          var arg0 =
+              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+                that,
+              );
+          return wire.wire__dart_bwk__api__sp_account__SpAccount_sp_address(
+            arg0,
+          );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_String,
+          decodeErrorData: dco_decode_String,
+        ),
+        constMeta: kDartBwkApiSpAccountSpAccountSpAddressConstMeta,
+        argValues: [that],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountSpAccountSpAddressConstMeta =>
+      const TaskConstMeta(
+        debugName: "SpAccount_sp_address",
+        argNames: ["that"],
+      );
+
+  @override
+  Future<void> dartBwkApiSpAccountSpAccountStartElectrum({
+    required SpAccount that,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          var arg0 =
+              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+                that,
+              );
+          return wire.wire__dart_bwk__api__sp_account__SpAccount_start_electrum(
+            port_,
+            arg0,
+          );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_unit,
+          decodeErrorData: dco_decode_String,
+        ),
+        constMeta: kDartBwkApiSpAccountSpAccountStartElectrumConstMeta,
+        argValues: [that],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountSpAccountStartElectrumConstMeta =>
+      const TaskConstMeta(
+        debugName: "SpAccount_start_electrum",
+        argNames: ["that"],
+      );
+
+  @override
+  Future<void> dartBwkApiSpAccountSpAccountStopScan({required SpAccount that}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          var arg0 =
+              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+                that,
+              );
+          return wire.wire__dart_bwk__api__sp_account__SpAccount_stop_scan(
+            port_,
+            arg0,
+          );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_unit,
+          decodeErrorData: dco_decode_String,
+        ),
+        constMeta: kDartBwkApiSpAccountSpAccountStopScanConstMeta,
+        argValues: [that],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountSpAccountStopScanConstMeta =>
+      const TaskConstMeta(debugName: "SpAccount_stop_scan", argNames: ["that"]);
+
+  @override
+  BigInt dartBwkApiSpAccountSpAccountSubAccountBalance({
+    required SpAccount that,
+    required SubAccountKind kind,
+  }) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          var arg0 =
+              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+                that,
+              );
+          var arg1 = cst_encode_sub_account_kind(kind);
+          return wire
+              .wire__dart_bwk__api__sp_account__SpAccount_sub_account_balance(
+                arg0,
+                arg1,
+              );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_u_64,
+          decodeErrorData: dco_decode_String,
+        ),
+        constMeta: kDartBwkApiSpAccountSpAccountSubAccountBalanceConstMeta,
+        argValues: [that, kind],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountSpAccountSubAccountBalanceConstMeta =>
+      const TaskConstMeta(
+        debugName: "SpAccount_sub_account_balance",
+        argNames: ["that", "kind"],
+      );
+
+  @override
+  SpBalanceView dartBwkApiSpAccountSpAccountUnifiedBalance({
+    required SpAccount that,
+  }) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          var arg0 =
+              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+                that,
+              );
+          return wire
+              .wire__dart_bwk__api__sp_account__SpAccount_unified_balance(arg0);
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_sp_balance_view,
+          decodeErrorData: dco_decode_String,
+        ),
+        constMeta: kDartBwkApiSpAccountSpAccountUnifiedBalanceConstMeta,
+        argValues: [that],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountSpAccountUnifiedBalanceConstMeta =>
+      const TaskConstMeta(
+        debugName: "SpAccount_unified_balance",
+        argNames: ["that"],
+      );
+
+  @override
+  Future<List<UnifiedCoinView>> dartBwkApiSpAccountSpAccountUnifiedCoins({
+    required SpAccount that,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          var arg0 =
+              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+                that,
+              );
+          return wire.wire__dart_bwk__api__sp_account__SpAccount_unified_coins(
+            port_,
+            arg0,
+          );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_list_unified_coin_view,
+          decodeErrorData: dco_decode_String,
+        ),
+        constMeta: kDartBwkApiSpAccountSpAccountUnifiedCoinsConstMeta,
+        argValues: [that],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountSpAccountUnifiedCoinsConstMeta =>
+      const TaskConstMeta(
+        debugName: "SpAccount_unified_coins",
+        argNames: ["that"],
+      );
+
+  @override
+  Future<List<SpPaymentView>> dartBwkApiSpAccountSpAccountUnifiedHistory({
+    required SpAccount that,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          var arg0 =
+              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+                that,
+              );
+          return wire
+              .wire__dart_bwk__api__sp_account__SpAccount_unified_history(
+                port_,
+                arg0,
+              );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_list_sp_payment_view,
+          decodeErrorData: dco_decode_String,
+        ),
+        constMeta: kDartBwkApiSpAccountSpAccountUnifiedHistoryConstMeta,
+        argValues: [that],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountSpAccountUnifiedHistoryConstMeta =>
+      const TaskConstMeta(
+        debugName: "SpAccount_unified_history",
+        argNames: ["that"],
+      );
+
+  @override
   Future<Address> lwkApiWalletWalletAddress({
     required Wallet that,
     required int index,
@@ -3043,7 +3653,9 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
       );
 
   @override
-  Future<List<Balance>> lwkApiWalletWalletBalances({required Wallet that}) {
+  Future<List<WalletBalance>> lwkApiWalletWalletBalances({
+    required Wallet that,
+  }) {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
@@ -3054,7 +3666,7 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
           return wire.wire__lwk__api__wallet__Wallet_balances(port_, arg0);
         },
         codec: DcoCodec(
-          decodeSuccessData: dco_decode_list_balance,
+          decodeSuccessData: dco_decode_list_wallet_balance,
           decodeErrorData: dco_decode_lwk_error,
         ),
         constMeta: kLwkApiWalletWalletBalancesConstMeta,
@@ -3138,6 +3750,51 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
       );
 
   @override
+  Future<String> lwkApiWalletWalletBuildCustomTx({
+    required Wallet that,
+    required List<OutPoint> utxos,
+    required List<TxOutputSpec> outputs,
+    String? drainTo,
+    required double feeRate,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          var arg0 =
+              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWallet(
+                that,
+              );
+          var arg1 = cst_encode_list_out_point(utxos);
+          var arg2 = cst_encode_list_tx_output_spec(outputs);
+          var arg3 = cst_encode_opt_String(drainTo);
+          var arg4 = cst_encode_f_32(feeRate);
+          return wire.wire__lwk__api__wallet__Wallet_build_custom_tx(
+            port_,
+            arg0,
+            arg1,
+            arg2,
+            arg3,
+            arg4,
+          );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_String,
+          decodeErrorData: dco_decode_lwk_error,
+        ),
+        constMeta: kLwkApiWalletWalletBuildCustomTxConstMeta,
+        argValues: [that, utxos, outputs, drainTo, feeRate],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kLwkApiWalletWalletBuildCustomTxConstMeta =>
+      const TaskConstMeta(
+        debugName: "Wallet_build_custom_tx",
+        argNames: ["that", "utxos", "outputs", "drainTo", "feeRate"],
+      );
+
+  @override
   Future<String> lwkApiWalletWalletBuildLbtcTx({
     required Wallet that,
     required BigInt sats,
@@ -3188,7 +3845,7 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     required BigInt sats,
     required String outAddress,
     required String asset,
-    required Network network,
+    required LiquidNetwork network,
     String? baseUrl,
     required bool isSendAll,
   }) {
@@ -3202,7 +3859,7 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
           var arg1 = cst_encode_u_64(sats);
           var arg2 = cst_encode_String(outAddress);
           var arg3 = cst_encode_String(asset);
-          var arg4 = cst_encode_network(network);
+          var arg4 = cst_encode_liquid_network(network);
           var arg5 = cst_encode_opt_String(baseUrl);
           var arg6 = cst_encode_bool(isSendAll);
           return wire.wire__lwk__api__wallet__Wallet_build_payjoin_tx(
@@ -3239,6 +3896,48 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
           "baseUrl",
           "isSendAll",
         ],
+      );
+
+  @override
+  Future<List<String>> lwkApiWalletWalletConsolidate({
+    required Wallet that,
+    required double feeRate,
+    int? highUtxoThreshold,
+    int? maximumInputs,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          var arg0 =
+              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWallet(
+                that,
+              );
+          var arg1 = cst_encode_f_32(feeRate);
+          var arg2 = cst_encode_opt_box_autoadd_u_32(highUtxoThreshold);
+          var arg3 = cst_encode_opt_box_autoadd_u_32(maximumInputs);
+          return wire.wire__lwk__api__wallet__Wallet_consolidate(
+            port_,
+            arg0,
+            arg1,
+            arg2,
+            arg3,
+          );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_list_String,
+          decodeErrorData: dco_decode_lwk_error,
+        ),
+        constMeta: kLwkApiWalletWalletConsolidateConstMeta,
+        argValues: [that, feeRate, highUtxoThreshold, maximumInputs],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kLwkApiWalletWalletConsolidateConstMeta =>
+      const TaskConstMeta(
+        debugName: "Wallet_consolidate",
+        argNames: ["that", "feeRate", "highUtxoThreshold", "maximumInputs"],
       );
 
   @override
@@ -3303,14 +4002,14 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
 
   @override
   Future<Wallet> lwkApiWalletWalletInit({
-    required Network network,
+    required LiquidNetwork network,
     required String dbpath,
     required Descriptor descriptor,
   }) {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
-          var arg0 = cst_encode_network(network);
+          var arg0 = cst_encode_liquid_network(network);
           var arg1 = cst_encode_String(dbpath);
           var arg2 = cst_encode_box_autoadd_descriptor(descriptor);
           return wire.wire__lwk__api__wallet__Wallet_init(
@@ -3340,7 +4039,7 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   @override
   Future<String> lwkApiWalletWalletSignTx({
     required Wallet that,
-    required Network network,
+    required LiquidNetwork network,
     required String pset,
     required String mnemonic,
   }) {
@@ -3351,7 +4050,7 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
               cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWallet(
                 that,
               );
-          var arg1 = cst_encode_network(network);
+          var arg1 = cst_encode_liquid_network(network);
           var arg2 = cst_encode_String(pset);
           var arg3 = cst_encode_String(mnemonic);
           return wire.wire__lwk__api__wallet__Wallet_sign_tx(
@@ -3381,7 +4080,7 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   @override
   Future<String> lwkApiWalletWalletSignedPsetWithExtraDetails({
     required Wallet that,
-    required Network network,
+    required LiquidNetwork network,
     required String pset,
     required String mnemonic,
   }) {
@@ -3392,7 +4091,7 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
               cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWallet(
                 that,
               );
-          var arg1 = cst_encode_network(network);
+          var arg1 = cst_encode_liquid_network(network);
           var arg2 = cst_encode_String(pset);
           var arg3 = cst_encode_String(mnemonic);
           return wire
@@ -3523,14 +4222,14 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
 
   @override
   Future<Address> lwkApiTypesAddressAddressFromScript({
-    required Network network,
+    required LiquidNetwork network,
     required String script,
     String? blindingKey,
   }) {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
-          var arg0 = cst_encode_network(network);
+          var arg0 = cst_encode_liquid_network(network);
           var arg1 = cst_encode_String(script);
           var arg2 = cst_encode_opt_String(blindingKey);
           return wire.wire__lwk__api__types__address_address_from_script(
@@ -3558,7 +4257,9 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
       );
 
   @override
-  Future<Network> lwkApiTypesAddressValidate({required String addressString}) {
+  Future<LiquidNetwork> lwkApiTypesAddressValidate({
+    required String addressString,
+  }) {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
@@ -3566,7 +4267,7 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
           return wire.wire__lwk__api__types__address_validate(port_, arg0);
         },
         codec: DcoCodec(
-          decodeSuccessData: dco_decode_network,
+          decodeSuccessData: dco_decode_liquid_network,
           decodeErrorData: dco_decode_lwk_error,
         ),
         constMeta: kLwkApiTypesAddressValidateConstMeta,
@@ -4109,8 +4810,7 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
 
   @override
   Future<BtcLnSwap> boltzApiBtcLnBtcLnSwapNewReverse({
-    required String mnemonic,
-    String? passphrase,
+    required SwapMasterKey swapMasterKey,
     required BigInt index,
     required BigInt outAmount,
     String? outAddress,
@@ -4123,16 +4823,15 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
-          var arg0 = cst_encode_String(mnemonic);
-          var arg1 = cst_encode_opt_String(passphrase);
-          var arg2 = cst_encode_u_64(index);
-          var arg3 = cst_encode_u_64(outAmount);
-          var arg4 = cst_encode_opt_String(outAddress);
-          var arg5 = cst_encode_chain(network);
-          var arg6 = cst_encode_String(electrumUrl);
-          var arg7 = cst_encode_String(boltzUrl);
-          var arg8 = cst_encode_opt_String(description);
-          var arg9 = cst_encode_opt_String(referralId);
+          var arg0 = cst_encode_box_autoadd_swap_master_key(swapMasterKey);
+          var arg1 = cst_encode_u_64(index);
+          var arg2 = cst_encode_u_64(outAmount);
+          var arg3 = cst_encode_opt_String(outAddress);
+          var arg4 = cst_encode_chain(network);
+          var arg5 = cst_encode_String(electrumUrl);
+          var arg6 = cst_encode_String(boltzUrl);
+          var arg7 = cst_encode_opt_String(description);
+          var arg8 = cst_encode_opt_String(referralId);
           return wire.wire__boltz__api__btc_ln__btc_ln_swap_new_reverse(
             port_,
             arg0,
@@ -4144,7 +4843,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
             arg6,
             arg7,
             arg8,
-            arg9,
           );
         },
         codec: DcoCodec(
@@ -4153,8 +4851,7 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
         ),
         constMeta: kBoltzApiBtcLnBtcLnSwapNewReverseConstMeta,
         argValues: [
-          mnemonic,
-          passphrase,
+          swapMasterKey,
           index,
           outAmount,
           outAddress,
@@ -4173,8 +4870,7 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
       const TaskConstMeta(
         debugName: "btc_ln_swap_new_reverse",
         argNames: [
-          "mnemonic",
-          "passphrase",
+          "swapMasterKey",
           "index",
           "outAmount",
           "outAddress",
@@ -4188,8 +4884,7 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
 
   @override
   Future<BtcLnSwap> boltzApiBtcLnBtcLnSwapNewSubmarine({
-    required String mnemonic,
-    String? passphrase,
+    required SwapMasterKey swapMasterKey,
     required BigInt index,
     required String invoice,
     required Chain network,
@@ -4200,14 +4895,13 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
-          var arg0 = cst_encode_String(mnemonic);
-          var arg1 = cst_encode_opt_String(passphrase);
-          var arg2 = cst_encode_u_64(index);
-          var arg3 = cst_encode_String(invoice);
-          var arg4 = cst_encode_chain(network);
-          var arg5 = cst_encode_String(electrumUrl);
-          var arg6 = cst_encode_String(boltzUrl);
-          var arg7 = cst_encode_opt_String(referralId);
+          var arg0 = cst_encode_box_autoadd_swap_master_key(swapMasterKey);
+          var arg1 = cst_encode_u_64(index);
+          var arg2 = cst_encode_String(invoice);
+          var arg3 = cst_encode_chain(network);
+          var arg4 = cst_encode_String(electrumUrl);
+          var arg5 = cst_encode_String(boltzUrl);
+          var arg6 = cst_encode_opt_String(referralId);
           return wire.wire__boltz__api__btc_ln__btc_ln_swap_new_submarine(
             port_,
             arg0,
@@ -4217,7 +4911,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
             arg4,
             arg5,
             arg6,
-            arg7,
           );
         },
         codec: DcoCodec(
@@ -4226,8 +4919,7 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
         ),
         constMeta: kBoltzApiBtcLnBtcLnSwapNewSubmarineConstMeta,
         argValues: [
-          mnemonic,
-          passphrase,
+          swapMasterKey,
           index,
           invoice,
           network,
@@ -4244,8 +4936,7 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
       const TaskConstMeta(
         debugName: "btc_ln_swap_new_submarine",
         argNames: [
-          "mnemonic",
-          "passphrase",
+          "swapMasterKey",
           "index",
           "invoice",
           "network",
@@ -4840,8 +5531,7 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   @override
   Future<ChainSwap> boltzApiChainSwapChainSwapNewSwap({
     required ChainSwapDirection direction,
-    required String mnemonic,
-    String? passphrase,
+    required SwapMasterKey swapMasterKey,
     required BigInt index,
     required BigInt amount,
     required bool isTestnet,
@@ -4854,15 +5544,14 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
       NormalTask(
         callFfi: (port_) {
           var arg0 = cst_encode_chain_swap_direction(direction);
-          var arg1 = cst_encode_String(mnemonic);
-          var arg2 = cst_encode_opt_String(passphrase);
-          var arg3 = cst_encode_u_64(index);
-          var arg4 = cst_encode_u_64(amount);
-          var arg5 = cst_encode_bool(isTestnet);
-          var arg6 = cst_encode_String(btcElectrumUrl);
-          var arg7 = cst_encode_String(lbtcElectrumUrl);
-          var arg8 = cst_encode_String(boltzUrl);
-          var arg9 = cst_encode_opt_String(referralId);
+          var arg1 = cst_encode_box_autoadd_swap_master_key(swapMasterKey);
+          var arg2 = cst_encode_u_64(index);
+          var arg3 = cst_encode_u_64(amount);
+          var arg4 = cst_encode_bool(isTestnet);
+          var arg5 = cst_encode_String(btcElectrumUrl);
+          var arg6 = cst_encode_String(lbtcElectrumUrl);
+          var arg7 = cst_encode_String(boltzUrl);
+          var arg8 = cst_encode_opt_String(referralId);
           return wire.wire__boltz__api__chain_swap__chain_swap_new_swap(
             port_,
             arg0,
@@ -4874,7 +5563,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
             arg6,
             arg7,
             arg8,
-            arg9,
           );
         },
         codec: DcoCodec(
@@ -4884,8 +5572,7 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
         constMeta: kBoltzApiChainSwapChainSwapNewSwapConstMeta,
         argValues: [
           direction,
-          mnemonic,
-          passphrase,
+          swapMasterKey,
           index,
           amount,
           isTestnet,
@@ -4904,8 +5591,7 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
         debugName: "chain_swap_new_swap",
         argNames: [
           "direction",
-          "mnemonic",
-          "passphrase",
+          "swapMasterKey",
           "index",
           "amount",
           "isTestnet",
@@ -5196,7 +5882,7 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   );
 
   @override
-  Future<DecodedInvoice> boltzApiTypesDecodedInvoiceFromString({
+  Future<DecodedInvoice> boltzApiInvoiceDecodedInvoiceFromString({
     required String s,
     String? boltzUrl,
   }) {
@@ -5205,7 +5891,7 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
         callFfi: (port_) {
           var arg0 = cst_encode_String(s);
           var arg1 = cst_encode_opt_String(boltzUrl);
-          return wire.wire__boltz__api__types__decoded_invoice_from_string(
+          return wire.wire__boltz__api__invoice__decoded_invoice_from_string(
             port_,
             arg0,
             arg1,
@@ -5215,14 +5901,14 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
           decodeSuccessData: dco_decode_decoded_invoice,
           decodeErrorData: dco_decode_boltz_error,
         ),
-        constMeta: kBoltzApiTypesDecodedInvoiceFromStringConstMeta,
+        constMeta: kBoltzApiInvoiceDecodedInvoiceFromStringConstMeta,
         argValues: [s, boltzUrl],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kBoltzApiTypesDecodedInvoiceFromStringConstMeta =>
+  TaskConstMeta get kBoltzApiInvoiceDecodedInvoiceFromStringConstMeta =>
       const TaskConstMeta(
         debugName: "decoded_invoice_from_string",
         argNames: ["s", "boltzUrl"],
@@ -5230,13 +5916,13 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
 
   @override
   Future<Descriptor> lwkApiDescriptorDescriptorNewConfidential({
-    required Network network,
+    required LiquidNetwork network,
     required String mnemonic,
   }) {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
-          var arg0 = cst_encode_network(network);
+          var arg0 = cst_encode_liquid_network(network);
           var arg1 = cst_encode_String(mnemonic);
           return wire.wire__lwk__api__descriptor__descriptor_new_confidential(
             port_,
@@ -5543,14 +6229,14 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
       );
 
   @override
-  PlatformInt64 lwkApiTypesGetBalanceByAssetId({
-    required List<Balance> balances,
+  BigInt lwkApiTypesGetBalanceByAssetId({
+    required List<WalletBalance> balances,
     required String assetId,
   }) {
     return handler.executeSync(
       SyncTask(
         callFfi: () {
-          var arg0 = cst_encode_list_balance(balances);
+          var arg0 = cst_encode_list_wallet_balance(balances);
           var arg1 = cst_encode_String(assetId);
           return wire.wire__lwk__api__types__get_balance_by_asset_id(
             arg0,
@@ -5558,7 +6244,7 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
           );
         },
         codec: DcoCodec(
-          decodeSuccessData: dco_decode_i_64,
+          decodeSuccessData: dco_decode_u_64,
           decodeErrorData: null,
         ),
         constMeta: kLwkApiTypesGetBalanceByAssetIdConstMeta,
@@ -5650,15 +6336,15 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
       const TaskConstMeta(debugName: "get_lbtc_asset_id", argNames: []);
 
   @override
-  PlatformInt64 lwkApiTypesGetLbtcBalance({required List<Balance> balances}) {
+  BigInt lwkApiTypesGetLbtcBalance({required List<WalletBalance> balances}) {
     return handler.executeSync(
       SyncTask(
         callFfi: () {
-          var arg0 = cst_encode_list_balance(balances);
+          var arg0 = cst_encode_list_wallet_balance(balances);
           return wire.wire__lwk__api__types__get_lbtc_balance(arg0);
         },
         codec: DcoCodec(
-          decodeSuccessData: dco_decode_i_64,
+          decodeSuccessData: dco_decode_u_64,
           decodeErrorData: null,
         ),
         constMeta: kLwkApiTypesGetLbtcBalanceConstMeta,
@@ -5695,15 +6381,15 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
       const TaskConstMeta(debugName: "get_ltest_asset_id", argNames: []);
 
   @override
-  PlatformInt64 lwkApiTypesGetLtestBalance({required List<Balance> balances}) {
+  BigInt lwkApiTypesGetLtestBalance({required List<WalletBalance> balances}) {
     return handler.executeSync(
       SyncTask(
         callFfi: () {
-          var arg0 = cst_encode_list_balance(balances);
+          var arg0 = cst_encode_list_wallet_balance(balances);
           return wire.wire__lwk__api__types__get_ltest_balance(arg0);
         },
         codec: DcoCodec(
-          decodeSuccessData: dco_decode_i_64,
+          decodeSuccessData: dco_decode_u_64,
           decodeErrorData: null,
         ),
         constMeta: kLwkApiTypesGetLtestBalanceConstMeta,
@@ -5717,6 +6403,27 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     debugName: "get_ltest_balance",
     argNames: ["balances"],
   );
+
+  @override
+  Future<RegtestDefaults> dartBwkApiRegtestGetRegtestDefaults() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          return wire.wire__dart_bwk__api__regtest__get_regtest_defaults(port_);
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_regtest_defaults,
+          decodeErrorData: null,
+        ),
+        constMeta: kDartBwkApiRegtestGetRegtestDefaultsConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiRegtestGetRegtestDefaultsConstMeta =>
+      const TaskConstMeta(debugName: "get_regtest_defaults", argNames: []);
 
   @override
   Future<String> bitboxApiGetRootFingerprint({required String serialNumber}) {
@@ -5820,6 +6527,27 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
       const TaskConstMeta(debugName: "init_app", argNames: []);
 
   @override
+  Future<void> crateApiSimpleInitApp() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          return wire.wire__crate__api__simple__init_app(port_);
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_unit,
+          decodeErrorData: null,
+        ),
+        constMeta: kCrateApiSimpleInitAppConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiSimpleInitAppConstMeta =>
+      const TaskConstMeta(debugName: "init_app", argNames: []);
+
+  @override
   Future<Joined> bbqrJoinJoinedFrbOverrideTryFromParts({
     required List<String> parts,
   }) {
@@ -5849,76 +6577,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
             "joined_frb_override_try_from_parts(dart_style=try_from_parts)",
         argNames: ["parts"],
       );
-
-  @override
-  Future<KeyPair> boltzApiTypesKeyPairGenerate({
-    required String mnemonic,
-    String? passphrase,
-    required Chain network,
-    required BigInt index,
-    required SwapType swapType,
-  }) {
-    return handler.executeNormal(
-      NormalTask(
-        callFfi: (port_) {
-          var arg0 = cst_encode_String(mnemonic);
-          var arg1 = cst_encode_opt_String(passphrase);
-          var arg2 = cst_encode_chain(network);
-          var arg3 = cst_encode_u_64(index);
-          var arg4 = cst_encode_swap_type(swapType);
-          return wire.wire__boltz__api__types__key_pair_generate(
-            port_,
-            arg0,
-            arg1,
-            arg2,
-            arg3,
-            arg4,
-          );
-        },
-        codec: DcoCodec(
-          decodeSuccessData: dco_decode_key_pair,
-          decodeErrorData: dco_decode_boltz_error,
-        ),
-        constMeta: kBoltzApiTypesKeyPairGenerateConstMeta,
-        argValues: [mnemonic, passphrase, network, index, swapType],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kBoltzApiTypesKeyPairGenerateConstMeta =>
-      const TaskConstMeta(
-        debugName: "key_pair_generate",
-        argNames: ["mnemonic", "passphrase", "network", "index", "swapType"],
-      );
-
-  @override
-  Future<KeyPair> boltzApiTypesKeyPairNew({
-    required String secretKey,
-    required String publicKey,
-  }) {
-    return handler.executeNormal(
-      NormalTask(
-        callFfi: (port_) {
-          var arg0 = cst_encode_String(secretKey);
-          var arg1 = cst_encode_String(publicKey);
-          return wire.wire__boltz__api__types__key_pair_new(port_, arg0, arg1);
-        },
-        codec: DcoCodec(
-          decodeSuccessData: dco_decode_key_pair,
-          decodeErrorData: null,
-        ),
-        constMeta: kBoltzApiTypesKeyPairNewConstMeta,
-        argValues: [secretKey, publicKey],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kBoltzApiTypesKeyPairNewConstMeta => const TaskConstMeta(
-    debugName: "key_pair_new",
-    argNames: ["secretKey", "publicKey"],
-  );
 
   @override
   Future<LBtcSwapScriptStr> boltzApiTypesLBtcSwapScriptStrNew({
@@ -6373,8 +7031,7 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
 
   @override
   Future<LbtcLnSwap> boltzApiLbtcLnLbtcLnSwapNewReverse({
-    required String mnemonic,
-    String? passphrase,
+    required SwapMasterKey swapMasterKey,
     required BigInt index,
     required BigInt outAmount,
     String? outAddress,
@@ -6387,16 +7044,15 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
-          var arg0 = cst_encode_String(mnemonic);
-          var arg1 = cst_encode_opt_String(passphrase);
-          var arg2 = cst_encode_u_64(index);
-          var arg3 = cst_encode_u_64(outAmount);
-          var arg4 = cst_encode_opt_String(outAddress);
-          var arg5 = cst_encode_chain(network);
-          var arg6 = cst_encode_String(electrumUrl);
-          var arg7 = cst_encode_String(boltzUrl);
-          var arg8 = cst_encode_opt_String(description);
-          var arg9 = cst_encode_opt_String(referralId);
+          var arg0 = cst_encode_box_autoadd_swap_master_key(swapMasterKey);
+          var arg1 = cst_encode_u_64(index);
+          var arg2 = cst_encode_u_64(outAmount);
+          var arg3 = cst_encode_opt_String(outAddress);
+          var arg4 = cst_encode_chain(network);
+          var arg5 = cst_encode_String(electrumUrl);
+          var arg6 = cst_encode_String(boltzUrl);
+          var arg7 = cst_encode_opt_String(description);
+          var arg8 = cst_encode_opt_String(referralId);
           return wire.wire__boltz__api__lbtc_ln__lbtc_ln_swap_new_reverse(
             port_,
             arg0,
@@ -6408,7 +7064,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
             arg6,
             arg7,
             arg8,
-            arg9,
           );
         },
         codec: DcoCodec(
@@ -6417,8 +7072,7 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
         ),
         constMeta: kBoltzApiLbtcLnLbtcLnSwapNewReverseConstMeta,
         argValues: [
-          mnemonic,
-          passphrase,
+          swapMasterKey,
           index,
           outAmount,
           outAddress,
@@ -6437,8 +7091,7 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
       const TaskConstMeta(
         debugName: "lbtc_ln_swap_new_reverse",
         argNames: [
-          "mnemonic",
-          "passphrase",
+          "swapMasterKey",
           "index",
           "outAmount",
           "outAddress",
@@ -6452,8 +7105,7 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
 
   @override
   Future<LbtcLnSwap> boltzApiLbtcLnLbtcLnSwapNewSubmarine({
-    required String mnemonic,
-    String? passphrase,
+    required SwapMasterKey swapMasterKey,
     required BigInt index,
     required String invoice,
     required Chain network,
@@ -6464,14 +7116,13 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
-          var arg0 = cst_encode_String(mnemonic);
-          var arg1 = cst_encode_opt_String(passphrase);
-          var arg2 = cst_encode_u_64(index);
-          var arg3 = cst_encode_String(invoice);
-          var arg4 = cst_encode_chain(network);
-          var arg5 = cst_encode_String(electrumUrl);
-          var arg6 = cst_encode_String(boltzUrl);
-          var arg7 = cst_encode_opt_String(referralId);
+          var arg0 = cst_encode_box_autoadd_swap_master_key(swapMasterKey);
+          var arg1 = cst_encode_u_64(index);
+          var arg2 = cst_encode_String(invoice);
+          var arg3 = cst_encode_chain(network);
+          var arg4 = cst_encode_String(electrumUrl);
+          var arg5 = cst_encode_String(boltzUrl);
+          var arg6 = cst_encode_opt_String(referralId);
           return wire.wire__boltz__api__lbtc_ln__lbtc_ln_swap_new_submarine(
             port_,
             arg0,
@@ -6481,7 +7132,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
             arg4,
             arg5,
             arg6,
-            arg7,
           );
         },
         codec: DcoCodec(
@@ -6490,8 +7140,7 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
         ),
         constMeta: kBoltzApiLbtcLnLbtcLnSwapNewSubmarineConstMeta,
         argValues: [
-          mnemonic,
-          passphrase,
+          swapMasterKey,
           index,
           invoice,
           network,
@@ -6508,8 +7157,7 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
       const TaskConstMeta(
         debugName: "lbtc_ln_swap_new_submarine",
         argNames: [
-          "mnemonic",
-          "passphrase",
+          "swapMasterKey",
           "index",
           "invoice",
           "network",
@@ -6773,28 +7421,37 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   );
 
   @override
-  Future<PreImage> boltzApiTypesPreImageGenerate() {
+  Future<PreImage> boltzApiSecretsPreImageFromInvoiceStr({
+    required String invoice,
+  }) {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
-          return wire.wire__boltz__api__types__pre_image_generate(port_);
+          var arg0 = cst_encode_String(invoice);
+          return wire.wire__boltz__api__secrets__pre_image_from_invoice_str(
+            port_,
+            arg0,
+          );
         },
         codec: DcoCodec(
           decodeSuccessData: dco_decode_pre_image,
-          decodeErrorData: null,
+          decodeErrorData: dco_decode_boltz_error,
         ),
-        constMeta: kBoltzApiTypesPreImageGenerateConstMeta,
-        argValues: [],
+        constMeta: kBoltzApiSecretsPreImageFromInvoiceStrConstMeta,
+        argValues: [invoice],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kBoltzApiTypesPreImageGenerateConstMeta =>
-      const TaskConstMeta(debugName: "pre_image_generate", argNames: []);
+  TaskConstMeta get kBoltzApiSecretsPreImageFromInvoiceStrConstMeta =>
+      const TaskConstMeta(
+        debugName: "pre_image_from_invoice_str",
+        argNames: ["invoice"],
+      );
 
   @override
-  Future<PreImage> boltzApiTypesPreImageNew({
+  Future<PreImage> boltzApiSecretsPreImageNew({
     required String value,
     required String sha256,
     required String hash160,
@@ -6805,7 +7462,7 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
           var arg0 = cst_encode_String(value);
           var arg1 = cst_encode_String(sha256);
           var arg2 = cst_encode_String(hash160);
-          return wire.wire__boltz__api__types__pre_image_new(
+          return wire.wire__boltz__api__secrets__pre_image_new(
             port_,
             arg0,
             arg1,
@@ -6816,17 +7473,199 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
           decodeSuccessData: dco_decode_pre_image,
           decodeErrorData: null,
         ),
-        constMeta: kBoltzApiTypesPreImageNewConstMeta,
+        constMeta: kBoltzApiSecretsPreImageNewConstMeta,
         argValues: [value, sha256, hash160],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kBoltzApiTypesPreImageNewConstMeta => const TaskConstMeta(
+  TaskConstMeta get kBoltzApiSecretsPreImageNewConstMeta => const TaskConstMeta(
     debugName: "pre_image_new",
     argNames: ["value", "sha256", "hash160"],
   );
+
+  @override
+  Future<List<ChainSwap>> boltzApiRestoreRestoreChainSwaps({
+    required SwapMasterKey swapMasterKey,
+    required String btcElectrumUrl,
+    required String lbtcElectrumUrl,
+    required String boltzUrl,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          var arg0 = cst_encode_box_autoadd_swap_master_key(swapMasterKey);
+          var arg1 = cst_encode_String(btcElectrumUrl);
+          var arg2 = cst_encode_String(lbtcElectrumUrl);
+          var arg3 = cst_encode_String(boltzUrl);
+          return wire.wire__boltz__api__restore__restore_chain_swaps(
+            port_,
+            arg0,
+            arg1,
+            arg2,
+            arg3,
+          );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_list_chain_swap,
+          decodeErrorData: dco_decode_boltz_error,
+        ),
+        constMeta: kBoltzApiRestoreRestoreChainSwapsConstMeta,
+        argValues: [swapMasterKey, btcElectrumUrl, lbtcElectrumUrl, boltzUrl],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kBoltzApiRestoreRestoreChainSwapsConstMeta =>
+      const TaskConstMeta(
+        debugName: "restore_chain_swaps",
+        argNames: [
+          "swapMasterKey",
+          "btcElectrumUrl",
+          "lbtcElectrumUrl",
+          "boltzUrl",
+        ],
+      );
+
+  @override
+  Future<List<BtcLnSwap>> boltzApiRestoreRestoreLnBtcSwaps({
+    required SwapMasterKey swapMasterKey,
+    required String electrumUrl,
+    required String boltzUrl,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          var arg0 = cst_encode_box_autoadd_swap_master_key(swapMasterKey);
+          var arg1 = cst_encode_String(electrumUrl);
+          var arg2 = cst_encode_String(boltzUrl);
+          return wire.wire__boltz__api__restore__restore_ln_btc_swaps(
+            port_,
+            arg0,
+            arg1,
+            arg2,
+          );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_list_btc_ln_swap,
+          decodeErrorData: dco_decode_boltz_error,
+        ),
+        constMeta: kBoltzApiRestoreRestoreLnBtcSwapsConstMeta,
+        argValues: [swapMasterKey, electrumUrl, boltzUrl],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kBoltzApiRestoreRestoreLnBtcSwapsConstMeta =>
+      const TaskConstMeta(
+        debugName: "restore_ln_btc_swaps",
+        argNames: ["swapMasterKey", "electrumUrl", "boltzUrl"],
+      );
+
+  @override
+  Future<List<LbtcLnSwap>> boltzApiRestoreRestoreLnLbtcSwaps({
+    required SwapMasterKey swapMasterKey,
+    required String electrumUrl,
+    required String boltzUrl,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          var arg0 = cst_encode_box_autoadd_swap_master_key(swapMasterKey);
+          var arg1 = cst_encode_String(electrumUrl);
+          var arg2 = cst_encode_String(boltzUrl);
+          return wire.wire__boltz__api__restore__restore_ln_lbtc_swaps(
+            port_,
+            arg0,
+            arg1,
+            arg2,
+          );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_list_lbtc_ln_swap,
+          decodeErrorData: dco_decode_boltz_error,
+        ),
+        constMeta: kBoltzApiRestoreRestoreLnLbtcSwapsConstMeta,
+        argValues: [swapMasterKey, electrumUrl, boltzUrl],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kBoltzApiRestoreRestoreLnLbtcSwapsConstMeta =>
+      const TaskConstMeta(
+        debugName: "restore_ln_lbtc_swaps",
+        argNames: ["swapMasterKey", "electrumUrl", "boltzUrl"],
+      );
+
+  @override
+  Future<PlatformInt64> boltzApiRestoreRestoreSwapIndex({
+    required SwapMasterKey swapMasterKey,
+    required String boltzUrl,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          var arg0 = cst_encode_box_autoadd_swap_master_key(swapMasterKey);
+          var arg1 = cst_encode_String(boltzUrl);
+          return wire.wire__boltz__api__restore__restore_swap_index(
+            port_,
+            arg0,
+            arg1,
+          );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_i_64,
+          decodeErrorData: dco_decode_boltz_error,
+        ),
+        constMeta: kBoltzApiRestoreRestoreSwapIndexConstMeta,
+        argValues: [swapMasterKey, boltzUrl],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kBoltzApiRestoreRestoreSwapIndexConstMeta =>
+      const TaskConstMeta(
+        debugName: "restore_swap_index",
+        argNames: ["swapMasterKey", "boltzUrl"],
+      );
+
+  @override
+  Future<List<RestoredSwapSummary>> boltzApiRestoreRestoreSwapSummaries({
+    required SwapMasterKey swapMasterKey,
+    required String boltzUrl,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          var arg0 = cst_encode_box_autoadd_swap_master_key(swapMasterKey);
+          var arg1 = cst_encode_String(boltzUrl);
+          return wire.wire__boltz__api__restore__restore_swap_summaries(
+            port_,
+            arg0,
+            arg1,
+          );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_list_restored_swap_summary,
+          decodeErrorData: dco_decode_boltz_error,
+        ),
+        constMeta: kBoltzApiRestoreRestoreSwapSummariesConstMeta,
+        argValues: [swapMasterKey, boltzUrl],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kBoltzApiRestoreRestoreSwapSummariesConstMeta =>
+      const TaskConstMeta(
+        debugName: "restore_swap_summaries",
+        argNames: ["swapMasterKey", "boltzUrl"],
+      );
 
   @override
   void bitboxApiSetUsbReadDataWrapper({
@@ -6967,6 +7806,42 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     debugName: "start_pairing",
     argNames: ["serialNumber"],
   );
+
+  @override
+  Future<SwapMasterKey> boltzApiSecretsSwapMasterKeyCreate({
+    required String walletMnemonic,
+    String? walletPassphrase,
+    required Network network,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          var arg0 = cst_encode_String(walletMnemonic);
+          var arg1 = cst_encode_opt_String(walletPassphrase);
+          var arg2 = cst_encode_network(network);
+          return wire.wire__boltz__api__secrets__swap_master_key_create(
+            port_,
+            arg0,
+            arg1,
+            arg2,
+          );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_swap_master_key,
+          decodeErrorData: dco_decode_boltz_error,
+        ),
+        constMeta: kBoltzApiSecretsSwapMasterKeyCreateConstMeta,
+        argValues: [walletMnemonic, walletPassphrase, network],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kBoltzApiSecretsSwapMasterKeyCreateConstMeta =>
+      const TaskConstMeta(
+        debugName: "swap_master_key_create",
+        argNames: ["walletMnemonic", "walletPassphrase", "network"],
+      );
 
   @override
   String boltzApiSwapStatusSwapStatusAsString({required SwapStatus that}) {
@@ -7172,6 +8047,56 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
       );
 
   @override
+  Future<void> dartBwkApiSpAccountTestBlindbitUrl({required String url}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          var arg0 = cst_encode_String(url);
+          return wire.wire__dart_bwk__api__sp_account__test_blindbit_url(
+            port_,
+            arg0,
+          );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_unit,
+          decodeErrorData: dco_decode_String,
+        ),
+        constMeta: kDartBwkApiSpAccountTestBlindbitUrlConstMeta,
+        argValues: [url],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountTestBlindbitUrlConstMeta =>
+      const TaskConstMeta(debugName: "test_blindbit_url", argNames: ["url"]);
+
+  @override
+  Future<void> dartBwkApiSpAccountTestElectrumUrl({required String url}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          var arg0 = cst_encode_String(url);
+          return wire.wire__dart_bwk__api__sp_account__test_electrum_url(
+            port_,
+            arg0,
+          );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_unit,
+          decodeErrorData: dco_decode_String,
+        ),
+        constMeta: kDartBwkApiSpAccountTestElectrumUrlConstMeta,
+        argValues: [url],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountTestElectrumUrlConstMeta =>
+      const TaskConstMeta(debugName: "test_electrum_url", argNames: ["url"]);
+
+  @override
   Transaction boltzApiSwapStatusTransactionFromJson({required String json}) {
     return handler.executeSync(
       SyncTask(
@@ -7221,48 +8146,38 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
       const TaskConstMeta(debugName: "transaction_to_json", argNames: ["that"]);
 
   @override
-  bool arkWalletArkUtilsUtilsIsArk({required String address}) {
-    return handler.executeSync(
-      SyncTask(
-        callFfi: () {
+  Future<SpRecipientAddressKind> dartBwkApiSpAccountValidateRecipientAddress({
+    required String address,
+    required SpNetwork network,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
           var arg0 = cst_encode_String(address);
-          return wire.wire__ark_wallet__ark__utils__utils_is_ark(arg0);
+          var arg1 = cst_encode_sp_network(network);
+          return wire
+              .wire__dart_bwk__api__sp_account__validate_recipient_address(
+                port_,
+                arg0,
+                arg1,
+              );
         },
         codec: DcoCodec(
-          decodeSuccessData: dco_decode_bool,
-          decodeErrorData: null,
+          decodeSuccessData: dco_decode_sp_recipient_address_kind,
+          decodeErrorData: dco_decode_String,
         ),
-        constMeta: kArkWalletArkUtilsUtilsIsArkConstMeta,
-        argValues: [address],
+        constMeta: kDartBwkApiSpAccountValidateRecipientAddressConstMeta,
+        argValues: [address, network],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kArkWalletArkUtilsUtilsIsArkConstMeta =>
-      const TaskConstMeta(debugName: "utils_is_ark", argNames: ["address"]);
-
-  @override
-  bool arkWalletArkUtilsUtilsIsBtc({required String address}) {
-    return handler.executeSync(
-      SyncTask(
-        callFfi: () {
-          var arg0 = cst_encode_String(address);
-          return wire.wire__ark_wallet__ark__utils__utils_is_btc(arg0);
-        },
-        codec: DcoCodec(
-          decodeSuccessData: dco_decode_bool,
-          decodeErrorData: null,
-        ),
-        constMeta: kArkWalletArkUtilsUtilsIsBtcConstMeta,
-        argValues: [address],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta get kArkWalletArkUtilsUtilsIsBtcConstMeta =>
-      const TaskConstMeta(debugName: "utils_is_btc", argNames: ["address"]);
+  TaskConstMeta get kDartBwkApiSpAccountValidateRecipientAddressConstMeta =>
+      const TaskConstMeta(
+        debugName: "validate_recipient_address",
+        argNames: ["address", "network"],
+      );
 
   @override
   Future<String> bitboxApiVerifyAddress({
@@ -7327,14 +8242,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   );
 
   RustArcIncrementStrongCountFnType
-  get rust_arc_increment_strong_count_ArkWallet => wire
-      .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArkWallet;
-
-  RustArcDecrementStrongCountFnType
-  get rust_arc_decrement_strong_count_ArkWallet => wire
-      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArkWallet;
-
-  RustArcIncrementStrongCountFnType
   get rust_arc_increment_strong_count_ContinuousJoinResult => wire
       .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerContinuousJoinResult;
 
@@ -7349,22 +8256,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   RustArcDecrementStrongCountFnType
   get rust_arc_decrement_strong_count_ContinuousJoiner => wire
       .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerContinuousJoiner;
-
-  RustArcIncrementStrongCountFnType
-  get rust_arc_increment_strong_count_EsploraClient => wire
-      .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerEsploraClient;
-
-  RustArcDecrementStrongCountFnType
-  get rust_arc_decrement_strong_count_EsploraClient => wire
-      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerEsploraClient;
-
-  RustArcIncrementStrongCountFnType
-  get rust_arc_increment_strong_count_InMemoryDb => wire
-      .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInMemoryDb;
-
-  RustArcDecrementStrongCountFnType
-  get rust_arc_decrement_strong_count_InMemoryDb => wire
-      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInMemoryDb;
 
   RustArcIncrementStrongCountFnType
   get rust_arc_increment_strong_count_LiquidTransaction => wire
@@ -7383,6 +8274,14 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
       .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPartiallySignedElementsTransaction;
 
   RustArcIncrementStrongCountFnType
+  get rust_arc_increment_strong_count_SpAccount => wire
+      .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount;
+
+  RustArcDecrementStrongCountFnType
+  get rust_arc_decrement_strong_count_SpAccount => wire
+      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount;
+
+  RustArcIncrementStrongCountFnType
   get rust_arc_increment_strong_count_Wallet => wire
       .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWallet;
 
@@ -7394,15 +8293,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   AnyhowException dco_decode_AnyhowException(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return AnyhowException(raw as String);
-  }
-
-  @protected
-  ArkWallet
-  dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArkWallet(
-    dynamic raw,
-  ) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return ArkWalletImpl.frbInternalDcoDecode(raw as List<dynamic>);
   }
 
   @protected
@@ -7421,24 +8311,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   ) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return ContinuousJoinerImpl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
-  EsploraClient
-  dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerEsploraClient(
-    dynamic raw,
-  ) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return EsploraClientImpl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
-  InMemoryDb
-  dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInMemoryDb(
-    dynamic raw,
-  ) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return InMemoryDbImpl.frbInternalDcoDecode(raw as List<dynamic>);
   }
 
   @protected
@@ -7462,6 +8334,15 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
+  SpAccount
+  dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return SpAccountImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
   Wallet
   dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWallet(
     dynamic raw,
@@ -7477,24 +8358,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   ) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return ContinuousJoinerImpl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
-  ArkWallet
-  dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArkWallet(
-    dynamic raw,
-  ) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return ArkWalletImpl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
-  EsploraClient
-  dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerEsploraClient(
-    dynamic raw,
-  ) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return EsploraClientImpl.frbInternalDcoDecode(raw as List<dynamic>);
   }
 
   @protected
@@ -7518,21 +8381,21 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
+  SpAccount
+  dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return SpAccountImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
   Wallet
   dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWallet(
     dynamic raw,
   ) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return WalletImpl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
-  ArkWallet
-  dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArkWallet(
-    dynamic raw,
-  ) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return ArkWalletImpl.frbInternalDcoDecode(raw as List<dynamic>);
   }
 
   @protected
@@ -7551,24 +8414,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   ) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return ContinuousJoinerImpl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
-  EsploraClient
-  dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerEsploraClient(
-    dynamic raw,
-  ) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return EsploraClientImpl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
-  InMemoryDb
-  dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInMemoryDb(
-    dynamic raw,
-  ) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return InMemoryDbImpl.frbInternalDcoDecode(raw as List<dynamic>);
   }
 
   @protected
@@ -7592,12 +8437,29 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
+  SpAccount
+  dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return SpAccountImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
   Wallet
   dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWallet(
     dynamic raw,
   ) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return WalletImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  RustStreamSink<SpNotification> dco_decode_StreamSink_sp_notification_Dco(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    throw UnimplementedError();
   }
 
   @protected
@@ -7639,63 +8501,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
-  ArkBalance dco_decode_ark_balance(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    final arr = raw as List<dynamic>;
-    if (arr.length != 6)
-      throw Exception('unexpected arr length: expect 6 but see ${arr.length}');
-    return ArkBalance(
-      preconfirmed: dco_decode_i_64(arr[0]),
-      settled: dco_decode_i_64(arr[1]),
-      available: dco_decode_i_64(arr[2]),
-      recoverable: dco_decode_i_64(arr[3]),
-      total: dco_decode_i_64(arr[4]),
-      boarding: dco_decode_ark_boarding(arr[5]),
-    );
-  }
-
-  @protected
-  ArkBoarding dco_decode_ark_boarding(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    final arr = raw as List<dynamic>;
-    if (arr.length != 3)
-      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
-    return ArkBoarding(
-      unconfirmed: dco_decode_i_64(arr[0]),
-      confirmed: dco_decode_i_64(arr[1]),
-      total: dco_decode_i_64(arr[2]),
-    );
-  }
-
-  @protected
-  ArkTransaction dco_decode_ark_transaction(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    switch (raw[0]) {
-      case 0:
-        return ArkTransaction_Boarding(
-          txid: dco_decode_String(raw[1]),
-          sats: dco_decode_i_64(raw[2]),
-          confirmedAt: dco_decode_opt_box_autoadd_i_64(raw[3]),
-        );
-      case 1:
-        return ArkTransaction_Commitment(
-          txid: dco_decode_String(raw[1]),
-          sats: dco_decode_i_64(raw[2]),
-          createdAt: dco_decode_i_64(raw[3]),
-        );
-      case 2:
-        return ArkTransaction_Redeem(
-          txid: dco_decode_String(raw[1]),
-          sats: dco_decode_i_64(raw[2]),
-          isSettled: dco_decode_bool(raw[3]),
-          createdAt: dco_decode_i_64(raw[4]),
-        );
-      default:
-        throw Exception("unreachable");
-    }
-  }
-
-  @protected
   Balance dco_decode_balance(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
@@ -7714,20 +8519,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     if (arr.isNotEmpty)
       throw Exception('unexpected arr length: expect 0 but see ${arr.length}');
     return Blockchain();
-  }
-
-  @protected
-  BoardingSettlement dco_decode_boarding_settlement(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    final arr = raw as List<dynamic>;
-    if (arr.length != 4)
-      throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
-    return BoardingSettlement(
-      pendingCount: dco_decode_i_32(arr[0]),
-      confirmedCount: dco_decode_i_32(arr[1]),
-      totalPendingSats: dco_decode_i_64(arr[2]),
-      totalConfirmedSats: dco_decode_i_64(arr[3]),
-    );
   }
 
   @protected
@@ -7815,12 +8606,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
-  PlatformInt64 dco_decode_box_autoadd_i_64(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return dco_decode_i_64(raw);
-  }
-
-  @protected
   KeyPair dco_decode_box_autoadd_key_pair(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dco_decode_key_pair(raw);
@@ -7875,6 +8660,12 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
+  SwapMasterKey dco_decode_box_autoadd_swap_master_key(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_swap_master_key(raw);
+  }
+
+  @protected
   SwapStatusResponse dco_decode_box_autoadd_swap_status_response(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dco_decode_swap_status_response(raw);
@@ -7908,6 +8699,12 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   TxOutput dco_decode_box_autoadd_tx_output(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dco_decode_tx_output(raw);
+  }
+
+  @protected
+  TxSimulation dco_decode_box_autoadd_tx_simulation(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_tx_simulation(raw);
   }
 
   @protected
@@ -7981,10 +8778,10 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     if (arr.length != 4)
       throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
     return ChainFeesAndLimits(
-      btcLimits: dco_decode_swap_limits(arr[0]),
-      lbtcLimits: dco_decode_swap_limits(arr[1]),
-      btcFees: dco_decode_chain_swap_fees(arr[2]),
-      lbtcFees: dco_decode_chain_swap_fees(arr[3]),
+      lbtcToBtcLimits: dco_decode_swap_limits(arr[0]),
+      btcToLbtcLimits: dco_decode_swap_limits(arr[1]),
+      lbtcToBtcFees: dco_decode_chain_swap_fees(arr[2]),
+      btcToLbtcFees: dco_decode_chain_swap_fees(arr[3]),
     );
   }
 
@@ -8033,6 +8830,12 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
       userClaim: dco_decode_u_64(arr[2]),
       server: dco_decode_u_64(arr[3]),
     );
+  }
+
+  @protected
+  CoinSource dco_decode_coin_source(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return CoinSource.values[raw as int];
   }
 
   @protected
@@ -8125,6 +8928,12 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
+  HeaderProgressPhase dco_decode_header_progress_phase(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return HeaderProgressPhase.values[raw as int];
+  }
+
+  @protected
   int dco_decode_i_32(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as int;
@@ -8204,21 +9013,45 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
+  LiquidNetwork dco_decode_liquid_network(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return LiquidNetwork.values[raw as int];
+  }
+
+  @protected
   List<String> dco_decode_list_String(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return (raw as List<dynamic>).map(dco_decode_String).toList();
   }
 
   @protected
-  List<ArkTransaction> dco_decode_list_ark_transaction(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return (raw as List<dynamic>).map(dco_decode_ark_transaction).toList();
-  }
-
-  @protected
   List<Balance> dco_decode_list_balance(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return (raw as List<dynamic>).map(dco_decode_balance).toList();
+  }
+
+  @protected
+  List<BtcLnSwap> dco_decode_list_btc_ln_swap(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_btc_ln_swap).toList();
+  }
+
+  @protected
+  List<ChainSwap> dco_decode_list_chain_swap(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_chain_swap).toList();
+  }
+
+  @protected
+  List<LbtcLnSwap> dco_decode_list_lbtc_ln_swap(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_lbtc_ln_swap).toList();
+  }
+
+  @protected
+  List<OutPoint> dco_decode_list_out_point(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_out_point).toList();
   }
 
   @protected
@@ -8243,6 +9076,32 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   List<PsetOutput> dco_decode_list_pset_output(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return (raw as List<dynamic>).map(dco_decode_pset_output).toList();
+  }
+
+  @protected
+  List<RecipientView> dco_decode_list_recipient_view(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_recipient_view).toList();
+  }
+
+  @protected
+  List<RestoredSwapSummary> dco_decode_list_restored_swap_summary(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>)
+        .map(dco_decode_restored_swap_summary)
+        .toList();
+  }
+
+  @protected
+  List<SpCoinView> dco_decode_list_sp_coin_view(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_sp_coin_view).toList();
+  }
+
+  @protected
+  List<SpPaymentView> dco_decode_list_sp_payment_view(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_sp_payment_view).toList();
   }
 
   @protected
@@ -8273,6 +9132,24 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   List<TxOutput> dco_decode_list_tx_output(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return (raw as List<dynamic>).map(dco_decode_tx_output).toList();
+  }
+
+  @protected
+  List<TxOutputSpec> dco_decode_list_tx_output_spec(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_tx_output_spec).toList();
+  }
+
+  @protected
+  List<UnifiedCoinView> dco_decode_list_unified_coin_view(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_unified_coin_view).toList();
+  }
+
+  @protected
+  List<WalletBalance> dco_decode_list_wallet_balance(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_wallet_balance).toList();
   }
 
   @protected
@@ -8343,12 +9220,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   FileType? dco_decode_opt_box_autoadd_file_type(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw == null ? null : dco_decode_box_autoadd_file_type(raw);
-  }
-
-  @protected
-  PlatformInt64? dco_decode_opt_box_autoadd_i_64(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return raw == null ? null : dco_decode_box_autoadd_i_64(raw);
   }
 
   @protected
@@ -8503,6 +9374,61 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
+  RecipientView dco_decode_recipient_view(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    switch (raw[0]) {
+      case 0:
+        return RecipientView_Sp(
+          address: dco_decode_String(raw[1]),
+          amountSat: dco_decode_u_64(raw[2]),
+          label: dco_decode_opt_box_autoadd_u_32(raw[3]),
+          isMax: dco_decode_bool(raw[4]),
+        );
+      case 1:
+        return RecipientView_Standard(
+          address: dco_decode_String(raw[1]),
+          amountSat: dco_decode_u_64(raw[2]),
+          isMax: dco_decode_bool(raw[3]),
+        );
+      default:
+        throw Exception("unreachable");
+    }
+  }
+
+  @protected
+  RegtestDefaults dco_decode_regtest_defaults(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 5)
+      throw Exception('unexpected arr length: expect 5 but see ${arr.length}');
+    return RegtestDefaults(
+      isOk: dco_decode_bool(arr[0]),
+      error: dco_decode_String(arr[1]),
+      blindbitUrl: dco_decode_String(arr[2]),
+      p2PNode: dco_decode_String(arr[3]),
+      electrumUrl: dco_decode_String(arr[4]),
+    );
+  }
+
+  @protected
+  RestoredSwapSummary dco_decode_restored_swap_summary(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 8)
+      throw Exception('unexpected arr length: expect 8 but see ${arr.length}');
+    return RestoredSwapSummary(
+      id: dco_decode_String(arr[0]),
+      kind: dco_decode_swap_type(arr[1]),
+      status: dco_decode_String(arr[2]),
+      createdAt: dco_decode_u_64(arr[3]),
+      from: dco_decode_String(arr[4]),
+      to: dco_decode_String(arr[5]),
+      amount: dco_decode_u_64(arr[6]),
+      recoverable: dco_decode_bool(arr[7]),
+    );
+  }
+
+  @protected
   RevSwapFees dco_decode_rev_swap_fees(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
@@ -8529,31 +9455,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
-  ServerInfo dco_decode_server_info(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    final arr = raw as List<dynamic>;
-    if (arr.length != 15)
-      throw Exception('unexpected arr length: expect 15 but see ${arr.length}');
-    return ServerInfo(
-      version: dco_decode_String(arr[0]),
-      signerPubkey: dco_decode_String(arr[1]),
-      forfeitPubkey: dco_decode_String(arr[2]),
-      forfeitAddress: dco_decode_String(arr[3]),
-      checkpointTapscript: dco_decode_String(arr[4]),
-      network: dco_decode_String(arr[5]),
-      sessionDuration: dco_decode_i_64(arr[6]),
-      unilateralExitDelay: dco_decode_u_32(arr[7]),
-      boardingExitDelay: dco_decode_u_32(arr[8]),
-      utxoMinAmount: dco_decode_opt_box_autoadd_i_64(arr[9]),
-      utxoMaxAmount: dco_decode_opt_box_autoadd_i_64(arr[10]),
-      vtxoMinAmount: dco_decode_opt_box_autoadd_i_64(arr[11]),
-      vtxoMaxAmount: dco_decode_opt_box_autoadd_i_64(arr[12]),
-      dust: dco_decode_i_64(arr[13]),
-      digest: dco_decode_String(arr[14]),
-    );
-  }
-
-  @protected
   Side dco_decode_side(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return Side.values[raw as int];
@@ -8568,8 +9469,169 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     return SizeAndFees(
       discountedVsize: dco_decode_usize(arr[0]),
       discountedWeight: dco_decode_usize(arr[1]),
-      absoluteFees: dco_decode_list_balance(arr[2]),
+      absoluteFees: dco_decode_list_wallet_balance(arr[2]),
     );
+  }
+
+  @protected
+  SpBalanceView dco_decode_sp_balance_view(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3)
+      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    return SpBalanceView(
+      confirmedSat: dco_decode_u_64(arr[0]),
+      totalUnifiedSat: dco_decode_u_64(arr[1]),
+      lastScannedHeight: dco_decode_opt_box_autoadd_u_32(arr[2]),
+    );
+  }
+
+  @protected
+  SpCoinView dco_decode_sp_coin_view(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 5)
+      throw Exception('unexpected arr length: expect 5 but see ${arr.length}');
+    return SpCoinView(
+      outpoint: dco_decode_String(arr[0]),
+      amountSat: dco_decode_u_64(arr[1]),
+      height: dco_decode_u_32(arr[2]),
+      isSpendable: dco_decode_bool(arr[3]),
+      label: dco_decode_opt_String(arr[4]),
+    );
+  }
+
+  @protected
+  SpError dco_decode_sp_error(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    switch (raw[0]) {
+      case 0:
+        return SpError_ScannerAlreadyRunning();
+      case 1:
+        return SpError_DisposeTimedOut();
+      case 2:
+        return SpError_SimulationDrifted(detail: dco_decode_String(raw[1]));
+      case 3:
+        return SpError_Other(message: dco_decode_String(raw[1]));
+      default:
+        throw Exception("unreachable");
+    }
+  }
+
+  @protected
+  SpNetwork dco_decode_sp_network(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return SpNetwork.values[raw as int];
+  }
+
+  @protected
+  SpNotification dco_decode_sp_notification(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    switch (raw[0]) {
+      case 0:
+        return SpNotification_ScanStarted(
+          from: dco_decode_u_32(raw[1]),
+          to: dco_decode_u_32(raw[2]),
+        );
+      case 1:
+        return SpNotification_ScanReceiveProgress(
+          current: dco_decode_u_32(raw[1]),
+          end: dco_decode_u_32(raw[2]),
+        );
+      case 2:
+        return SpNotification_ScanCompleted();
+      case 3:
+        return SpNotification_ScanStopped();
+      case 4:
+        return SpNotification_ScanFailed(message: dco_decode_String(raw[1]));
+      case 5:
+        return SpNotification_NewOutput(
+          outpoint: dco_decode_String(raw[1]),
+          amountSat: dco_decode_u_64(raw[2]),
+        );
+      case 6:
+        return SpNotification_OutputSpent(outpoint: dco_decode_String(raw[1]));
+      case 7:
+        return SpNotification_Broadcasted(txid: dco_decode_String(raw[1]));
+      case 8:
+        return SpNotification_BroadcastFailed(
+          message: dco_decode_String(raw[1]),
+        );
+      case 9:
+        return SpNotification_BackendOffline();
+      case 10:
+        return SpNotification_ElectrumTx(
+          kind: dco_decode_coin_source(raw[1]),
+          txid: dco_decode_String(raw[2]),
+          amountSat: dco_decode_u_64(raw[3]),
+          height: dco_decode_opt_box_autoadd_u_32(raw[4]),
+        );
+      case 11:
+        return SpNotification_ScanSpendProgress(
+          current: dco_decode_u_32(raw[1]),
+          end: dco_decode_u_32(raw[2]),
+        );
+      case 12:
+        return SpNotification_HeaderProgressStarted(
+          phase: dco_decode_header_progress_phase(raw[1]),
+          start: dco_decode_u_32(raw[2]),
+          end: dco_decode_u_32(raw[3]),
+        );
+      case 13:
+        return SpNotification_HeaderProgress(
+          phase: dco_decode_header_progress_phase(raw[1]),
+          current: dco_decode_u_32(raw[2]),
+          end: dco_decode_u_32(raw[3]),
+        );
+      case 14:
+        return SpNotification_HeaderProgressCompleted(
+          phase: dco_decode_header_progress_phase(raw[1]),
+        );
+      case 15:
+        return SpNotification_HeaderProgressFailed(
+          phase: dco_decode_header_progress_phase(raw[1]),
+        );
+      case 16:
+        return SpNotification_PaymentHistoryUpdated();
+      default:
+        throw Exception("unreachable");
+    }
+  }
+
+  @protected
+  SpPaymentDirection dco_decode_sp_payment_direction(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return SpPaymentDirection.values[raw as int];
+  }
+
+  @protected
+  SpPaymentStatus dco_decode_sp_payment_status(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return SpPaymentStatus.values[raw as int];
+  }
+
+  @protected
+  SpPaymentView dco_decode_sp_payment_view(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 8)
+      throw Exception('unexpected arr length: expect 8 but see ${arr.length}');
+    return SpPaymentView(
+      txid: dco_decode_String(arr[0]),
+      direction: dco_decode_sp_payment_direction(arr[1]),
+      status: dco_decode_sp_payment_status(arr[2]),
+      amountSat: dco_decode_u_64(arr[3]),
+      feeSat: dco_decode_opt_box_autoadd_u_64(arr[4]),
+      height: dco_decode_opt_box_autoadd_u_32(arr[5]),
+      timestamp: dco_decode_opt_box_autoadd_u_64(arr[6]),
+      label: dco_decode_opt_String(arr[7]),
+    );
+  }
+
+  @protected
+  SpRecipientAddressKind dco_decode_sp_recipient_address_kind(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return SpRecipientAddressKind.values[raw as int];
   }
 
   @protected
@@ -8598,6 +9660,12 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
       minVersion: dco_decode_version(arr[3]),
       maxVersion: dco_decode_version(arr[4]),
     );
+  }
+
+  @protected
+  SubAccountKind dco_decode_sub_account_kind(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return SubAccountKind.values[raw as int];
   }
 
   @protected
@@ -8630,11 +9698,28 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   SwapLimits dco_decode_swap_limits(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 2)
-      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    if (arr.length != 4)
+      throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
     return SwapLimits(
       minimal: dco_decode_u_64(arr[0]),
       maximal: dco_decode_u_64(arr[1]),
+      maximalZeroConf: dco_decode_opt_box_autoadd_u_64(arr[2]),
+      minimalBatched: dco_decode_opt_box_autoadd_u_64(arr[3]),
+    );
+  }
+
+  @protected
+  SwapMasterKey dco_decode_swap_master_key(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 5)
+      throw Exception('unexpected arr length: expect 5 but see ${arr.length}');
+    return SwapMasterKey(
+      xprv: dco_decode_String(arr[0]),
+      xpub: dco_decode_String(arr[1]),
+      network: dco_decode_network(arr[2]),
+      mnemonic: dco_decode_String(arr[3]),
+      fingerprint: dco_decode_String(arr[4]),
     );
   }
 
@@ -8791,6 +9876,33 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
+  TxOutputSpec dco_decode_tx_output_spec(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3)
+      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    return TxOutputSpec(
+      address: dco_decode_String(arr[0]),
+      satoshi: dco_decode_u_64(arr[1]),
+      assetId: dco_decode_opt_String(arr[2]),
+    );
+  }
+
+  @protected
+  TxSimulation dco_decode_tx_simulation(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 4)
+      throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
+    return TxSimulation(
+      inputs: dco_decode_list_unified_coin_view(arr[0]),
+      outputs: dco_decode_list_recipient_view(arr[1]),
+      feeSat: dco_decode_u_64(arr[2]),
+      changeSat: dco_decode_u_64(arr[3]),
+    );
+  }
+
+  @protected
   int dco_decode_u_32(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as int;
@@ -8809,6 +9921,27 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
+  UnifiedCoinStatus dco_decode_unified_coin_status(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return UnifiedCoinStatus.values[raw as int];
+  }
+
+  @protected
+  UnifiedCoinView dco_decode_unified_coin_view(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 5)
+      throw Exception('unexpected arr length: expect 5 but see ${arr.length}');
+    return UnifiedCoinView(
+      source: dco_decode_coin_source(arr[0]),
+      outpoint: dco_decode_String(arr[1]),
+      amountSat: dco_decode_u_64(arr[2]),
+      height: dco_decode_opt_box_autoadd_u_32(arr[3]),
+      status: dco_decode_unified_coin_status(arr[4]),
+    );
+  }
+
+  @protected
   void dco_decode_unit(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return;
@@ -8821,18 +9954,21 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
-  Utils dco_decode_utils(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    final arr = raw as List<dynamic>;
-    if (arr.isNotEmpty)
-      throw Exception('unexpected arr length: expect 0 but see ${arr.length}');
-    return Utils();
-  }
-
-  @protected
   Version dco_decode_version(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return Version.values[raw as int];
+  }
+
+  @protected
+  WalletBalance dco_decode_wallet_balance(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return WalletBalance(
+      assetId: dco_decode_String(arr[0]),
+      value: dco_decode_u_64(arr[1]),
+    );
   }
 
   @protected
@@ -8840,18 +9976,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var inner = sse_decode_String(deserializer);
     return AnyhowException(inner);
-  }
-
-  @protected
-  ArkWallet
-  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArkWallet(
-    SseDeserializer deserializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return ArkWalletImpl.frbInternalSseDecode(
-      sse_decode_usize(deserializer),
-      sse_decode_i_32(deserializer),
-    );
   }
 
   @protected
@@ -8873,30 +9997,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return ContinuousJoinerImpl.frbInternalSseDecode(
-      sse_decode_usize(deserializer),
-      sse_decode_i_32(deserializer),
-    );
-  }
-
-  @protected
-  EsploraClient
-  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerEsploraClient(
-    SseDeserializer deserializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return EsploraClientImpl.frbInternalSseDecode(
-      sse_decode_usize(deserializer),
-      sse_decode_i_32(deserializer),
-    );
-  }
-
-  @protected
-  InMemoryDb
-  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInMemoryDb(
-    SseDeserializer deserializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return InMemoryDbImpl.frbInternalSseDecode(
       sse_decode_usize(deserializer),
       sse_decode_i_32(deserializer),
     );
@@ -8927,6 +10027,18 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
+  SpAccount
+  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return SpAccountImpl.frbInternalSseDecode(
+      sse_decode_usize(deserializer),
+      sse_decode_i_32(deserializer),
+    );
+  }
+
+  @protected
   Wallet
   sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWallet(
     SseDeserializer deserializer,
@@ -8945,30 +10057,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return ContinuousJoinerImpl.frbInternalSseDecode(
-      sse_decode_usize(deserializer),
-      sse_decode_i_32(deserializer),
-    );
-  }
-
-  @protected
-  ArkWallet
-  sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArkWallet(
-    SseDeserializer deserializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return ArkWalletImpl.frbInternalSseDecode(
-      sse_decode_usize(deserializer),
-      sse_decode_i_32(deserializer),
-    );
-  }
-
-  @protected
-  EsploraClient
-  sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerEsploraClient(
-    SseDeserializer deserializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return EsploraClientImpl.frbInternalSseDecode(
       sse_decode_usize(deserializer),
       sse_decode_i_32(deserializer),
     );
@@ -8999,24 +10087,24 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
-  Wallet
-  sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWallet(
+  SpAccount
+  sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
     SseDeserializer deserializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    return WalletImpl.frbInternalSseDecode(
+    return SpAccountImpl.frbInternalSseDecode(
       sse_decode_usize(deserializer),
       sse_decode_i_32(deserializer),
     );
   }
 
   @protected
-  ArkWallet
-  sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArkWallet(
+  Wallet
+  sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWallet(
     SseDeserializer deserializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    return ArkWalletImpl.frbInternalSseDecode(
+    return WalletImpl.frbInternalSseDecode(
       sse_decode_usize(deserializer),
       sse_decode_i_32(deserializer),
     );
@@ -9047,30 +10135,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
-  EsploraClient
-  sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerEsploraClient(
-    SseDeserializer deserializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return EsploraClientImpl.frbInternalSseDecode(
-      sse_decode_usize(deserializer),
-      sse_decode_i_32(deserializer),
-    );
-  }
-
-  @protected
-  InMemoryDb
-  sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInMemoryDb(
-    SseDeserializer deserializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return InMemoryDbImpl.frbInternalSseDecode(
-      sse_decode_usize(deserializer),
-      sse_decode_i_32(deserializer),
-    );
-  }
-
-  @protected
   LiquidTransaction
   sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLiquidTransaction(
     SseDeserializer deserializer,
@@ -9095,6 +10159,18 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
+  SpAccount
+  sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return SpAccountImpl.frbInternalSseDecode(
+      sse_decode_usize(deserializer),
+      sse_decode_i_32(deserializer),
+    );
+  }
+
+  @protected
   Wallet
   sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWallet(
     SseDeserializer deserializer,
@@ -9104,6 +10180,14 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
       sse_decode_usize(deserializer),
       sse_decode_i_32(deserializer),
     );
+  }
+
+  @protected
+  RustStreamSink<SpNotification> sse_decode_StreamSink_sp_notification_Dco(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    throw UnimplementedError('Unreachable ()');
   }
 
   @protected
@@ -9129,78 +10213,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
-  ArkBalance sse_decode_ark_balance(SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    var var_preconfirmed = sse_decode_i_64(deserializer);
-    var var_settled = sse_decode_i_64(deserializer);
-    var var_available = sse_decode_i_64(deserializer);
-    var var_recoverable = sse_decode_i_64(deserializer);
-    var var_total = sse_decode_i_64(deserializer);
-    var var_boarding = sse_decode_ark_boarding(deserializer);
-    return ArkBalance(
-      preconfirmed: var_preconfirmed,
-      settled: var_settled,
-      available: var_available,
-      recoverable: var_recoverable,
-      total: var_total,
-      boarding: var_boarding,
-    );
-  }
-
-  @protected
-  ArkBoarding sse_decode_ark_boarding(SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    var var_unconfirmed = sse_decode_i_64(deserializer);
-    var var_confirmed = sse_decode_i_64(deserializer);
-    var var_total = sse_decode_i_64(deserializer);
-    return ArkBoarding(
-      unconfirmed: var_unconfirmed,
-      confirmed: var_confirmed,
-      total: var_total,
-    );
-  }
-
-  @protected
-  ArkTransaction sse_decode_ark_transaction(SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-
-    var tag_ = sse_decode_i_32(deserializer);
-    switch (tag_) {
-      case 0:
-        var var_txid = sse_decode_String(deserializer);
-        var var_sats = sse_decode_i_64(deserializer);
-        var var_confirmedAt = sse_decode_opt_box_autoadd_i_64(deserializer);
-        return ArkTransaction_Boarding(
-          txid: var_txid,
-          sats: var_sats,
-          confirmedAt: var_confirmedAt,
-        );
-      case 1:
-        var var_txid = sse_decode_String(deserializer);
-        var var_sats = sse_decode_i_64(deserializer);
-        var var_createdAt = sse_decode_i_64(deserializer);
-        return ArkTransaction_Commitment(
-          txid: var_txid,
-          sats: var_sats,
-          createdAt: var_createdAt,
-        );
-      case 2:
-        var var_txid = sse_decode_String(deserializer);
-        var var_sats = sse_decode_i_64(deserializer);
-        var var_isSettled = sse_decode_bool(deserializer);
-        var var_createdAt = sse_decode_i_64(deserializer);
-        return ArkTransaction_Redeem(
-          txid: var_txid,
-          sats: var_sats,
-          isSettled: var_isSettled,
-          createdAt: var_createdAt,
-        );
-      default:
-        throw UnimplementedError('');
-    }
-  }
-
-  @protected
   Balance sse_decode_balance(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_assetId = sse_decode_String(deserializer);
@@ -9212,23 +10224,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   Blockchain sse_decode_blockchain(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return Blockchain();
-  }
-
-  @protected
-  BoardingSettlement sse_decode_boarding_settlement(
-    SseDeserializer deserializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    var var_pendingCount = sse_decode_i_32(deserializer);
-    var var_confirmedCount = sse_decode_i_32(deserializer);
-    var var_totalPendingSats = sse_decode_i_64(deserializer);
-    var var_totalConfirmedSats = sse_decode_i_64(deserializer);
-    return BoardingSettlement(
-      pendingCount: var_pendingCount,
-      confirmedCount: var_confirmedCount,
-      totalPendingSats: var_totalPendingSats,
-      totalConfirmedSats: var_totalConfirmedSats,
-    );
   }
 
   @protected
@@ -9318,12 +10313,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
-  PlatformInt64 sse_decode_box_autoadd_i_64(SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return (sse_decode_i_64(deserializer));
-  }
-
-  @protected
   KeyPair sse_decode_box_autoadd_key_pair(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return (sse_decode_key_pair(deserializer));
@@ -9382,6 +10371,14 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
+  SwapMasterKey sse_decode_box_autoadd_swap_master_key(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_swap_master_key(deserializer));
+  }
+
+  @protected
   SwapStatusResponse sse_decode_box_autoadd_swap_status_response(
     SseDeserializer deserializer,
   ) {
@@ -9419,6 +10416,14 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   TxOutput sse_decode_box_autoadd_tx_output(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return (sse_decode_tx_output(deserializer));
+  }
+
+  @protected
+  TxSimulation sse_decode_box_autoadd_tx_simulation(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_tx_simulation(deserializer));
   }
 
   @protected
@@ -9507,15 +10512,15 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     SseDeserializer deserializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    var var_btcLimits = sse_decode_swap_limits(deserializer);
-    var var_lbtcLimits = sse_decode_swap_limits(deserializer);
-    var var_btcFees = sse_decode_chain_swap_fees(deserializer);
-    var var_lbtcFees = sse_decode_chain_swap_fees(deserializer);
+    var var_lbtcToBtcLimits = sse_decode_swap_limits(deserializer);
+    var var_btcToLbtcLimits = sse_decode_swap_limits(deserializer);
+    var var_lbtcToBtcFees = sse_decode_chain_swap_fees(deserializer);
+    var var_btcToLbtcFees = sse_decode_chain_swap_fees(deserializer);
     return ChainFeesAndLimits(
-      btcLimits: var_btcLimits,
-      lbtcLimits: var_lbtcLimits,
-      btcFees: var_btcFees,
-      lbtcFees: var_lbtcFees,
+      lbtcToBtcLimits: var_lbtcToBtcLimits,
+      btcToLbtcLimits: var_btcToLbtcLimits,
+      lbtcToBtcFees: var_lbtcToBtcFees,
+      btcToLbtcFees: var_btcToLbtcFees,
     );
   }
 
@@ -9582,6 +10587,13 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
       userClaim: var_userClaim,
       server: var_server,
     );
+  }
+
+  @protected
+  CoinSource sse_decode_coin_source(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var inner = sse_decode_i_32(deserializer);
+    return CoinSource.values[inner];
   }
 
   @protected
@@ -9680,6 +10692,15 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
+  HeaderProgressPhase sse_decode_header_progress_phase(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var inner = sse_decode_i_32(deserializer);
+    return HeaderProgressPhase.values[inner];
+  }
+
+  @protected
   int sse_decode_i_32(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return deserializer.buffer.getInt32();
@@ -9773,6 +10794,13 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
+  LiquidNetwork sse_decode_liquid_network(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var inner = sse_decode_i_32(deserializer);
+    return LiquidNetwork.values[inner];
+  }
+
+  @protected
   List<String> sse_decode_list_String(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
 
@@ -9785,20 +10813,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
-  List<ArkTransaction> sse_decode_list_ark_transaction(
-    SseDeserializer deserializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-
-    var len_ = sse_decode_i_32(deserializer);
-    var ans_ = <ArkTransaction>[];
-    for (var idx_ = 0; idx_ < len_; ++idx_) {
-      ans_.add(sse_decode_ark_transaction(deserializer));
-    }
-    return ans_;
-  }
-
-  @protected
   List<Balance> sse_decode_list_balance(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
 
@@ -9806,6 +10820,54 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     var ans_ = <Balance>[];
     for (var idx_ = 0; idx_ < len_; ++idx_) {
       ans_.add(sse_decode_balance(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<BtcLnSwap> sse_decode_list_btc_ln_swap(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <BtcLnSwap>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_btc_ln_swap(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<ChainSwap> sse_decode_list_chain_swap(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <ChainSwap>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_chain_swap(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<LbtcLnSwap> sse_decode_list_lbtc_ln_swap(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <LbtcLnSwap>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_lbtc_ln_swap(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<OutPoint> sse_decode_list_out_point(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <OutPoint>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_out_point(deserializer));
     }
     return ans_;
   }
@@ -9844,6 +10906,60 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     var ans_ = <PsetOutput>[];
     for (var idx_ = 0; idx_ < len_; ++idx_) {
       ans_.add(sse_decode_pset_output(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<RecipientView> sse_decode_list_recipient_view(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <RecipientView>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_recipient_view(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<RestoredSwapSummary> sse_decode_list_restored_swap_summary(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <RestoredSwapSummary>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_restored_swap_summary(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<SpCoinView> sse_decode_list_sp_coin_view(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <SpCoinView>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_sp_coin_view(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<SpPaymentView> sse_decode_list_sp_payment_view(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <SpPaymentView>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_sp_payment_view(deserializer));
     }
     return ans_;
   }
@@ -9906,6 +11022,48 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     var ans_ = <TxOutput>[];
     for (var idx_ = 0; idx_ < len_; ++idx_) {
       ans_.add(sse_decode_tx_output(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<TxOutputSpec> sse_decode_list_tx_output_spec(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <TxOutputSpec>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_tx_output_spec(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<UnifiedCoinView> sse_decode_list_unified_coin_view(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <UnifiedCoinView>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_unified_coin_view(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<WalletBalance> sse_decode_list_wallet_balance(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <WalletBalance>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_wallet_balance(deserializer));
     }
     return ans_;
   }
@@ -9993,17 +11151,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
 
     if (sse_decode_bool(deserializer)) {
       return (sse_decode_box_autoadd_file_type(deserializer));
-    } else {
-      return null;
-    }
-  }
-
-  @protected
-  PlatformInt64? sse_decode_opt_box_autoadd_i_64(SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-
-    if (sse_decode_bool(deserializer)) {
-      return (sse_decode_box_autoadd_i_64(deserializer));
     } else {
       return null;
     }
@@ -10207,6 +11354,79 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
+  RecipientView sse_decode_recipient_view(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var tag_ = sse_decode_i_32(deserializer);
+    switch (tag_) {
+      case 0:
+        var var_address = sse_decode_String(deserializer);
+        var var_amountSat = sse_decode_u_64(deserializer);
+        var var_label = sse_decode_opt_box_autoadd_u_32(deserializer);
+        var var_isMax = sse_decode_bool(deserializer);
+        return RecipientView_Sp(
+          address: var_address,
+          amountSat: var_amountSat,
+          label: var_label,
+          isMax: var_isMax,
+        );
+      case 1:
+        var var_address = sse_decode_String(deserializer);
+        var var_amountSat = sse_decode_u_64(deserializer);
+        var var_isMax = sse_decode_bool(deserializer);
+        return RecipientView_Standard(
+          address: var_address,
+          amountSat: var_amountSat,
+          isMax: var_isMax,
+        );
+      default:
+        throw UnimplementedError('');
+    }
+  }
+
+  @protected
+  RegtestDefaults sse_decode_regtest_defaults(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_isOk = sse_decode_bool(deserializer);
+    var var_error = sse_decode_String(deserializer);
+    var var_blindbitUrl = sse_decode_String(deserializer);
+    var var_p2PNode = sse_decode_String(deserializer);
+    var var_electrumUrl = sse_decode_String(deserializer);
+    return RegtestDefaults(
+      isOk: var_isOk,
+      error: var_error,
+      blindbitUrl: var_blindbitUrl,
+      p2PNode: var_p2PNode,
+      electrumUrl: var_electrumUrl,
+    );
+  }
+
+  @protected
+  RestoredSwapSummary sse_decode_restored_swap_summary(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_id = sse_decode_String(deserializer);
+    var var_kind = sse_decode_swap_type(deserializer);
+    var var_status = sse_decode_String(deserializer);
+    var var_createdAt = sse_decode_u_64(deserializer);
+    var var_from = sse_decode_String(deserializer);
+    var var_to = sse_decode_String(deserializer);
+    var var_amount = sse_decode_u_64(deserializer);
+    var var_recoverable = sse_decode_bool(deserializer);
+    return RestoredSwapSummary(
+      id: var_id,
+      kind: var_kind,
+      status: var_status,
+      createdAt: var_createdAt,
+      from: var_from,
+      to: var_to,
+      amount: var_amount,
+      recoverable: var_recoverable,
+    );
+  }
+
+  @protected
   RevSwapFees sse_decode_rev_swap_fees(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_percentage = sse_decode_f_64(deserializer);
@@ -10232,43 +11452,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
-  ServerInfo sse_decode_server_info(SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    var var_version = sse_decode_String(deserializer);
-    var var_signerPubkey = sse_decode_String(deserializer);
-    var var_forfeitPubkey = sse_decode_String(deserializer);
-    var var_forfeitAddress = sse_decode_String(deserializer);
-    var var_checkpointTapscript = sse_decode_String(deserializer);
-    var var_network = sse_decode_String(deserializer);
-    var var_sessionDuration = sse_decode_i_64(deserializer);
-    var var_unilateralExitDelay = sse_decode_u_32(deserializer);
-    var var_boardingExitDelay = sse_decode_u_32(deserializer);
-    var var_utxoMinAmount = sse_decode_opt_box_autoadd_i_64(deserializer);
-    var var_utxoMaxAmount = sse_decode_opt_box_autoadd_i_64(deserializer);
-    var var_vtxoMinAmount = sse_decode_opt_box_autoadd_i_64(deserializer);
-    var var_vtxoMaxAmount = sse_decode_opt_box_autoadd_i_64(deserializer);
-    var var_dust = sse_decode_i_64(deserializer);
-    var var_digest = sse_decode_String(deserializer);
-    return ServerInfo(
-      version: var_version,
-      signerPubkey: var_signerPubkey,
-      forfeitPubkey: var_forfeitPubkey,
-      forfeitAddress: var_forfeitAddress,
-      checkpointTapscript: var_checkpointTapscript,
-      network: var_network,
-      sessionDuration: var_sessionDuration,
-      unilateralExitDelay: var_unilateralExitDelay,
-      boardingExitDelay: var_boardingExitDelay,
-      utxoMinAmount: var_utxoMinAmount,
-      utxoMaxAmount: var_utxoMaxAmount,
-      vtxoMinAmount: var_vtxoMinAmount,
-      vtxoMaxAmount: var_vtxoMaxAmount,
-      dust: var_dust,
-      digest: var_digest,
-    );
-  }
-
-  @protected
   Side sse_decode_side(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var inner = sse_decode_i_32(deserializer);
@@ -10280,12 +11463,209 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_discountedVsize = sse_decode_usize(deserializer);
     var var_discountedWeight = sse_decode_usize(deserializer);
-    var var_absoluteFees = sse_decode_list_balance(deserializer);
+    var var_absoluteFees = sse_decode_list_wallet_balance(deserializer);
     return SizeAndFees(
       discountedVsize: var_discountedVsize,
       discountedWeight: var_discountedWeight,
       absoluteFees: var_absoluteFees,
     );
+  }
+
+  @protected
+  SpBalanceView sse_decode_sp_balance_view(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_confirmedSat = sse_decode_u_64(deserializer);
+    var var_totalUnifiedSat = sse_decode_u_64(deserializer);
+    var var_lastScannedHeight = sse_decode_opt_box_autoadd_u_32(deserializer);
+    return SpBalanceView(
+      confirmedSat: var_confirmedSat,
+      totalUnifiedSat: var_totalUnifiedSat,
+      lastScannedHeight: var_lastScannedHeight,
+    );
+  }
+
+  @protected
+  SpCoinView sse_decode_sp_coin_view(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_outpoint = sse_decode_String(deserializer);
+    var var_amountSat = sse_decode_u_64(deserializer);
+    var var_height = sse_decode_u_32(deserializer);
+    var var_isSpendable = sse_decode_bool(deserializer);
+    var var_label = sse_decode_opt_String(deserializer);
+    return SpCoinView(
+      outpoint: var_outpoint,
+      amountSat: var_amountSat,
+      height: var_height,
+      isSpendable: var_isSpendable,
+      label: var_label,
+    );
+  }
+
+  @protected
+  SpError sse_decode_sp_error(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var tag_ = sse_decode_i_32(deserializer);
+    switch (tag_) {
+      case 0:
+        return SpError_ScannerAlreadyRunning();
+      case 1:
+        return SpError_DisposeTimedOut();
+      case 2:
+        var var_detail = sse_decode_String(deserializer);
+        return SpError_SimulationDrifted(detail: var_detail);
+      case 3:
+        var var_message = sse_decode_String(deserializer);
+        return SpError_Other(message: var_message);
+      default:
+        throw UnimplementedError('');
+    }
+  }
+
+  @protected
+  SpNetwork sse_decode_sp_network(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var inner = sse_decode_i_32(deserializer);
+    return SpNetwork.values[inner];
+  }
+
+  @protected
+  SpNotification sse_decode_sp_notification(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var tag_ = sse_decode_i_32(deserializer);
+    switch (tag_) {
+      case 0:
+        var var_from = sse_decode_u_32(deserializer);
+        var var_to = sse_decode_u_32(deserializer);
+        return SpNotification_ScanStarted(from: var_from, to: var_to);
+      case 1:
+        var var_current = sse_decode_u_32(deserializer);
+        var var_end = sse_decode_u_32(deserializer);
+        return SpNotification_ScanReceiveProgress(
+          current: var_current,
+          end: var_end,
+        );
+      case 2:
+        return SpNotification_ScanCompleted();
+      case 3:
+        return SpNotification_ScanStopped();
+      case 4:
+        var var_message = sse_decode_String(deserializer);
+        return SpNotification_ScanFailed(message: var_message);
+      case 5:
+        var var_outpoint = sse_decode_String(deserializer);
+        var var_amountSat = sse_decode_u_64(deserializer);
+        return SpNotification_NewOutput(
+          outpoint: var_outpoint,
+          amountSat: var_amountSat,
+        );
+      case 6:
+        var var_outpoint = sse_decode_String(deserializer);
+        return SpNotification_OutputSpent(outpoint: var_outpoint);
+      case 7:
+        var var_txid = sse_decode_String(deserializer);
+        return SpNotification_Broadcasted(txid: var_txid);
+      case 8:
+        var var_message = sse_decode_String(deserializer);
+        return SpNotification_BroadcastFailed(message: var_message);
+      case 9:
+        return SpNotification_BackendOffline();
+      case 10:
+        var var_kind = sse_decode_coin_source(deserializer);
+        var var_txid = sse_decode_String(deserializer);
+        var var_amountSat = sse_decode_u_64(deserializer);
+        var var_height = sse_decode_opt_box_autoadd_u_32(deserializer);
+        return SpNotification_ElectrumTx(
+          kind: var_kind,
+          txid: var_txid,
+          amountSat: var_amountSat,
+          height: var_height,
+        );
+      case 11:
+        var var_current = sse_decode_u_32(deserializer);
+        var var_end = sse_decode_u_32(deserializer);
+        return SpNotification_ScanSpendProgress(
+          current: var_current,
+          end: var_end,
+        );
+      case 12:
+        var var_phase = sse_decode_header_progress_phase(deserializer);
+        var var_start = sse_decode_u_32(deserializer);
+        var var_end = sse_decode_u_32(deserializer);
+        return SpNotification_HeaderProgressStarted(
+          phase: var_phase,
+          start: var_start,
+          end: var_end,
+        );
+      case 13:
+        var var_phase = sse_decode_header_progress_phase(deserializer);
+        var var_current = sse_decode_u_32(deserializer);
+        var var_end = sse_decode_u_32(deserializer);
+        return SpNotification_HeaderProgress(
+          phase: var_phase,
+          current: var_current,
+          end: var_end,
+        );
+      case 14:
+        var var_phase = sse_decode_header_progress_phase(deserializer);
+        return SpNotification_HeaderProgressCompleted(phase: var_phase);
+      case 15:
+        var var_phase = sse_decode_header_progress_phase(deserializer);
+        return SpNotification_HeaderProgressFailed(phase: var_phase);
+      case 16:
+        return SpNotification_PaymentHistoryUpdated();
+      default:
+        throw UnimplementedError('');
+    }
+  }
+
+  @protected
+  SpPaymentDirection sse_decode_sp_payment_direction(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var inner = sse_decode_i_32(deserializer);
+    return SpPaymentDirection.values[inner];
+  }
+
+  @protected
+  SpPaymentStatus sse_decode_sp_payment_status(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var inner = sse_decode_i_32(deserializer);
+    return SpPaymentStatus.values[inner];
+  }
+
+  @protected
+  SpPaymentView sse_decode_sp_payment_view(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_txid = sse_decode_String(deserializer);
+    var var_direction = sse_decode_sp_payment_direction(deserializer);
+    var var_status = sse_decode_sp_payment_status(deserializer);
+    var var_amountSat = sse_decode_u_64(deserializer);
+    var var_feeSat = sse_decode_opt_box_autoadd_u_64(deserializer);
+    var var_height = sse_decode_opt_box_autoadd_u_32(deserializer);
+    var var_timestamp = sse_decode_opt_box_autoadd_u_64(deserializer);
+    var var_label = sse_decode_opt_String(deserializer);
+    return SpPaymentView(
+      txid: var_txid,
+      direction: var_direction,
+      status: var_status,
+      amountSat: var_amountSat,
+      feeSat: var_feeSat,
+      height: var_height,
+      timestamp: var_timestamp,
+      label: var_label,
+    );
+  }
+
+  @protected
+  SpRecipientAddressKind sse_decode_sp_recipient_address_kind(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var inner = sse_decode_i_32(deserializer);
+    return SpRecipientAddressKind.values[inner];
   }
 
   @protected
@@ -10319,6 +11699,13 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
+  SubAccountKind sse_decode_sub_account_kind(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var inner = sse_decode_i_32(deserializer);
+    return SubAccountKind.values[inner];
+  }
+
+  @protected
   SubSwapFees sse_decode_sub_swap_fees(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_percentage = sse_decode_f_64(deserializer);
@@ -10348,7 +11735,31 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_minimal = sse_decode_u_64(deserializer);
     var var_maximal = sse_decode_u_64(deserializer);
-    return SwapLimits(minimal: var_minimal, maximal: var_maximal);
+    var var_maximalZeroConf = sse_decode_opt_box_autoadd_u_64(deserializer);
+    var var_minimalBatched = sse_decode_opt_box_autoadd_u_64(deserializer);
+    return SwapLimits(
+      minimal: var_minimal,
+      maximal: var_maximal,
+      maximalZeroConf: var_maximalZeroConf,
+      minimalBatched: var_minimalBatched,
+    );
+  }
+
+  @protected
+  SwapMasterKey sse_decode_swap_master_key(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_xprv = sse_decode_String(deserializer);
+    var var_xpub = sse_decode_String(deserializer);
+    var var_network = sse_decode_network(deserializer);
+    var var_mnemonic = sse_decode_String(deserializer);
+    var var_fingerprint = sse_decode_String(deserializer);
+    return SwapMasterKey(
+      xprv: var_xprv,
+      xpub: var_xpub,
+      network: var_network,
+      mnemonic: var_mnemonic,
+      fingerprint: var_fingerprint,
+    );
   }
 
   @protected
@@ -10526,6 +11937,34 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
+  TxOutputSpec sse_decode_tx_output_spec(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_address = sse_decode_String(deserializer);
+    var var_satoshi = sse_decode_u_64(deserializer);
+    var var_assetId = sse_decode_opt_String(deserializer);
+    return TxOutputSpec(
+      address: var_address,
+      satoshi: var_satoshi,
+      assetId: var_assetId,
+    );
+  }
+
+  @protected
+  TxSimulation sse_decode_tx_simulation(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_inputs = sse_decode_list_unified_coin_view(deserializer);
+    var var_outputs = sse_decode_list_recipient_view(deserializer);
+    var var_feeSat = sse_decode_u_64(deserializer);
+    var var_changeSat = sse_decode_u_64(deserializer);
+    return TxSimulation(
+      inputs: var_inputs,
+      outputs: var_outputs,
+      feeSat: var_feeSat,
+      changeSat: var_changeSat,
+    );
+  }
+
+  @protected
   int sse_decode_u_32(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return deserializer.buffer.getUint32();
@@ -10544,6 +11983,32 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
+  UnifiedCoinStatus sse_decode_unified_coin_status(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var inner = sse_decode_i_32(deserializer);
+    return UnifiedCoinStatus.values[inner];
+  }
+
+  @protected
+  UnifiedCoinView sse_decode_unified_coin_view(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_source = sse_decode_coin_source(deserializer);
+    var var_outpoint = sse_decode_String(deserializer);
+    var var_amountSat = sse_decode_u_64(deserializer);
+    var var_height = sse_decode_opt_box_autoadd_u_32(deserializer);
+    var var_status = sse_decode_unified_coin_status(deserializer);
+    return UnifiedCoinView(
+      source: var_source,
+      outpoint: var_outpoint,
+      amountSat: var_amountSat,
+      height: var_height,
+      status: var_status,
+    );
+  }
+
+  @protected
   void sse_decode_unit(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
   }
@@ -10555,12 +12020,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
-  Utils sse_decode_utils(SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return Utils();
-  }
-
-  @protected
   Version sse_decode_version(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var inner = sse_decode_i_32(deserializer);
@@ -10568,13 +12027,11 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
-  int
-  cst_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArkWallet(
-    ArkWallet raw,
-  ) {
-    // Codec=Cst (C-struct based), see doc to use other codecs
-    // ignore: invalid_use_of_internal_member
-    return (raw as ArkWalletImpl).frbInternalCstEncode(move: true);
+  WalletBalance sse_decode_wallet_balance(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_assetId = sse_decode_String(deserializer);
+    var var_value = sse_decode_u_64(deserializer);
+    return WalletBalance(assetId: var_assetId, value: var_value);
   }
 
   @protected
@@ -10595,26 +12052,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     // Codec=Cst (C-struct based), see doc to use other codecs
     // ignore: invalid_use_of_internal_member
     return (raw as ContinuousJoinerImpl).frbInternalCstEncode(move: true);
-  }
-
-  @protected
-  int
-  cst_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerEsploraClient(
-    EsploraClient raw,
-  ) {
-    // Codec=Cst (C-struct based), see doc to use other codecs
-    // ignore: invalid_use_of_internal_member
-    return (raw as EsploraClientImpl).frbInternalCstEncode(move: true);
-  }
-
-  @protected
-  int
-  cst_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInMemoryDb(
-    InMemoryDb raw,
-  ) {
-    // Codec=Cst (C-struct based), see doc to use other codecs
-    // ignore: invalid_use_of_internal_member
-    return (raw as InMemoryDbImpl).frbInternalCstEncode(move: true);
   }
 
   @protected
@@ -10641,6 +12078,16 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
 
   @protected
   int
+  cst_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+    SpAccount raw,
+  ) {
+    // Codec=Cst (C-struct based), see doc to use other codecs
+    // ignore: invalid_use_of_internal_member
+    return (raw as SpAccountImpl).frbInternalCstEncode(move: true);
+  }
+
+  @protected
+  int
   cst_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWallet(
     Wallet raw,
   ) {
@@ -10657,26 +12104,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     // Codec=Cst (C-struct based), see doc to use other codecs
     // ignore: invalid_use_of_internal_member
     return (raw as ContinuousJoinerImpl).frbInternalCstEncode(move: false);
-  }
-
-  @protected
-  int
-  cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArkWallet(
-    ArkWallet raw,
-  ) {
-    // Codec=Cst (C-struct based), see doc to use other codecs
-    // ignore: invalid_use_of_internal_member
-    return (raw as ArkWalletImpl).frbInternalCstEncode(move: false);
-  }
-
-  @protected
-  int
-  cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerEsploraClient(
-    EsploraClient raw,
-  ) {
-    // Codec=Cst (C-struct based), see doc to use other codecs
-    // ignore: invalid_use_of_internal_member
-    return (raw as EsploraClientImpl).frbInternalCstEncode(move: false);
   }
 
   @protected
@@ -10703,22 +12130,22 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
 
   @protected
   int
+  cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+    SpAccount raw,
+  ) {
+    // Codec=Cst (C-struct based), see doc to use other codecs
+    // ignore: invalid_use_of_internal_member
+    return (raw as SpAccountImpl).frbInternalCstEncode(move: false);
+  }
+
+  @protected
+  int
   cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWallet(
     Wallet raw,
   ) {
     // Codec=Cst (C-struct based), see doc to use other codecs
     // ignore: invalid_use_of_internal_member
     return (raw as WalletImpl).frbInternalCstEncode(move: false);
-  }
-
-  @protected
-  int
-  cst_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArkWallet(
-    ArkWallet raw,
-  ) {
-    // Codec=Cst (C-struct based), see doc to use other codecs
-    // ignore: invalid_use_of_internal_member
-    return (raw as ArkWalletImpl).frbInternalCstEncode();
   }
 
   @protected
@@ -10743,26 +12170,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
 
   @protected
   int
-  cst_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerEsploraClient(
-    EsploraClient raw,
-  ) {
-    // Codec=Cst (C-struct based), see doc to use other codecs
-    // ignore: invalid_use_of_internal_member
-    return (raw as EsploraClientImpl).frbInternalCstEncode();
-  }
-
-  @protected
-  int
-  cst_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInMemoryDb(
-    InMemoryDb raw,
-  ) {
-    // Codec=Cst (C-struct based), see doc to use other codecs
-    // ignore: invalid_use_of_internal_member
-    return (raw as InMemoryDbImpl).frbInternalCstEncode();
-  }
-
-  @protected
-  int
   cst_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerLiquidTransaction(
     LiquidTransaction raw,
   ) {
@@ -10780,6 +12187,16 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     // ignore: invalid_use_of_internal_member
     return (raw as PartiallySignedElementsTransactionImpl)
         .frbInternalCstEncode();
+  }
+
+  @protected
+  int
+  cst_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+    SpAccount raw,
+  ) {
+    // Codec=Cst (C-struct based), see doc to use other codecs
+    // ignore: invalid_use_of_internal_member
+    return (raw as SpAccountImpl).frbInternalCstEncode();
   }
 
   @protected
@@ -10811,6 +12228,12 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
+  int cst_encode_coin_source(CoinSource raw) {
+    // Codec=Cst (C-struct based), see doc to use other codecs
+    return cst_encode_i_32(raw.index);
+  }
+
+  @protected
   int cst_encode_encoding(Encoding raw) {
     // Codec=Cst (C-struct based), see doc to use other codecs
     return cst_encode_i_32(raw.index);
@@ -10835,9 +12258,21 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
+  int cst_encode_header_progress_phase(HeaderProgressPhase raw) {
+    // Codec=Cst (C-struct based), see doc to use other codecs
+    return cst_encode_i_32(raw.index);
+  }
+
+  @protected
   int cst_encode_i_32(int raw) {
     // Codec=Cst (C-struct based), see doc to use other codecs
     return raw;
+  }
+
+  @protected
+  int cst_encode_liquid_network(LiquidNetwork raw) {
+    // Codec=Cst (C-struct based), see doc to use other codecs
+    return cst_encode_i_32(raw.index);
   }
 
   @protected
@@ -10848,6 +12283,36 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
 
   @protected
   int cst_encode_side(Side raw) {
+    // Codec=Cst (C-struct based), see doc to use other codecs
+    return cst_encode_i_32(raw.index);
+  }
+
+  @protected
+  int cst_encode_sp_network(SpNetwork raw) {
+    // Codec=Cst (C-struct based), see doc to use other codecs
+    return cst_encode_i_32(raw.index);
+  }
+
+  @protected
+  int cst_encode_sp_payment_direction(SpPaymentDirection raw) {
+    // Codec=Cst (C-struct based), see doc to use other codecs
+    return cst_encode_i_32(raw.index);
+  }
+
+  @protected
+  int cst_encode_sp_payment_status(SpPaymentStatus raw) {
+    // Codec=Cst (C-struct based), see doc to use other codecs
+    return cst_encode_i_32(raw.index);
+  }
+
+  @protected
+  int cst_encode_sp_recipient_address_kind(SpRecipientAddressKind raw) {
+    // Codec=Cst (C-struct based), see doc to use other codecs
+    return cst_encode_i_32(raw.index);
+  }
+
+  @protected
+  int cst_encode_sub_account_kind(SubAccountKind raw) {
     // Codec=Cst (C-struct based), see doc to use other codecs
     return cst_encode_i_32(raw.index);
   }
@@ -10883,6 +12348,12 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
+  int cst_encode_unified_coin_status(UnifiedCoinStatus raw) {
+    // Codec=Cst (C-struct based), see doc to use other codecs
+    return cst_encode_i_32(raw.index);
+  }
+
+  @protected
   void cst_encode_unit(void raw) {
     // Codec=Cst (C-struct based), see doc to use other codecs
     return raw;
@@ -10901,19 +12372,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_String(self.message, serializer);
-  }
-
-  @protected
-  void
-  sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArkWallet(
-    ArkWallet self,
-    SseSerializer serializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-      (self as ArkWalletImpl).frbInternalSseEncode(move: true),
-      serializer,
-    );
   }
 
   @protected
@@ -10938,32 +12396,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_usize(
       (self as ContinuousJoinerImpl).frbInternalSseEncode(move: true),
-      serializer,
-    );
-  }
-
-  @protected
-  void
-  sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerEsploraClient(
-    EsploraClient self,
-    SseSerializer serializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-      (self as EsploraClientImpl).frbInternalSseEncode(move: true),
-      serializer,
-    );
-  }
-
-  @protected
-  void
-  sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInMemoryDb(
-    InMemoryDb self,
-    SseSerializer serializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-      (self as InMemoryDbImpl).frbInternalSseEncode(move: true),
       serializer,
     );
   }
@@ -10998,6 +12430,19 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
 
   @protected
   void
+  sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+    SpAccount self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(
+      (self as SpAccountImpl).frbInternalSseEncode(move: true),
+      serializer,
+    );
+  }
+
+  @protected
+  void
   sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWallet(
     Wallet self,
     SseSerializer serializer,
@@ -11018,32 +12463,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_usize(
       (self as ContinuousJoinerImpl).frbInternalSseEncode(move: false),
-      serializer,
-    );
-  }
-
-  @protected
-  void
-  sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArkWallet(
-    ArkWallet self,
-    SseSerializer serializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-      (self as ArkWalletImpl).frbInternalSseEncode(move: false),
-      serializer,
-    );
-  }
-
-  @protected
-  void
-  sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerEsploraClient(
-    EsploraClient self,
-    SseSerializer serializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-      (self as EsploraClientImpl).frbInternalSseEncode(move: false),
       serializer,
     );
   }
@@ -11078,6 +12497,19 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
 
   @protected
   void
+  sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+    SpAccount self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(
+      (self as SpAccountImpl).frbInternalSseEncode(move: false),
+      serializer,
+    );
+  }
+
+  @protected
+  void
   sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWallet(
     Wallet self,
     SseSerializer serializer,
@@ -11085,19 +12517,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_usize(
       (self as WalletImpl).frbInternalSseEncode(move: false),
-      serializer,
-    );
-  }
-
-  @protected
-  void
-  sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArkWallet(
-    ArkWallet self,
-    SseSerializer serializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-      (self as ArkWalletImpl).frbInternalSseEncode(move: null),
       serializer,
     );
   }
@@ -11124,32 +12543,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_usize(
       (self as ContinuousJoinerImpl).frbInternalSseEncode(move: null),
-      serializer,
-    );
-  }
-
-  @protected
-  void
-  sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerEsploraClient(
-    EsploraClient self,
-    SseSerializer serializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-      (self as EsploraClientImpl).frbInternalSseEncode(move: null),
-      serializer,
-    );
-  }
-
-  @protected
-  void
-  sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInMemoryDb(
-    InMemoryDb self,
-    SseSerializer serializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-      (self as InMemoryDbImpl).frbInternalSseEncode(move: null),
       serializer,
     );
   }
@@ -11184,6 +12577,19 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
 
   @protected
   void
+  sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+    SpAccount self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(
+      (self as SpAccountImpl).frbInternalSseEncode(move: null),
+      serializer,
+    );
+  }
+
+  @protected
+  void
   sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWallet(
     Wallet self,
     SseSerializer serializer,
@@ -11191,6 +12597,23 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_usize(
       (self as WalletImpl).frbInternalSseEncode(move: null),
+      serializer,
+    );
+  }
+
+  @protected
+  void sse_encode_StreamSink_sp_notification_Dco(
+    RustStreamSink<SpNotification> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(
+      self.setupAndSerialize(
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_sp_notification,
+          decodeErrorData: dco_decode_AnyhowException,
+        ),
+      ),
       serializer,
     );
   }
@@ -11211,64 +12634,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
-  void sse_encode_ark_balance(ArkBalance self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_i_64(self.preconfirmed, serializer);
-    sse_encode_i_64(self.settled, serializer);
-    sse_encode_i_64(self.available, serializer);
-    sse_encode_i_64(self.recoverable, serializer);
-    sse_encode_i_64(self.total, serializer);
-    sse_encode_ark_boarding(self.boarding, serializer);
-  }
-
-  @protected
-  void sse_encode_ark_boarding(ArkBoarding self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_i_64(self.unconfirmed, serializer);
-    sse_encode_i_64(self.confirmed, serializer);
-    sse_encode_i_64(self.total, serializer);
-  }
-
-  @protected
-  void sse_encode_ark_transaction(
-    ArkTransaction self,
-    SseSerializer serializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    switch (self) {
-      case ArkTransaction_Boarding(
-        txid: final txid,
-        sats: final sats,
-        confirmedAt: final confirmedAt,
-      ):
-        sse_encode_i_32(0, serializer);
-        sse_encode_String(txid, serializer);
-        sse_encode_i_64(sats, serializer);
-        sse_encode_opt_box_autoadd_i_64(confirmedAt, serializer);
-      case ArkTransaction_Commitment(
-        txid: final txid,
-        sats: final sats,
-        createdAt: final createdAt,
-      ):
-        sse_encode_i_32(1, serializer);
-        sse_encode_String(txid, serializer);
-        sse_encode_i_64(sats, serializer);
-        sse_encode_i_64(createdAt, serializer);
-      case ArkTransaction_Redeem(
-        txid: final txid,
-        sats: final sats,
-        isSettled: final isSettled,
-        createdAt: final createdAt,
-      ):
-        sse_encode_i_32(2, serializer);
-        sse_encode_String(txid, serializer);
-        sse_encode_i_64(sats, serializer);
-        sse_encode_bool(isSettled, serializer);
-        sse_encode_i_64(createdAt, serializer);
-    }
-  }
-
-  @protected
   void sse_encode_balance(Balance self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_String(self.assetId, serializer);
@@ -11278,18 +12643,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   @protected
   void sse_encode_blockchain(Blockchain self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-  }
-
-  @protected
-  void sse_encode_boarding_settlement(
-    BoardingSettlement self,
-    SseSerializer serializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_i_32(self.pendingCount, serializer);
-    sse_encode_i_32(self.confirmedCount, serializer);
-    sse_encode_i_64(self.totalPendingSats, serializer);
-    sse_encode_i_64(self.totalConfirmedSats, serializer);
   }
 
   @protected
@@ -11402,15 +12755,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
-  void sse_encode_box_autoadd_i_64(
-    PlatformInt64 self,
-    SseSerializer serializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_i_64(self, serializer);
-  }
-
-  @protected
   void sse_encode_box_autoadd_key_pair(KeyPair self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_key_pair(self, serializer);
@@ -11483,6 +12827,15 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
+  void sse_encode_box_autoadd_swap_master_key(
+    SwapMasterKey self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_swap_master_key(self, serializer);
+  }
+
+  @protected
   void sse_encode_box_autoadd_swap_status_response(
     SwapStatusResponse self,
     SseSerializer serializer,
@@ -11528,6 +12881,15 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_tx_output(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_tx_simulation(
+    TxSimulation self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_tx_simulation(self, serializer);
   }
 
   @protected
@@ -11593,10 +12955,10 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     SseSerializer serializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_swap_limits(self.btcLimits, serializer);
-    sse_encode_swap_limits(self.lbtcLimits, serializer);
-    sse_encode_chain_swap_fees(self.btcFees, serializer);
-    sse_encode_chain_swap_fees(self.lbtcFees, serializer);
+    sse_encode_swap_limits(self.lbtcToBtcLimits, serializer);
+    sse_encode_swap_limits(self.btcToLbtcLimits, serializer);
+    sse_encode_chain_swap_fees(self.lbtcToBtcFees, serializer);
+    sse_encode_chain_swap_fees(self.btcToLbtcFees, serializer);
   }
 
   @protected
@@ -11640,6 +13002,12 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     sse_encode_u_64(self.userLockup, serializer);
     sse_encode_u_64(self.userClaim, serializer);
     sse_encode_u_64(self.server, serializer);
+  }
+
+  @protected
+  void sse_encode_coin_source(CoinSource self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
   }
 
   @protected
@@ -11717,6 +13085,15 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
+  void sse_encode_header_progress_phase(
+    HeaderProgressPhase self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
+  }
+
+  @protected
   void sse_encode_i_32(int self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     serializer.buffer.putInt32(self);
@@ -11779,6 +13156,12 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
+  void sse_encode_liquid_network(LiquidNetwork self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
+  }
+
+  @protected
   void sse_encode_list_String(List<String> self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_i_32(self.length, serializer);
@@ -11788,23 +13171,59 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
-  void sse_encode_list_ark_transaction(
-    List<ArkTransaction> self,
-    SseSerializer serializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_i_32(self.length, serializer);
-    for (final item in self) {
-      sse_encode_ark_transaction(item, serializer);
-    }
-  }
-
-  @protected
   void sse_encode_list_balance(List<Balance> self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_i_32(self.length, serializer);
     for (final item in self) {
       sse_encode_balance(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_btc_ln_swap(
+    List<BtcLnSwap> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_btc_ln_swap(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_chain_swap(
+    List<ChainSwap> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_chain_swap(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_lbtc_ln_swap(
+    List<LbtcLnSwap> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_lbtc_ln_swap(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_out_point(
+    List<OutPoint> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_out_point(item, serializer);
     }
   }
 
@@ -11851,6 +13270,54 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     sse_encode_i_32(self.length, serializer);
     for (final item in self) {
       sse_encode_pset_output(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_recipient_view(
+    List<RecipientView> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_recipient_view(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_restored_swap_summary(
+    List<RestoredSwapSummary> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_restored_swap_summary(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_sp_coin_view(
+    List<SpCoinView> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_sp_coin_view(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_sp_payment_view(
+    List<SpPaymentView> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_sp_payment_view(item, serializer);
     }
   }
 
@@ -11902,6 +13369,42 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     sse_encode_i_32(self.length, serializer);
     for (final item in self) {
       sse_encode_tx_output(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_tx_output_spec(
+    List<TxOutputSpec> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_tx_output_spec(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_unified_coin_view(
+    List<UnifiedCoinView> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_unified_coin_view(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_wallet_balance(
+    List<WalletBalance> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_wallet_balance(item, serializer);
     }
   }
 
@@ -11989,19 +13492,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     sse_encode_bool(self != null, serializer);
     if (self != null) {
       sse_encode_box_autoadd_file_type(self, serializer);
-    }
-  }
-
-  @protected
-  void sse_encode_opt_box_autoadd_i_64(
-    PlatformInt64? self,
-    SseSerializer serializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-
-    sse_encode_bool(self != null, serializer);
-    if (self != null) {
-      sse_encode_box_autoadd_i_64(self, serializer);
     }
   }
 
@@ -12183,6 +13673,62 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
+  void sse_encode_recipient_view(RecipientView self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    switch (self) {
+      case RecipientView_Sp(
+        address: final address,
+        amountSat: final amountSat,
+        label: final label,
+        isMax: final isMax,
+      ):
+        sse_encode_i_32(0, serializer);
+        sse_encode_String(address, serializer);
+        sse_encode_u_64(amountSat, serializer);
+        sse_encode_opt_box_autoadd_u_32(label, serializer);
+        sse_encode_bool(isMax, serializer);
+      case RecipientView_Standard(
+        address: final address,
+        amountSat: final amountSat,
+        isMax: final isMax,
+      ):
+        sse_encode_i_32(1, serializer);
+        sse_encode_String(address, serializer);
+        sse_encode_u_64(amountSat, serializer);
+        sse_encode_bool(isMax, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_regtest_defaults(
+    RegtestDefaults self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_bool(self.isOk, serializer);
+    sse_encode_String(self.error, serializer);
+    sse_encode_String(self.blindbitUrl, serializer);
+    sse_encode_String(self.p2PNode, serializer);
+    sse_encode_String(self.electrumUrl, serializer);
+  }
+
+  @protected
+  void sse_encode_restored_swap_summary(
+    RestoredSwapSummary self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.id, serializer);
+    sse_encode_swap_type(self.kind, serializer);
+    sse_encode_String(self.status, serializer);
+    sse_encode_u_64(self.createdAt, serializer);
+    sse_encode_String(self.from, serializer);
+    sse_encode_String(self.to, serializer);
+    sse_encode_u_64(self.amount, serializer);
+    sse_encode_bool(self.recoverable, serializer);
+  }
+
+  @protected
   void sse_encode_rev_swap_fees(RevSwapFees self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_f_64(self.percentage, serializer);
@@ -12202,26 +13748,6 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
-  void sse_encode_server_info(ServerInfo self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_String(self.version, serializer);
-    sse_encode_String(self.signerPubkey, serializer);
-    sse_encode_String(self.forfeitPubkey, serializer);
-    sse_encode_String(self.forfeitAddress, serializer);
-    sse_encode_String(self.checkpointTapscript, serializer);
-    sse_encode_String(self.network, serializer);
-    sse_encode_i_64(self.sessionDuration, serializer);
-    sse_encode_u_32(self.unilateralExitDelay, serializer);
-    sse_encode_u_32(self.boardingExitDelay, serializer);
-    sse_encode_opt_box_autoadd_i_64(self.utxoMinAmount, serializer);
-    sse_encode_opt_box_autoadd_i_64(self.utxoMaxAmount, serializer);
-    sse_encode_opt_box_autoadd_i_64(self.vtxoMinAmount, serializer);
-    sse_encode_opt_box_autoadd_i_64(self.vtxoMaxAmount, serializer);
-    sse_encode_i_64(self.dust, serializer);
-    sse_encode_String(self.digest, serializer);
-  }
-
-  @protected
   void sse_encode_side(Side self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_i_32(self.index, serializer);
@@ -12232,7 +13758,184 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_usize(self.discountedVsize, serializer);
     sse_encode_usize(self.discountedWeight, serializer);
-    sse_encode_list_balance(self.absoluteFees, serializer);
+    sse_encode_list_wallet_balance(self.absoluteFees, serializer);
+  }
+
+  @protected
+  void sse_encode_sp_balance_view(
+    SpBalanceView self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_u_64(self.confirmedSat, serializer);
+    sse_encode_u_64(self.totalUnifiedSat, serializer);
+    sse_encode_opt_box_autoadd_u_32(self.lastScannedHeight, serializer);
+  }
+
+  @protected
+  void sse_encode_sp_coin_view(SpCoinView self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.outpoint, serializer);
+    sse_encode_u_64(self.amountSat, serializer);
+    sse_encode_u_32(self.height, serializer);
+    sse_encode_bool(self.isSpendable, serializer);
+    sse_encode_opt_String(self.label, serializer);
+  }
+
+  @protected
+  void sse_encode_sp_error(SpError self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    switch (self) {
+      case SpError_ScannerAlreadyRunning():
+        sse_encode_i_32(0, serializer);
+      case SpError_DisposeTimedOut():
+        sse_encode_i_32(1, serializer);
+      case SpError_SimulationDrifted(detail: final detail):
+        sse_encode_i_32(2, serializer);
+        sse_encode_String(detail, serializer);
+      case SpError_Other(message: final message):
+        sse_encode_i_32(3, serializer);
+        sse_encode_String(message, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_sp_network(SpNetwork self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
+  }
+
+  @protected
+  void sse_encode_sp_notification(
+    SpNotification self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    switch (self) {
+      case SpNotification_ScanStarted(from: final from, to: final to):
+        sse_encode_i_32(0, serializer);
+        sse_encode_u_32(from, serializer);
+        sse_encode_u_32(to, serializer);
+      case SpNotification_ScanReceiveProgress(
+        current: final current,
+        end: final end,
+      ):
+        sse_encode_i_32(1, serializer);
+        sse_encode_u_32(current, serializer);
+        sse_encode_u_32(end, serializer);
+      case SpNotification_ScanCompleted():
+        sse_encode_i_32(2, serializer);
+      case SpNotification_ScanStopped():
+        sse_encode_i_32(3, serializer);
+      case SpNotification_ScanFailed(message: final message):
+        sse_encode_i_32(4, serializer);
+        sse_encode_String(message, serializer);
+      case SpNotification_NewOutput(
+        outpoint: final outpoint,
+        amountSat: final amountSat,
+      ):
+        sse_encode_i_32(5, serializer);
+        sse_encode_String(outpoint, serializer);
+        sse_encode_u_64(amountSat, serializer);
+      case SpNotification_OutputSpent(outpoint: final outpoint):
+        sse_encode_i_32(6, serializer);
+        sse_encode_String(outpoint, serializer);
+      case SpNotification_Broadcasted(txid: final txid):
+        sse_encode_i_32(7, serializer);
+        sse_encode_String(txid, serializer);
+      case SpNotification_BroadcastFailed(message: final message):
+        sse_encode_i_32(8, serializer);
+        sse_encode_String(message, serializer);
+      case SpNotification_BackendOffline():
+        sse_encode_i_32(9, serializer);
+      case SpNotification_ElectrumTx(
+        kind: final kind,
+        txid: final txid,
+        amountSat: final amountSat,
+        height: final height,
+      ):
+        sse_encode_i_32(10, serializer);
+        sse_encode_coin_source(kind, serializer);
+        sse_encode_String(txid, serializer);
+        sse_encode_u_64(amountSat, serializer);
+        sse_encode_opt_box_autoadd_u_32(height, serializer);
+      case SpNotification_ScanSpendProgress(
+        current: final current,
+        end: final end,
+      ):
+        sse_encode_i_32(11, serializer);
+        sse_encode_u_32(current, serializer);
+        sse_encode_u_32(end, serializer);
+      case SpNotification_HeaderProgressStarted(
+        phase: final phase,
+        start: final start,
+        end: final end,
+      ):
+        sse_encode_i_32(12, serializer);
+        sse_encode_header_progress_phase(phase, serializer);
+        sse_encode_u_32(start, serializer);
+        sse_encode_u_32(end, serializer);
+      case SpNotification_HeaderProgress(
+        phase: final phase,
+        current: final current,
+        end: final end,
+      ):
+        sse_encode_i_32(13, serializer);
+        sse_encode_header_progress_phase(phase, serializer);
+        sse_encode_u_32(current, serializer);
+        sse_encode_u_32(end, serializer);
+      case SpNotification_HeaderProgressCompleted(phase: final phase):
+        sse_encode_i_32(14, serializer);
+        sse_encode_header_progress_phase(phase, serializer);
+      case SpNotification_HeaderProgressFailed(phase: final phase):
+        sse_encode_i_32(15, serializer);
+        sse_encode_header_progress_phase(phase, serializer);
+      case SpNotification_PaymentHistoryUpdated():
+        sse_encode_i_32(16, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_sp_payment_direction(
+    SpPaymentDirection self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
+  }
+
+  @protected
+  void sse_encode_sp_payment_status(
+    SpPaymentStatus self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
+  }
+
+  @protected
+  void sse_encode_sp_payment_view(
+    SpPaymentView self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.txid, serializer);
+    sse_encode_sp_payment_direction(self.direction, serializer);
+    sse_encode_sp_payment_status(self.status, serializer);
+    sse_encode_u_64(self.amountSat, serializer);
+    sse_encode_opt_box_autoadd_u_64(self.feeSat, serializer);
+    sse_encode_opt_box_autoadd_u_32(self.height, serializer);
+    sse_encode_opt_box_autoadd_u_64(self.timestamp, serializer);
+    sse_encode_opt_String(self.label, serializer);
+  }
+
+  @protected
+  void sse_encode_sp_recipient_address_kind(
+    SpRecipientAddressKind self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
   }
 
   @protected
@@ -12251,6 +13954,15 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     sse_encode_usize(self.maxSplitNumber, serializer);
     sse_encode_version(self.minVersion, serializer);
     sse_encode_version(self.maxVersion, serializer);
+  }
+
+  @protected
+  void sse_encode_sub_account_kind(
+    SubAccountKind self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
   }
 
   @protected
@@ -12277,6 +13989,21 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_u_64(self.minimal, serializer);
     sse_encode_u_64(self.maximal, serializer);
+    sse_encode_opt_box_autoadd_u_64(self.maximalZeroConf, serializer);
+    sse_encode_opt_box_autoadd_u_64(self.minimalBatched, serializer);
+  }
+
+  @protected
+  void sse_encode_swap_master_key(
+    SwapMasterKey self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.xprv, serializer);
+    sse_encode_String(self.xpub, serializer);
+    sse_encode_network(self.network, serializer);
+    sse_encode_String(self.mnemonic, serializer);
+    sse_encode_String(self.fingerprint, serializer);
   }
 
   @protected
@@ -12398,6 +14125,23 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
+  void sse_encode_tx_output_spec(TxOutputSpec self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.address, serializer);
+    sse_encode_u_64(self.satoshi, serializer);
+    sse_encode_opt_String(self.assetId, serializer);
+  }
+
+  @protected
+  void sse_encode_tx_simulation(TxSimulation self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_list_unified_coin_view(self.inputs, serializer);
+    sse_encode_list_recipient_view(self.outputs, serializer);
+    sse_encode_u_64(self.feeSat, serializer);
+    sse_encode_u_64(self.changeSat, serializer);
+  }
+
+  @protected
   void sse_encode_u_32(int self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     serializer.buffer.putUint32(self);
@@ -12416,6 +14160,28 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
+  void sse_encode_unified_coin_status(
+    UnifiedCoinStatus self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
+  }
+
+  @protected
+  void sse_encode_unified_coin_view(
+    UnifiedCoinView self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_coin_source(self.source, serializer);
+    sse_encode_String(self.outpoint, serializer);
+    sse_encode_u_64(self.amountSat, serializer);
+    sse_encode_opt_box_autoadd_u_32(self.height, serializer);
+    sse_encode_unified_coin_status(self.status, serializer);
+  }
+
+  @protected
   void sse_encode_unit(void self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
   }
@@ -12427,102 +14193,17 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
-  void sse_encode_utils(Utils self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-  }
-
-  @protected
   void sse_encode_version(Version self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_i_32(self.index, serializer);
   }
-}
 
-@sealed
-class ArkWalletImpl extends RustOpaque implements ArkWallet {
-  // Not to be used by end users
-  ArkWalletImpl.frbInternalDcoDecode(List<dynamic> wire)
-    : super.frbInternalDcoDecode(wire, _kStaticData);
-
-  // Not to be used by end users
-  ArkWalletImpl.frbInternalSseDecode(BigInt ptr, int externalSizeOnNative)
-    : super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
-
-  static final _kStaticData = RustArcStaticData(
-    rustArcIncrementStrongCount:
-        BullSdk.instance.api.rust_arc_increment_strong_count_ArkWallet,
-    rustArcDecrementStrongCount:
-        BullSdk.instance.api.rust_arc_decrement_strong_count_ArkWallet,
-    rustArcDecrementStrongCountPtr:
-        BullSdk.instance.api.rust_arc_decrement_strong_count_ArkWalletPtr,
-  );
-
-  Future<ArkBalance> balance() =>
-      BullSdk.instance.api.arkWalletArkClientArkWalletBalance(that: this);
-
-  String boardingAddress() => BullSdk.instance.api
-      .arkWalletArkClientArkWalletBoardingAddress(that: this);
-
-  Future<bool> canSettleBoarding() => BullSdk.instance.api
-      .arkWalletArkClientArkWalletCanSettleBoarding(that: this);
-
-  Future<String> collaborativeRedeem({
-    required String address,
-    required PlatformInt64 sats,
-    required bool selectRecoverableVtxos,
-  }) => BullSdk.instance.api.arkWalletArkClientArkWalletCollaborativeRedeem(
-    that: this,
-    address: address,
-    sats: sats,
-    selectRecoverableVtxos: selectRecoverableVtxos,
-  );
-
-  Future<BoardingSettlement> getBoardingStatus() => BullSdk.instance.api
-      .arkWalletArkClientArkWalletGetBoardingStatus(that: this);
-
-  String offchainAddress() => BullSdk.instance.api
-      .arkWalletArkClientArkWalletOffchainAddress(that: this);
-
-  String onchainAddress() => BullSdk.instance.api
-      .arkWalletArkClientArkWalletOnchainAddress(that: this);
-
-  Future<String> sendOffChain({
-    required String address,
-    required PlatformInt64 sats,
-  }) => BullSdk.instance.api.arkWalletArkClientArkWalletSendOffChain(
-    that: this,
-    address: address,
-    sats: sats,
-  );
-
-  Future<String> sendOnChain({
-    required String address,
-    required PlatformInt64 sats,
-  }) => BullSdk.instance.api.arkWalletArkClientArkWalletSendOnChain(
-    that: this,
-    address: address,
-    sats: sats,
-  );
-
-  ServerInfo serverInfo() =>
-      BullSdk.instance.api.arkWalletArkClientArkWalletServerInfo(that: this);
-
-  Future<void> settle({required bool selectRecoverableVtxos}) =>
-      BullSdk.instance.api.arkWalletArkClientArkWalletSettle(
-        that: this,
-        selectRecoverableVtxos: selectRecoverableVtxos,
-      );
-
-  Future<BoardingSettlement> settleBoardingTransactions({
-    required bool selectRecoverableVtxos,
-  }) => BullSdk.instance.api
-      .arkWalletArkClientArkWalletSettleBoardingTransactions(
-        that: this,
-        selectRecoverableVtxos: selectRecoverableVtxos,
-      );
-
-  Future<List<ArkTransaction>> transactionHistory() => BullSdk.instance.api
-      .arkWalletArkClientArkWalletTransactionHistory(that: this);
+  @protected
+  void sse_encode_wallet_balance(WalletBalance self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.assetId, serializer);
+    sse_encode_u_64(self.value, serializer);
+  }
 }
 
 @sealed
@@ -12582,49 +14263,6 @@ class ContinuousJoinerImpl extends RustOpaque implements ContinuousJoiner {
         that: this,
         part_: part_,
       );
-}
-
-@sealed
-class EsploraClientImpl extends RustOpaque implements EsploraClient {
-  // Not to be used by end users
-  EsploraClientImpl.frbInternalDcoDecode(List<dynamic> wire)
-    : super.frbInternalDcoDecode(wire, _kStaticData);
-
-  // Not to be used by end users
-  EsploraClientImpl.frbInternalSseDecode(BigInt ptr, int externalSizeOnNative)
-    : super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
-
-  static final _kStaticData = RustArcStaticData(
-    rustArcIncrementStrongCount:
-        BullSdk.instance.api.rust_arc_increment_strong_count_EsploraClient,
-    rustArcDecrementStrongCount:
-        BullSdk.instance.api.rust_arc_decrement_strong_count_EsploraClient,
-    rustArcDecrementStrongCountPtr:
-        BullSdk.instance.api.rust_arc_decrement_strong_count_EsploraClientPtr,
-  );
-
-  Future<void> checkConnection() => BullSdk.instance.api
-      .arkWalletArkEsploraEsploraClientCheckConnection(that: this);
-}
-
-@sealed
-class InMemoryDbImpl extends RustOpaque implements InMemoryDb {
-  // Not to be used by end users
-  InMemoryDbImpl.frbInternalDcoDecode(List<dynamic> wire)
-    : super.frbInternalDcoDecode(wire, _kStaticData);
-
-  // Not to be used by end users
-  InMemoryDbImpl.frbInternalSseDecode(BigInt ptr, int externalSizeOnNative)
-    : super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
-
-  static final _kStaticData = RustArcStaticData(
-    rustArcIncrementStrongCount:
-        BullSdk.instance.api.rust_arc_increment_strong_count_InMemoryDb,
-    rustArcDecrementStrongCount:
-        BullSdk.instance.api.rust_arc_decrement_strong_count_InMemoryDb,
-    rustArcDecrementStrongCountPtr:
-        BullSdk.instance.api.rust_arc_decrement_strong_count_InMemoryDbPtr,
-  );
 }
 
 @sealed
@@ -12829,6 +14467,267 @@ class PartiallySignedElementsTransactionImpl extends RustOpaque
 }
 
 @sealed
+class SpAccountImpl extends RustOpaque implements SpAccount {
+  // Not to be used by end users
+  SpAccountImpl.frbInternalDcoDecode(List<dynamic> wire)
+    : super.frbInternalDcoDecode(wire, _kStaticData);
+
+  // Not to be used by end users
+  SpAccountImpl.frbInternalSseDecode(BigInt ptr, int externalSizeOnNative)
+    : super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
+
+  static final _kStaticData = RustArcStaticData(
+    rustArcIncrementStrongCount:
+        BullSdk.instance.api.rust_arc_increment_strong_count_SpAccount,
+    rustArcDecrementStrongCount:
+        BullSdk.instance.api.rust_arc_decrement_strong_count_SpAccount,
+    rustArcDecrementStrongCountPtr:
+        BullSdk.instance.api.rust_arc_decrement_strong_count_SpAccountPtr,
+  );
+
+  bool backendOnline() => BullSdk.instance.api
+      .dartBwkApiSpAccountSpAccountBackendOnline(that: this);
+
+  int blockHeight() =>
+      BullSdk.instance.api.dartBwkApiSpAccountSpAccountBlockHeight(that: this);
+
+  /// Start broadcasting a signed transaction to the network via Electrum.
+  /// tx_hex: hex-encoded raw transaction bytes (hex::encode the sign_psbt result).
+  /// Completion is delivered as Broadcasted or BroadcastFailed notification.
+  Future<void> broadcast({required String txHex}) => BullSdk.instance.api
+      .dartBwkApiSpAccountSpAccountBroadcast(that: this, txHex: txHex);
+
+  Future<void> clearScanState() => BullSdk.instance.api
+      .dartBwkApiSpAccountSpAccountClearScanState(that: this);
+
+  List<SpCoinView> coins() =>
+      BullSdk.instance.api.dartBwkApiSpAccountSpAccountCoins(that: this);
+
+  BigInt confirmedBalance() => BullSdk.instance.api
+      .dartBwkApiSpAccountSpAccountConfirmedBalance(that: this);
+
+  /// Cooperatively stop the notification thread and release the inner
+  /// Account (and its sqlite handle). Safe to call multiple times; the
+  /// second call is a no-op.
+  ///
+  /// Dart callers MUST invoke this before dropping the last reference to
+  /// `SpAccount` (typically from `SpWalletEntity.dispose()` which is in
+  /// turn called from `WalletBloc._onRefreshSpWallet` before reassigning
+  /// `state.spWallet`). Relying on `Drop` alone is risky because the FRB
+  /// Arc may outlive the Dart-side handle for a finalizer cycle, leaking
+  /// an open sqlite connection in the meantime.
+  ///
+  /// If a `scan_once` is in flight when `dispose()` is called, the
+  /// scan still holds the inner mutex via `&mut self`. Flipping
+  /// `scan_cancel` causes spdk-core's `process_blocks` to bail at the
+  /// next per-block checkpoint, the scan returns, and the inner Account
+  /// becomes free to drop. Without this signal, the next
+  /// `SpAccount::load` would open `account.sqlite` while the previous
+  /// scan was still writing — the exact double-handle race we are
+  /// trying to prevent.
+  ///
+  /// Not `#[frb(sync)]`: dispose() now waits for an in-flight
+  /// scan to release the lock, which can take up to ~30 seconds (the
+  /// `update_time` checkpoint cadence in spdk-core's `process_blocks`)
+  /// in the worst case. Running that on the Dart UI isolate would freeze
+  /// the UI. FRB dispatches `async` methods on a worker isolate.
+  ///
+  /// Return contract: returns `Ok(())` when the inner mutex
+  /// became reacquirable within the bounded budget (i.e. the previous
+  /// holder of the lock — a scan, a long `unified_history`/
+  /// `unified_coins`, an `prepare_psbt`/`finalize_psbt`/`sign_psbt`
+  /// invocation — actually released it). Returns `Err("dispose timed
+  /// out: inner lock still held; retry or restart")` when the budget
+  /// elapsed without the lock becoming free. The caller MUST treat the
+  /// timeout case as "previous SpAccount is still in flight" and MUST
+  /// NOT proceed to call `SpAccount::load(...)` against the same
+  /// `data_dir` — doing so would race the sqlite handle and is the
+  /// exact double-open we are trying to prevent.
+  ///
+  /// We still flip the cancel + shutdown flags, join the notification
+  /// thread, and drop the cached sink on the timeout path so the
+  /// notification side of cleanup is best-effort idempotent and a
+  /// subsequent dispose() call observes a clean state. Only the
+  /// inner-lock contract is violated.
+  Future<void> dispose() =>
+      BullSdk.instance.api.dartBwkApiSpAccountSpAccountDispose(that: this);
+
+  /// Build and serialize an unsigned PSBT ready for signing, consuming the
+  /// `TxSimulation` the user confirmed in the previous `prepare_psbt`.
+  ///
+  /// This method DOES NOT run coin selection: it pins the input set and the
+  /// output set to exactly what the simulation contains. If the coin store
+  /// has drifted since the simulation was produced (an incoming SP coin
+  /// from a completed scan, an Electrum push for a sub-account coin, a
+  /// reorg evicting an input), the method returns
+  /// [`SpError::SimulationDrifted`] so the caller can surface a re-confirm
+  /// prompt instead of broadcasting a tx that differs from what the user
+  /// reviewed.
+  ///
+  /// Rationale: finalize → sign → broadcast is irreversible; an auto-
+  /// re-selection here could ship a tx with different inputs, fee, or
+  /// change address from the one shown on the Confirm page.
+  Future<Uint8List> finalizePsbt({required TxSimulation simulation}) =>
+      BullSdk.instance.api.dartBwkApiSpAccountSpAccountFinalizePsbt(
+        that: this,
+        simulation: simulation,
+      );
+
+  Stream<SpNotification> init() =>
+      BullSdk.instance.api.dartBwkApiSpAccountSpAccountInit(that: this);
+
+  bool isScanning() =>
+      BullSdk.instance.api.dartBwkApiSpAccountSpAccountIsScanning(that: this);
+
+  int? lastScannedHeight() => BullSdk.instance.api
+      .dartBwkApiSpAccountSpAccountLastScannedHeight(that: this);
+
+  /// Earliest height a scan may start from (taproot activation on mainnet, a
+  /// low constant on test networks). The scan start chooser uses this as its
+  /// floor.
+  int minBirthdayHeight() => BullSdk.instance.api
+      .dartBwkApiSpAccountSpAccountMinBirthdayHeight(that: this);
+
+  String name() =>
+      BullSdk.instance.api.dartBwkApiSpAccountSpAccountName(that: this);
+
+  /// Returns the wallet's network as an `SpNetwork`.
+  ///
+  /// `bitcoin::Network` is upstream-marked `#[non_exhaustive]`; rather than
+  /// silently mapping a future variant to one of our known cases (which
+  /// would corrupt downstream address validation), we return an explicit
+  /// `Err` so the caller is forced to handle the unknown case.
+  SpNetwork network() =>
+      BullSdk.instance.api.dartBwkApiSpAccountSpAccountNetwork(that: this);
+
+  /// Reveal a fresh receive address for the BIP86 taproot sub-account.
+  ///
+  /// Each call derives the next never-before-issued address via
+  /// [`bwk::Account::new_addr`], which bumps and persists the receive-chain
+  /// tip (sqlite under `PersistenceKind::Sqlite`) *before* deriving. So an
+  /// address is never handed out twice — even across restarts, and
+  /// regardless of whether the previously revealed one has received a coin
+  /// yet. Callers MUST treat this as "give me a new address to hand out"
+  /// (an explicit user action), never as a stable display getter.
+  ///
+  /// Store-only / pure-descriptor: it never contacts Electrum or Blindbit,
+  /// so it does not violate the no-chain-query-outside-`scan_once` invariant.
+  ///
+  /// New SP wallets only register a taproot sub-account. Legacy wallets that
+  /// were persisted with both a segwit and a taproot sub-account keep both
+  /// for backward compatibility; the segwit one is only used internally
+  /// (change / payment provenance) and never exposes a hand-out address.
+  Future<String> newTaprootAddress() => BullSdk.instance.api
+      .dartBwkApiSpAccountSpAccountNewTaprootAddress(that: this);
+
+  /// Preview a transaction: run coin selection and return fee/change estimates.
+  /// Does NOT produce a signable PSBT — use finalize_psbt() for that.
+  ///
+  /// feerate_sat_vb: fee rate in satoshis per virtual byte.
+  Future<TxSimulation> preparePsbt({
+    required List<RecipientView> recipients,
+    required BigInt feerateSatVb,
+  }) => BullSdk.instance.api.dartBwkApiSpAccountSpAccountPreparePsbt(
+    that: this,
+    recipients: recipients,
+    feerateSatVb: feerateSatVb,
+  );
+
+  /// Restart the sub-account electrum listeners in place (stop then start),
+  /// keeping the account and its notification channel alive. Used on app
+  /// foreground to recover after Android killed the backgrounded socket:
+  /// `stop_electrum` reclaims each listener's statuses store, so `start_electrum`
+  /// reconnects + re-subscribes + re-syncs (re-detecting coins received away).
+  Future<void> restartElectrum() => BullSdk.instance.api
+      .dartBwkApiSpAccountSpAccountRestartElectrum(that: this);
+
+  /// USER-TRIGGERED ONLY. The bb-mobile app contract is that this method
+  /// is invoked exclusively from `ScanSpWalletUsecase`, which itself is
+  /// invoked exclusively from `SpCubit.scan()` (the Scan button handler).
+  /// Do not call from app lifecycle hooks, route observers, timers, or
+  /// background services. Doing so violates the documented invariant.
+  ///
+  /// Not `#[frb(sync)]`: the underlying bwk_sp scan walker is fully
+  /// synchronous and would freeze the Dart UI isolate for the entire
+  /// scan duration if dispatched there. FRB runs `async` methods on a
+  /// worker isolate. The inner mutex is held for the full scan — that
+  /// serializes against other methods, which is acceptable because SP
+  /// scans are user-triggered and rare.
+  ///
+  /// Cancellation: `stop_scan` flips `self.scan_cancel` (a clone of the
+  /// bwk_sp::Account's internal `scanner_stop`), which causes the scan
+  /// to bail at the next per-block checkpoint inside spdk-core's
+  /// `process_blocks`. bwk_sp resets the cancel flag at the start of
+  /// every OneShot run, so a stale `true` from a previous cancel does
+  /// not affect subsequent scans.
+  Future<void> scanOnce({int? startHeight}) =>
+      BullSdk.instance.api.dartBwkApiSpAccountSpAccountScanOnce(
+        that: this,
+        startHeight: startHeight,
+      );
+
+  /// Update the Blindbit backend URL at runtime.
+  void setBlindbitUrl({required String url}) => BullSdk.instance.api
+      .dartBwkApiSpAccountSpAccountSetBlindbitUrl(that: this, url: url);
+
+  /// Update the Electrum server endpoint for all sub-accounts (in-memory, no persist).
+  /// Accepts `[scheme://]host[:port]` with `scheme` ∈ `{tcp, ssl}`.
+  void setElectrumUrl({required String url}) => BullSdk.instance.api
+      .dartBwkApiSpAccountSpAccountSetElectrumUrl(that: this, url: url);
+
+  /// Sign and finalize an unsigned PSBT (returned by finalize_psbt).
+  /// Returns the raw serialized transaction bytes.
+  /// Hex-encode the result before passing to broadcast().
+  Future<Uint8List> signPsbt({required List<int> psbt}) => BullSdk.instance.api
+      .dartBwkApiSpAccountSpAccountSignPsbt(that: this, psbt: psbt);
+
+  String spAddress() =>
+      BullSdk.instance.api.dartBwkApiSpAccountSpAccountSpAddress(that: this);
+
+  /// Start the always-on electrum listeners for every sub-account (segwit +
+  /// taproot) so incoming txs are pushed in real time without a chain scan.
+  /// Set the sub-account electrum URL first via `set_electrum_url`. Idempotent:
+  /// bwk only spawns a listener when one is not already running. Not
+  /// `#[frb(sync)]` so the listener setup runs off the Dart UI isolate.
+  Future<void> startElectrum() => BullSdk.instance.api
+      .dartBwkApiSpAccountSpAccountStartElectrum(that: this);
+
+  /// Cooperatively cancel an in-flight `scan_once`. Returns immediately
+  /// without touching the inner mutex (which the scan call still holds
+  /// via `&mut self` for its full duration); spdk-core's `process_blocks`
+  /// observes `scan_cancel` between blocks and returns `Ok(())` after
+  /// persisting state. The scan handler then emits `ScanCompleted` and
+  /// the cubit's `_onNotification` transitions out of `isScanning`.
+  ///
+  /// Was `#[frb(sync)]`: that meant Dart's Stop button ran on the
+  /// UI isolate and blocked waiting for the inner mutex held by the
+  /// scan, freezing the UI for the rest of the scan. The new
+  /// signature is async + non-locking; the Stop button never deadlocks.
+  ///
+  /// Idempotent: re-flipping an already-`true` flag is a no-op.
+  Future<void> stopScan() =>
+      BullSdk.instance.api.dartBwkApiSpAccountSpAccountStopScan(that: this);
+
+  /// Confirmed balance of one sub-account in satoshis.
+  BigInt subAccountBalance({required SubAccountKind kind}) => BullSdk
+      .instance
+      .api
+      .dartBwkApiSpAccountSpAccountSubAccountBalance(that: this, kind: kind);
+
+  /// Aggregated balance across SP + all sub-accounts.
+  SpBalanceView unifiedBalance() => BullSdk.instance.api
+      .dartBwkApiSpAccountSpAccountUnifiedBalance(that: this);
+
+  /// Aggregated coins across SP + all sub-accounts, each tagged with its source.
+  Future<List<UnifiedCoinView>> unifiedCoins() =>
+      BullSdk.instance.api.dartBwkApiSpAccountSpAccountUnifiedCoins(that: this);
+
+  /// Aggregated payment history across SP + all sub-accounts.
+  Future<List<SpPaymentView>> unifiedHistory() => BullSdk.instance.api
+      .dartBwkApiSpAccountSpAccountUnifiedHistory(that: this);
+}
+
+@sealed
 class WalletImpl extends RustOpaque implements Wallet {
   // Not to be used by end users
   WalletImpl.frbInternalDcoDecode(List<dynamic> wire)
@@ -12856,7 +14755,7 @@ class WalletImpl extends RustOpaque implements Wallet {
       BullSdk.instance.api.lwkApiWalletWalletAddressLastUnused(that: this);
 
   /// Get balances for a wallet.
-  Future<List<Balance>> balances() =>
+  Future<List<WalletBalance>> balances() =>
       BullSdk.instance.api.lwkApiWalletWalletBalances(that: this);
 
   /// Get the blinding key string for the wallet
@@ -12875,6 +14774,23 @@ class WalletImpl extends RustOpaque implements Wallet {
     outAddress: outAddress,
     feeRate: feeRate,
     asset: asset,
+  );
+
+  /// Build a PSET spending `utxos`, paying `outputs`, with any leftover
+  /// L-BTC swept to `drain_to` if set.
+  ///
+  /// General-purpose builder for custom output shapes
+  Future<String> buildCustomTx({
+    required List<OutPoint> utxos,
+    required List<TxOutputSpec> outputs,
+    String? drainTo,
+    required double feeRate,
+  }) => BullSdk.instance.api.lwkApiWalletWalletBuildCustomTx(
+    that: this,
+    utxos: utxos,
+    outputs: outputs,
+    drainTo: drainTo,
+    feeRate: feeRate,
   );
 
   /// Build a LBTC transaction
@@ -12906,7 +14822,7 @@ class WalletImpl extends RustOpaque implements Wallet {
     required BigInt sats,
     required String outAddress,
     required String asset,
-    required Network network,
+    required LiquidNetwork network,
     String? baseUrl,
     required bool isSendAll,
   }) => BullSdk.instance.api.lwkApiWalletWalletBuildPayjoinTx(
@@ -12919,6 +14835,25 @@ class WalletImpl extends RustOpaque implements Wallet {
     isSendAll: isSendAll,
   );
 
+  /// Build N unsigned PSETs that consolidate the wallet's confirmed L-BTC UTXOs.
+  ///
+  /// Each PSET sweeps up to `maximum_inputs` coins into a single output, sent to
+  /// a fresh unused address (a different address is used for each batch).
+  /// Returns an empty vec if the UTXO count is <= `high_utxo_threshold`.
+  ///
+  /// Batches whose value doesn't cover the fee (dust batches) are skipped. If
+  /// every batch is dust, an error is returned.
+  Future<List<String>> consolidate({
+    required double feeRate,
+    int? highUtxoThreshold,
+    int? maximumInputs,
+  }) => BullSdk.instance.api.lwkApiWalletWalletConsolidate(
+    that: this,
+    feeRate: feeRate,
+    highUtxoThreshold: highUtxoThreshold,
+    maximumInputs: maximumInputs,
+  );
+
   /// Decode a transaction given a PSET
   Future<PsetAmounts> decodeTx({required String pset}) =>
       BullSdk.instance.api.lwkApiWalletWalletDecodeTx(that: this, pset: pset);
@@ -12929,7 +14864,7 @@ class WalletImpl extends RustOpaque implements Wallet {
 
   /// Sign a wallet transaction, returns (pset, signed_bytes)
   Future<String> signTx({
-    required Network network,
+    required LiquidNetwork network,
     required String pset,
     required String mnemonic,
   }) => BullSdk.instance.api.lwkApiWalletWalletSignTx(
@@ -12941,7 +14876,7 @@ class WalletImpl extends RustOpaque implements Wallet {
 
   /// Sign a pset with extra details (used for asset transactions)
   Future<String> signedPsetWithExtraDetails({
-    required Network network,
+    required LiquidNetwork network,
     required String pset,
     required String mnemonic,
   }) => BullSdk.instance.api.lwkApiWalletWalletSignedPsetWithExtraDetails(

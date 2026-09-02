@@ -3,12 +3,10 @@ description: BoltzWebSocket stream for Boltz swap status updates
 version: 0.1.0
 
 environment:
-  sdk: ">=3.3.0 <4.0.0"
+  sdk: "3.12.2"
+  flutter: "3.44.2"
 
 dependencies:
   bull_sdk:
-    git:
-      url: https://github.com/SatoshiPortal/bull_sdk
-      ref: main
-      path: packages/bull_sdk
+    path: ../bull_sdk
   web_socket_channel: ^3.0.1

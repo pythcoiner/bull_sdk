@@ -18,7 +18,7 @@ abstract class Wallet implements RustOpaqueInterface {
   Future<Address> addressLastUnused();
 
   /// Get balances for a wallet.
-  Future<List<Balance>> balances();
+  Future<List<WalletBalance>> balances();
 
   /// Get the blinding key string for the wallet
   Future<String> blindingKey();
@@ -29,6 +29,17 @@ abstract class Wallet implements RustOpaqueInterface {
     required String outAddress,
     required double feeRate,
     required String asset,
+  });
+
+  /// Build a PSET spending `utxos`, paying `outputs`, with any leftover
+  /// L-BTC swept to `drain_to` if set.
+  ///
+  /// General-purpose builder for custom output shapes
+  Future<String> buildCustomTx({
+    required List<OutPoint> utxos,
+    required List<TxOutputSpec> outputs,
+    String? drainTo,
+    required double feeRate,
   });
 
   /// Build a LBTC transaction
@@ -54,9 +65,23 @@ abstract class Wallet implements RustOpaqueInterface {
     required BigInt sats,
     required String outAddress,
     required String asset,
-    required Network network,
+    required LiquidNetwork network,
     String? baseUrl,
     required bool isSendAll,
+  });
+
+  /// Build N unsigned PSETs that consolidate the wallet's confirmed L-BTC UTXOs.
+  ///
+  /// Each PSET sweeps up to `maximum_inputs` coins into a single output, sent to
+  /// a fresh unused address (a different address is used for each batch).
+  /// Returns an empty vec if the UTXO count is <= `high_utxo_threshold`.
+  ///
+  /// Batches whose value doesn't cover the fee (dust batches) are skipped. If
+  /// every batch is dust, an error is returned.
+  Future<List<String>> consolidate({
+    required double feeRate,
+    int? highUtxoThreshold,
+    int? maximumInputs,
   });
 
   /// Decode a transaction given a PSET
@@ -67,7 +92,7 @@ abstract class Wallet implements RustOpaqueInterface {
 
   /// Initializes a wallet from a specific db path and descriptor
   static Future<Wallet> init({
-    required Network network,
+    required LiquidNetwork network,
     required String dbpath,
     required Descriptor descriptor,
   }) => BullSdk.instance.api.lwkApiWalletWalletInit(
@@ -78,14 +103,14 @@ abstract class Wallet implements RustOpaqueInterface {
 
   /// Sign a wallet transaction, returns (pset, signed_bytes)
   Future<String> signTx({
-    required Network network,
+    required LiquidNetwork network,
     required String pset,
     required String mnemonic,
   });
 
   /// Sign a pset with extra details (used for asset transactions)
   Future<String> signedPsetWithExtraDetails({
-    required Network network,
+    required LiquidNetwork network,
     required String pset,
     required String mnemonic,
   });

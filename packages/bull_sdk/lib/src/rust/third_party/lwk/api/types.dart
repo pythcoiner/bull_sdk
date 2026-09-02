@@ -8,11 +8,11 @@ import 'error.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `AssetIdBTreeMapInt`, `AssetIdBTreeMapUInt`, `AssetIdHashMapInt`, `AssetIdHashMapUInt`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `into`, `try_from`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `into`, `try_from`
 
 /// Get balance value for a specific asset ID from a list of balances
-PlatformInt64 getBalanceByAssetId({
-  required List<Balance> balances,
+BigInt getBalanceByAssetId({
+  required List<WalletBalance> balances,
   required String assetId,
 }) => BullSdk.instance.api.lwkApiTypesGetBalanceByAssetId(
   balances: balances,
@@ -20,11 +20,11 @@ PlatformInt64 getBalanceByAssetId({
 );
 
 /// Get L-BTC mainnet balance
-PlatformInt64 getLbtcBalance({required List<Balance> balances}) =>
+BigInt getLbtcBalance({required List<WalletBalance> balances}) =>
     BullSdk.instance.api.lwkApiTypesGetLbtcBalance(balances: balances);
 
 /// Get L-BTC testnet balance
-PlatformInt64 getLtestBalance({required List<Balance> balances}) =>
+BigInt getLtestBalance({required List<WalletBalance> balances}) =>
     BullSdk.instance.api.lwkApiTypesGetLtestBalance(balances: balances);
 
 /// Get L-BTC mainnet asset ID
@@ -49,7 +49,7 @@ class Address {
 
   /// Create an address from a scriptpubkey. Always returns 0 as the index is only for wallet generated addresses
   static Future<Address> addressFromScript({
-    required Network network,
+    required LiquidNetwork network,
     required String script,
     String? blindingKey,
   }) => BullSdk.instance.api.lwkApiTypesAddressAddressFromScript(
@@ -59,10 +59,10 @@ class Address {
   );
 
   /// Validate the address string and return the network
-  static Future<Network> validate({required String addressString}) => BullSdk
-      .instance
-      .api
-      .lwkApiTypesAddressValidate(addressString: addressString);
+  static Future<LiquidNetwork> validate({required String addressString}) =>
+      BullSdk.instance.api.lwkApiTypesAddressValidate(
+        addressString: addressString,
+      );
 
   @override
   int get hashCode =>
@@ -101,7 +101,7 @@ class Balance {
           value == other.value;
 }
 
-enum Network { mainnet, testnet }
+enum LiquidNetwork { mainnet, testnet }
 
 class OutPoint {
   final String txid;
@@ -125,7 +125,7 @@ class PayjoinTx {
   /// Partially signed transaction
   final String pset;
 
-  /// Network fee
+  /// LiquidNetwork fee
   final BigInt networkFee;
 
   /// Asset fee amount paid to the server
@@ -181,7 +181,7 @@ class PsetAmounts {
 class SizeAndFees {
   final BigInt discountedVsize;
   final BigInt discountedWeight;
-  final List<Balance> absoluteFees;
+  final List<WalletBalance> absoluteFees;
 
   const SizeAndFees({
     required this.discountedVsize,
@@ -326,4 +326,49 @@ class TxOutSecrets {
           valueBf == other.valueBf &&
           asset == other.asset &&
           assetBf == other.assetBf;
+}
+
+class TxOutputSpec {
+  final String address;
+  final BigInt satoshi;
+
+  /// `None` means the policy asset (L-BTC).
+  final String? assetId;
+
+  const TxOutputSpec({
+    required this.address,
+    required this.satoshi,
+    this.assetId,
+  });
+
+  @override
+  int get hashCode => address.hashCode ^ satoshi.hashCode ^ assetId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TxOutputSpec &&
+          runtimeType == other.runtimeType &&
+          address == other.address &&
+          satoshi == other.satoshi &&
+          assetId == other.assetId;
+}
+
+/// WalletBalance represents a non-negative amount held by a wallet.
+class WalletBalance {
+  final String assetId;
+  final BigInt value;
+
+  const WalletBalance({required this.assetId, required this.value});
+
+  @override
+  int get hashCode => assetId.hashCode ^ value.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is WalletBalance &&
+          runtimeType == other.runtimeType &&
+          assetId == other.assetId &&
+          value == other.value;
 }

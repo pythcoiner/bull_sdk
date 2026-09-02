@@ -18,7 +18,7 @@ class Descriptor {
 
   /// Createa new wpkh confidential descriptor based on Slip77 blinding key derivation
   static Future<Descriptor> newConfidential({
-    required Network network,
+    required LiquidNetwork network,
     required String mnemonic,
   }) => BullSdk.instance.api.lwkApiDescriptorDescriptorNewConfidential(
     network: network,
