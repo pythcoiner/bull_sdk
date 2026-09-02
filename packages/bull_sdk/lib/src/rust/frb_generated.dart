@@ -96,7 +96,7 @@ class BullSdk extends BaseEntrypoint<BullSdkApi, BullSdkApiImpl, BullSdkWire> {
   String get codegenVersion => '2.12.0';
 
   @override
-  int get rustContentHash => -1362716144;
+  int get rustContentHash => -593266635;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -1045,6 +1045,11 @@ abstract class BullSdkApi extends BaseApi {
   Transaction boltzApiSwapStatusTransactionFromJson({required String json});
 
   String boltzApiSwapStatusTransactionToJson({required Transaction that});
+
+  Future<SpRecipientAddressKind> dartBwkApiSpAccountValidateRecipientAddress({
+    required String address,
+    required SpNetwork network,
+  });
 
   Future<String> bitboxApiVerifyAddress({
     required String serialNumber,
@@ -8141,6 +8146,40 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
       const TaskConstMeta(debugName: "transaction_to_json", argNames: ["that"]);
 
   @override
+  Future<SpRecipientAddressKind> dartBwkApiSpAccountValidateRecipientAddress({
+    required String address,
+    required SpNetwork network,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          var arg0 = cst_encode_String(address);
+          var arg1 = cst_encode_sp_network(network);
+          return wire
+              .wire__dart_bwk__api__sp_account__validate_recipient_address(
+                port_,
+                arg0,
+                arg1,
+              );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_sp_recipient_address_kind,
+          decodeErrorData: dco_decode_String,
+        ),
+        constMeta: kDartBwkApiSpAccountValidateRecipientAddressConstMeta,
+        argValues: [address, network],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountValidateRecipientAddressConstMeta =>
+      const TaskConstMeta(
+        debugName: "validate_recipient_address",
+        argNames: ["address", "network"],
+      );
+
+  @override
   Future<String> bitboxApiVerifyAddress({
     required String serialNumber,
     required String keypath,
@@ -9587,6 +9626,12 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
       timestamp: dco_decode_opt_box_autoadd_u_64(arr[6]),
       label: dco_decode_opt_String(arr[7]),
     );
+  }
+
+  @protected
+  SpRecipientAddressKind dco_decode_sp_recipient_address_kind(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return SpRecipientAddressKind.values[raw as int];
   }
 
   @protected
@@ -11615,6 +11660,15 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
+  SpRecipientAddressKind sse_decode_sp_recipient_address_kind(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var inner = sse_decode_i_32(deserializer);
+    return SpRecipientAddressKind.values[inner];
+  }
+
+  @protected
   Split sse_decode_split(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_version = sse_decode_version(deserializer);
@@ -12247,6 +12301,12 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
 
   @protected
   int cst_encode_sp_payment_status(SpPaymentStatus raw) {
+    // Codec=Cst (C-struct based), see doc to use other codecs
+    return cst_encode_i_32(raw.index);
+  }
+
+  @protected
+  int cst_encode_sp_recipient_address_kind(SpRecipientAddressKind raw) {
     // Codec=Cst (C-struct based), see doc to use other codecs
     return cst_encode_i_32(raw.index);
   }
@@ -13867,6 +13927,15 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
     sse_encode_opt_box_autoadd_u_32(self.height, serializer);
     sse_encode_opt_box_autoadd_u_64(self.timestamp, serializer);
     sse_encode_opt_String(self.label, serializer);
+  }
+
+  @protected
+  void sse_encode_sp_recipient_address_kind(
+    SpRecipientAddressKind self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
   }
 
   @protected
