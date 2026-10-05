@@ -96,7 +96,7 @@ class BullSdk extends BaseEntrypoint<BullSdkApi, BullSdkApiImpl, BullSdkWire> {
   String get codegenVersion => '2.12.0';
 
   @override
-  int get rustContentHash => -593266635;
+  int get rustContentHash => 718148274;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -306,6 +306,21 @@ abstract class BullSdkApi extends BaseApi {
     required SpAccount that,
   });
 
+  Future<SpAccount> dartBwkApiSpAccountSpAccountCreateFromKeys({
+    required String name,
+    required SpNetwork network,
+    required String scanSkHex,
+    required String spendPkHex,
+    required String taprootDescriptor,
+    required String blindbitUrl,
+    required String electrumUrl,
+    required String dataDir,
+    int? birthdayHeight,
+    BigInt? dustLimit,
+    int? fetchConcurrencyFactor,
+    int? matchConcurrencyFactor,
+  });
+
   Future<SpAccount> dartBwkApiSpAccountSpAccountCreateFromMnemonic({
     required String name,
     required SpNetwork network,
@@ -333,6 +348,13 @@ abstract class BullSdkApi extends BaseApi {
 
   Future<void> dartBwkApiSpAccountSpAccountDispose({required SpAccount that});
 
+  Future<Uint8List> dartBwkApiSpAccountSpAccountFinalizeAndSign({
+    required SpAccount that,
+    required TxSimulation simulation,
+    required String bSpendHex,
+    required String taprootAccountXprv,
+  });
+
   Future<Uint8List> dartBwkApiSpAccountSpAccountFinalizePsbt({
     required SpAccount that,
     required TxSimulation simulation,
@@ -359,6 +381,11 @@ abstract class BullSdkApi extends BaseApi {
 
   Future<String> dartBwkApiSpAccountSpAccountNewTaprootAddress({
     required SpAccount that,
+  });
+
+  Future<List<SpOwnedOutput>> dartBwkApiSpAccountSpAccountOwnedOutputs({
+    required SpAccount that,
+    required List<int> txBytes,
   });
 
   Future<TxSimulation> dartBwkApiSpAccountSpAccountPreparePsbt({
@@ -2682,6 +2709,97 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
       );
 
   @override
+  Future<SpAccount> dartBwkApiSpAccountSpAccountCreateFromKeys({
+    required String name,
+    required SpNetwork network,
+    required String scanSkHex,
+    required String spendPkHex,
+    required String taprootDescriptor,
+    required String blindbitUrl,
+    required String electrumUrl,
+    required String dataDir,
+    int? birthdayHeight,
+    BigInt? dustLimit,
+    int? fetchConcurrencyFactor,
+    int? matchConcurrencyFactor,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          var arg0 = cst_encode_String(name);
+          var arg1 = cst_encode_sp_network(network);
+          var arg2 = cst_encode_String(scanSkHex);
+          var arg3 = cst_encode_String(spendPkHex);
+          var arg4 = cst_encode_String(taprootDescriptor);
+          var arg5 = cst_encode_String(blindbitUrl);
+          var arg6 = cst_encode_String(electrumUrl);
+          var arg7 = cst_encode_String(dataDir);
+          var arg8 = cst_encode_opt_box_autoadd_u_32(birthdayHeight);
+          var arg9 = cst_encode_opt_box_autoadd_u_64(dustLimit);
+          var arg10 = cst_encode_opt_box_autoadd_u_32(fetchConcurrencyFactor);
+          var arg11 = cst_encode_opt_box_autoadd_u_32(matchConcurrencyFactor);
+          return wire
+              .wire__dart_bwk__api__sp_account__SpAccount_create_from_keys(
+                port_,
+                arg0,
+                arg1,
+                arg2,
+                arg3,
+                arg4,
+                arg5,
+                arg6,
+                arg7,
+                arg8,
+                arg9,
+                arg10,
+                arg11,
+              );
+        },
+        codec: DcoCodec(
+          decodeSuccessData:
+              dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount,
+          decodeErrorData: dco_decode_String,
+        ),
+        constMeta: kDartBwkApiSpAccountSpAccountCreateFromKeysConstMeta,
+        argValues: [
+          name,
+          network,
+          scanSkHex,
+          spendPkHex,
+          taprootDescriptor,
+          blindbitUrl,
+          electrumUrl,
+          dataDir,
+          birthdayHeight,
+          dustLimit,
+          fetchConcurrencyFactor,
+          matchConcurrencyFactor,
+        ],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountSpAccountCreateFromKeysConstMeta =>
+      const TaskConstMeta(
+        debugName: "SpAccount_create_from_keys",
+        argNames: [
+          "name",
+          "network",
+          "scanSkHex",
+          "spendPkHex",
+          "taprootDescriptor",
+          "blindbitUrl",
+          "electrumUrl",
+          "dataDir",
+          "birthdayHeight",
+          "dustLimit",
+          "fetchConcurrencyFactor",
+          "matchConcurrencyFactor",
+        ],
+      );
+
+  @override
   Future<SpAccount> dartBwkApiSpAccountSpAccountCreateFromMnemonic({
     required String name,
     required SpNetwork network,
@@ -2863,6 +2981,49 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
 
   TaskConstMeta get kDartBwkApiSpAccountSpAccountDisposeConstMeta =>
       const TaskConstMeta(debugName: "SpAccount_dispose", argNames: ["that"]);
+
+  @override
+  Future<Uint8List> dartBwkApiSpAccountSpAccountFinalizeAndSign({
+    required SpAccount that,
+    required TxSimulation simulation,
+    required String bSpendHex,
+    required String taprootAccountXprv,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          var arg0 =
+              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+                that,
+              );
+          var arg1 = cst_encode_box_autoadd_tx_simulation(simulation);
+          var arg2 = cst_encode_String(bSpendHex);
+          var arg3 = cst_encode_String(taprootAccountXprv);
+          return wire
+              .wire__dart_bwk__api__sp_account__SpAccount_finalize_and_sign(
+                port_,
+                arg0,
+                arg1,
+                arg2,
+                arg3,
+              );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_list_prim_u_8_strict,
+          decodeErrorData: dco_decode_sp_error,
+        ),
+        constMeta: kDartBwkApiSpAccountSpAccountFinalizeAndSignConstMeta,
+        argValues: [that, simulation, bSpendHex, taprootAccountXprv],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountSpAccountFinalizeAndSignConstMeta =>
+      const TaskConstMeta(
+        debugName: "SpAccount_finalize_and_sign",
+        argNames: ["that", "simulation", "bSpendHex", "taprootAccountXprv"],
+      );
 
   @override
   Future<Uint8List> dartBwkApiSpAccountSpAccountFinalizePsbt({
@@ -3146,6 +3307,42 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
       const TaskConstMeta(
         debugName: "SpAccount_new_taproot_address",
         argNames: ["that"],
+      );
+
+  @override
+  Future<List<SpOwnedOutput>> dartBwkApiSpAccountSpAccountOwnedOutputs({
+    required SpAccount that,
+    required List<int> txBytes,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          var arg0 =
+              cst_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerSpAccount(
+                that,
+              );
+          var arg1 = cst_encode_list_prim_u_8_loose(txBytes);
+          return wire.wire__dart_bwk__api__sp_account__SpAccount_owned_outputs(
+            port_,
+            arg0,
+            arg1,
+          );
+        },
+        codec: DcoCodec(
+          decodeSuccessData: dco_decode_list_sp_owned_output,
+          decodeErrorData: dco_decode_sp_error,
+        ),
+        constMeta: kDartBwkApiSpAccountSpAccountOwnedOutputsConstMeta,
+        argValues: [that, txBytes],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kDartBwkApiSpAccountSpAccountOwnedOutputsConstMeta =>
+      const TaskConstMeta(
+        debugName: "SpAccount_owned_outputs",
+        argNames: ["that", "txBytes"],
       );
 
   @override
@@ -9099,6 +9296,12 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
+  List<SpOwnedOutput> dco_decode_list_sp_owned_output(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_sp_owned_output).toList();
+  }
+
+  @protected
   List<SpPaymentView> dco_decode_list_sp_payment_view(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return (raw as List<dynamic>).map(dco_decode_sp_payment_view).toList();
@@ -9596,6 +9799,19 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
       default:
         throw Exception("unreachable");
     }
+  }
+
+  @protected
+  SpOwnedOutput dco_decode_sp_owned_output(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3)
+      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    return SpOwnedOutput(
+      vout: dco_decode_u_32(arr[0]),
+      amountSat: dco_decode_u_64(arr[1]),
+      isChange: dco_decode_bool(arr[2]),
+    );
   }
 
   @protected
@@ -10951,6 +11167,20 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
+  List<SpOwnedOutput> sse_decode_list_sp_owned_output(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <SpOwnedOutput>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_sp_owned_output(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
   List<SpPaymentView> sse_decode_list_sp_payment_view(
     SseDeserializer deserializer,
   ) {
@@ -11618,6 +11848,19 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
       default:
         throw UnimplementedError('');
     }
+  }
+
+  @protected
+  SpOwnedOutput sse_decode_sp_owned_output(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_vout = sse_decode_u_32(deserializer);
+    var var_amountSat = sse_decode_u_64(deserializer);
+    var var_isChange = sse_decode_bool(deserializer);
+    return SpOwnedOutput(
+      vout: var_vout,
+      amountSat: var_amountSat,
+      isChange: var_isChange,
+    );
   }
 
   @protected
@@ -13310,6 +13553,18 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
   }
 
   @protected
+  void sse_encode_list_sp_owned_output(
+    List<SpOwnedOutput> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_sp_owned_output(item, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_list_sp_payment_view(
     List<SpPaymentView> self,
     SseSerializer serializer,
@@ -13893,6 +14148,17 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
       case SpNotification_PaymentHistoryUpdated():
         sse_encode_i_32(16, serializer);
     }
+  }
+
+  @protected
+  void sse_encode_sp_owned_output(
+    SpOwnedOutput self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_u_32(self.vout, serializer);
+    sse_encode_u_64(self.amountSat, serializer);
+    sse_encode_bool(self.isChange, serializer);
   }
 
   @protected
@@ -14552,6 +14818,30 @@ class SpAccountImpl extends RustOpaque implements SpAccount {
   Future<void> dispose() =>
       BullSdk.instance.api.dartBwkApiSpAccountSpAccountDispose(that: this);
 
+  /// Build, sign and finalize the transaction a confirmed `TxSimulation`
+  /// describes, with spend keys lent for this call only, for an account
+  /// built by [create_from_keys]. Returns the raw serialized transaction;
+  /// hex-encode it before passing it to broadcast().
+  ///
+  /// Like [finalize_psbt], inputs and outputs are pinned to the simulation
+  /// and a drifted coin set returns [`SpError::SimulationDrifted`].
+  ///
+  /// `b_spend_hex` is the BIP352 spend secret key (32 bytes, hex) and
+  /// `taproot_account_xprv` the extended private key of the BIP86 account
+  /// the taproot sub-account descriptor names (`m/86'/coin'/0'`), not the
+  /// master key. Both are refused unless they match the account's spend
+  /// public key and descriptor, and both are dropped when the call returns.
+  Future<Uint8List> finalizeAndSign({
+    required TxSimulation simulation,
+    required String bSpendHex,
+    required String taprootAccountXprv,
+  }) => BullSdk.instance.api.dartBwkApiSpAccountSpAccountFinalizeAndSign(
+    that: this,
+    simulation: simulation,
+    bSpendHex: bSpendHex,
+    taprootAccountXprv: taprootAccountXprv,
+  );
+
   /// Build and serialize an unsigned PSBT ready for signing, consuming the
   /// `TxSimulation` the user confirmed in the previous `prepare_psbt`.
   ///
@@ -14619,6 +14909,22 @@ class SpAccountImpl extends RustOpaque implements SpAccount {
   /// (change / payment provenance) and never exposes a hand-out address.
   Future<String> newTaprootAddress() => BullSdk.instance.api
       .dartBwkApiSpAccountSpAccountNewTaprootAddress(that: this);
+
+  /// The outputs of a signed transaction (the raw bytes
+  /// [finalize_and_sign] returns) that this account owns. They are found
+  /// the way the scanner finds payments: the scan key, the transaction's
+  /// input public keys and the account's labels, without the sending-side
+  /// code that derived the change. Call it before broadcast and refuse to
+  /// broadcast a spend whose expected SP change is not reported with
+  /// `is_change`.
+  ///
+  /// Every input must spend a coin of this account (SP or sub-account);
+  /// otherwise the call fails.
+  Future<List<SpOwnedOutput>> ownedOutputs({required List<int> txBytes}) =>
+      BullSdk.instance.api.dartBwkApiSpAccountSpAccountOwnedOutputs(
+        that: this,
+        txBytes: txBytes,
+      );
 
   /// Preview a transaction: run coin selection and return fee/change estimates.
   /// Does NOT produce a signable PSBT — use finalize_psbt() for that.

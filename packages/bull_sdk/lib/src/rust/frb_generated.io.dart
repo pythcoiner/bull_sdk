@@ -417,6 +417,9 @@ abstract class BullSdkApiImplPlatform extends BaseApiImpl<BullSdkWire> {
   List<SpCoinView> dco_decode_list_sp_coin_view(dynamic raw);
 
   @protected
+  List<SpOwnedOutput> dco_decode_list_sp_owned_output(dynamic raw);
+
+  @protected
   List<SpPaymentView> dco_decode_list_sp_payment_view(dynamic raw);
 
   @protected
@@ -558,6 +561,9 @@ abstract class BullSdkApiImplPlatform extends BaseApiImpl<BullSdkWire> {
 
   @protected
   SpNotification dco_decode_sp_notification(dynamic raw);
+
+  @protected
+  SpOwnedOutput dco_decode_sp_owned_output(dynamic raw);
 
   @protected
   SpPaymentDirection dco_decode_sp_payment_direction(dynamic raw);
@@ -1027,6 +1033,11 @@ abstract class BullSdkApiImplPlatform extends BaseApiImpl<BullSdkWire> {
   List<SpCoinView> sse_decode_list_sp_coin_view(SseDeserializer deserializer);
 
   @protected
+  List<SpOwnedOutput> sse_decode_list_sp_owned_output(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   List<SpPaymentView> sse_decode_list_sp_payment_view(
     SseDeserializer deserializer,
   );
@@ -1190,6 +1201,9 @@ abstract class BullSdkApiImplPlatform extends BaseApiImpl<BullSdkWire> {
 
   @protected
   SpNotification sse_decode_sp_notification(SseDeserializer deserializer);
+
+  @protected
+  SpOwnedOutput sse_decode_sp_owned_output(SseDeserializer deserializer);
 
   @protected
   SpPaymentDirection sse_decode_sp_payment_direction(
@@ -1755,6 +1769,18 @@ abstract class BullSdkApiImplPlatform extends BaseApiImpl<BullSdkWire> {
     final ans = wire.cst_new_list_sp_coin_view(raw.length);
     for (var i = 0; i < raw.length; ++i) {
       cst_api_fill_to_wire_sp_coin_view(raw[i], ans.ref.ptr[i]);
+    }
+    return ans;
+  }
+
+  @protected
+  ffi.Pointer<wire_cst_list_sp_owned_output> cst_encode_list_sp_owned_output(
+    List<SpOwnedOutput> raw,
+  ) {
+    // Codec=Cst (C-struct based), see doc to use other codecs
+    final ans = wire.cst_new_list_sp_owned_output(raw.length);
+    for (var i = 0; i < raw.length; ++i) {
+      cst_api_fill_to_wire_sp_owned_output(raw[i], ans.ref.ptr[i]);
     }
     return ans;
   }
@@ -2763,6 +2789,16 @@ abstract class BullSdkApiImplPlatform extends BaseApiImpl<BullSdkWire> {
   }
 
   @protected
+  void cst_api_fill_to_wire_sp_owned_output(
+    SpOwnedOutput apiObj,
+    wire_cst_sp_owned_output wireObj,
+  ) {
+    wireObj.vout = cst_encode_u_32(apiObj.vout);
+    wireObj.amount_sat = cst_encode_u_64(apiObj.amountSat);
+    wireObj.is_change = cst_encode_bool(apiObj.isChange);
+  }
+
+  @protected
   void cst_api_fill_to_wire_sp_payment_view(
     SpPaymentView apiObj,
     wire_cst_sp_payment_view wireObj,
@@ -3644,6 +3680,12 @@ abstract class BullSdkApiImplPlatform extends BaseApiImpl<BullSdkWire> {
   );
 
   @protected
+  void sse_encode_list_sp_owned_output(
+    List<SpOwnedOutput> self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_list_sp_payment_view(
     List<SpPaymentView> self,
     SseSerializer serializer,
@@ -3843,6 +3885,9 @@ abstract class BullSdkApiImplPlatform extends BaseApiImpl<BullSdkWire> {
     SpNotification self,
     SseSerializer serializer,
   );
+
+  @protected
+  void sse_encode_sp_owned_output(SpOwnedOutput self, SseSerializer serializer);
 
   @protected
   void sse_encode_sp_payment_direction(
@@ -4869,6 +4914,80 @@ class BullSdkWire implements BaseWire {
       _wire__dart_bwk__api__sp_account__SpAccount_confirmed_balancePtr
           .asFunction<WireSyncRust2DartDco Function(int)>();
 
+  void wire__dart_bwk__api__sp_account__SpAccount_create_from_keys(
+    int port_,
+    ffi.Pointer<wire_cst_list_prim_u_8_strict> name,
+    int network,
+    ffi.Pointer<wire_cst_list_prim_u_8_strict> scan_sk_hex,
+    ffi.Pointer<wire_cst_list_prim_u_8_strict> spend_pk_hex,
+    ffi.Pointer<wire_cst_list_prim_u_8_strict> taproot_descriptor,
+    ffi.Pointer<wire_cst_list_prim_u_8_strict> blindbit_url,
+    ffi.Pointer<wire_cst_list_prim_u_8_strict> electrum_url,
+    ffi.Pointer<wire_cst_list_prim_u_8_strict> data_dir,
+    ffi.Pointer<ffi.Uint32> birthday_height,
+    ffi.Pointer<ffi.Uint64> dust_limit,
+    ffi.Pointer<ffi.Uint32> fetch_concurrency_factor,
+    ffi.Pointer<ffi.Uint32> match_concurrency_factor,
+  ) {
+    return _wire__dart_bwk__api__sp_account__SpAccount_create_from_keys(
+      port_,
+      name,
+      network,
+      scan_sk_hex,
+      spend_pk_hex,
+      taproot_descriptor,
+      blindbit_url,
+      electrum_url,
+      data_dir,
+      birthday_height,
+      dust_limit,
+      fetch_concurrency_factor,
+      match_concurrency_factor,
+    );
+  }
+
+  late final _wire__dart_bwk__api__sp_account__SpAccount_create_from_keysPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Void Function(
+            ffi.Int64,
+            ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+            ffi.Int32,
+            ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+            ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+            ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+            ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+            ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+            ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+            ffi.Pointer<ffi.Uint32>,
+            ffi.Pointer<ffi.Uint64>,
+            ffi.Pointer<ffi.Uint32>,
+            ffi.Pointer<ffi.Uint32>,
+          )
+        >
+      >(
+        'frbgen_bull_sdk_wire__dart_bwk__api__sp_account__SpAccount_create_from_keys',
+      );
+  late final _wire__dart_bwk__api__sp_account__SpAccount_create_from_keys =
+      _wire__dart_bwk__api__sp_account__SpAccount_create_from_keysPtr
+          .asFunction<
+            void Function(
+              int,
+              ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+              int,
+              ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+              ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+              ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+              ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+              ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+              ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint64>,
+              ffi.Pointer<ffi.Uint32>,
+              ffi.Pointer<ffi.Uint32>,
+            )
+          >();
+
   void wire__dart_bwk__api__sp_account__SpAccount_create_from_mnemonic(
     int port_,
     ffi.Pointer<wire_cst_list_prim_u_8_strict> name,
@@ -5005,6 +5124,48 @@ class BullSdkWire implements BaseWire {
   late final _wire__dart_bwk__api__sp_account__SpAccount_dispose =
       _wire__dart_bwk__api__sp_account__SpAccount_disposePtr
           .asFunction<void Function(int, int)>();
+
+  void wire__dart_bwk__api__sp_account__SpAccount_finalize_and_sign(
+    int port_,
+    int that,
+    ffi.Pointer<wire_cst_tx_simulation> simulation,
+    ffi.Pointer<wire_cst_list_prim_u_8_strict> b_spend_hex,
+    ffi.Pointer<wire_cst_list_prim_u_8_strict> taproot_account_xprv,
+  ) {
+    return _wire__dart_bwk__api__sp_account__SpAccount_finalize_and_sign(
+      port_,
+      that,
+      simulation,
+      b_spend_hex,
+      taproot_account_xprv,
+    );
+  }
+
+  late final _wire__dart_bwk__api__sp_account__SpAccount_finalize_and_signPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Void Function(
+            ffi.Int64,
+            ffi.UintPtr,
+            ffi.Pointer<wire_cst_tx_simulation>,
+            ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+            ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+          )
+        >
+      >(
+        'frbgen_bull_sdk_wire__dart_bwk__api__sp_account__SpAccount_finalize_and_sign',
+      );
+  late final _wire__dart_bwk__api__sp_account__SpAccount_finalize_and_sign =
+      _wire__dart_bwk__api__sp_account__SpAccount_finalize_and_signPtr
+          .asFunction<
+            void Function(
+              int,
+              int,
+              ffi.Pointer<wire_cst_tx_simulation>,
+              ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+              ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+            )
+          >();
 
   void wire__dart_bwk__api__sp_account__SpAccount_finalize_psbt(
     int port_,
@@ -5182,6 +5343,36 @@ class BullSdkWire implements BaseWire {
   late final _wire__dart_bwk__api__sp_account__SpAccount_new_taproot_address =
       _wire__dart_bwk__api__sp_account__SpAccount_new_taproot_addressPtr
           .asFunction<void Function(int, int)>();
+
+  void wire__dart_bwk__api__sp_account__SpAccount_owned_outputs(
+    int port_,
+    int that,
+    ffi.Pointer<wire_cst_list_prim_u_8_loose> tx_bytes,
+  ) {
+    return _wire__dart_bwk__api__sp_account__SpAccount_owned_outputs(
+      port_,
+      that,
+      tx_bytes,
+    );
+  }
+
+  late final _wire__dart_bwk__api__sp_account__SpAccount_owned_outputsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Void Function(
+            ffi.Int64,
+            ffi.UintPtr,
+            ffi.Pointer<wire_cst_list_prim_u_8_loose>,
+          )
+        >
+      >(
+        'frbgen_bull_sdk_wire__dart_bwk__api__sp_account__SpAccount_owned_outputs',
+      );
+  late final _wire__dart_bwk__api__sp_account__SpAccount_owned_outputs =
+      _wire__dart_bwk__api__sp_account__SpAccount_owned_outputsPtr
+          .asFunction<
+            void Function(int, int, ffi.Pointer<wire_cst_list_prim_u_8_loose>)
+          >();
 
   void wire__dart_bwk__api__sp_account__SpAccount_prepare_psbt(
     int port_,
@@ -10040,6 +10231,21 @@ class BullSdkWire implements BaseWire {
   late final _cst_new_list_sp_coin_view = _cst_new_list_sp_coin_viewPtr
       .asFunction<ffi.Pointer<wire_cst_list_sp_coin_view> Function(int)>();
 
+  ffi.Pointer<wire_cst_list_sp_owned_output> cst_new_list_sp_owned_output(
+    int len,
+  ) {
+    return _cst_new_list_sp_owned_output(len);
+  }
+
+  late final _cst_new_list_sp_owned_outputPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Pointer<wire_cst_list_sp_owned_output> Function(ffi.Int32)
+        >
+      >('frbgen_bull_sdk_cst_new_list_sp_owned_output');
+  late final _cst_new_list_sp_owned_output = _cst_new_list_sp_owned_outputPtr
+      .asFunction<ffi.Pointer<wire_cst_list_sp_owned_output> Function(int)>();
+
   ffi.Pointer<wire_cst_list_sp_payment_view> cst_new_list_sp_payment_view(
     int len,
   ) {
@@ -10739,6 +10945,24 @@ final class wire_cst_sp_coin_view extends ffi.Struct {
 
 final class wire_cst_list_sp_coin_view extends ffi.Struct {
   external ffi.Pointer<wire_cst_sp_coin_view> ptr;
+
+  @ffi.Int32()
+  external int len;
+}
+
+final class wire_cst_sp_owned_output extends ffi.Struct {
+  @ffi.Uint32()
+  external int vout;
+
+  @ffi.Uint64()
+  external int amount_sat;
+
+  @ffi.Bool()
+  external bool is_change;
+}
+
+final class wire_cst_list_sp_owned_output extends ffi.Struct {
+  external ffi.Pointer<wire_cst_sp_owned_output> ptr;
 
   @ffi.Int32()
   external int len;
