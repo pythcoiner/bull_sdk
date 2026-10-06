@@ -39,3 +39,4 @@ export 'src/rust/api/simple.dart'
 export 'src/rust/third_party/dart_bwk/api/regtest.dart';
 export 'src/rust/third_party/dart_bwk/api/sp_account.dart';
 export 'src/rust/third_party/dart_bwk/api/types.dart';
+export 'src/sp_account_identity.dart';
