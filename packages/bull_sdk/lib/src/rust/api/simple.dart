@@ -36,6 +36,10 @@ sealed class SpError with _$SpError implements FrbException {
   const factory SpError.disposeTimedOut() = SpError_DisposeTimedOut;
   const factory SpError.simulationDrifted({required String detail}) =
       SpError_SimulationDrifted;
+  const factory SpError.tooManyCoins({required int count, required int max}) =
+      SpError_TooManyCoins;
+  const factory SpError.nothingToSendAfterFee({required BigInt remainderSat}) =
+      SpError_NothingToSendAfterFee;
   const factory SpError.other({required String message}) = SpError_Other;
 }
 

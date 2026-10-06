@@ -2315,7 +2315,7 @@ fn wire__dart_bwk__api__sp_account__SpAccount_prepare_psbt_impl(
                 api_recipients.into_iter().map(Into::into).collect();
             let api_feerate_sat_vb = feerate_sat_vb.cst_decode();
             move |context| {
-                transform_result_dco::<_, _, String>((move || {
+                transform_result_dco::<_, _, crate::api::simple::SpError>((move || {
                     let mut api_that_guard = None;
                     let decode_indices_ =
                         flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
@@ -8829,6 +8829,20 @@ impl SseDecode for crate::api::simple::SpError {
                 return crate::api::simple::SpError::SimulationDrifted { detail: var_detail };
             }
             3 => {
+                let mut var_count = <u32>::sse_decode(deserializer);
+                let mut var_max = <u32>::sse_decode(deserializer);
+                return crate::api::simple::SpError::TooManyCoins {
+                    count: var_count,
+                    max: var_max,
+                };
+            }
+            4 => {
+                let mut var_remainderSat = <u64>::sse_decode(deserializer);
+                return crate::api::simple::SpError::NothingToSendAfterFee {
+                    remainder_sat: var_remainderSat,
+                };
+            }
+            5 => {
                 let mut var_message = <String>::sse_decode(deserializer);
                 return crate::api::simple::SpError::Other {
                     message: var_message,
@@ -10728,8 +10742,17 @@ impl flutter_rust_bridge::IntoDart for crate::api::simple::SpError {
             crate::api::simple::SpError::SimulationDrifted { detail } => {
                 [2.into_dart(), detail.into_into_dart().into_dart()].into_dart()
             }
+            crate::api::simple::SpError::TooManyCoins { count, max } => [
+                3.into_dart(),
+                count.into_into_dart().into_dart(),
+                max.into_into_dart().into_dart(),
+            ]
+            .into_dart(),
+            crate::api::simple::SpError::NothingToSendAfterFee { remainder_sat } => {
+                [4.into_dart(), remainder_sat.into_into_dart().into_dart()].into_dart()
+            }
             crate::api::simple::SpError::Other { message } => {
-                [3.into_dart(), message.into_into_dart().into_dart()].into_dart()
+                [5.into_dart(), message.into_into_dart().into_dart()].into_dart()
             }
             _ => {
                 unimplemented!("");
@@ -12727,8 +12750,17 @@ impl SseEncode for crate::api::simple::SpError {
                 <i32>::sse_encode(2, serializer);
                 <String>::sse_encode(detail, serializer);
             }
-            crate::api::simple::SpError::Other { message } => {
+            crate::api::simple::SpError::TooManyCoins { count, max } => {
                 <i32>::sse_encode(3, serializer);
+                <u32>::sse_encode(count, serializer);
+                <u32>::sse_encode(max, serializer);
+            }
+            crate::api::simple::SpError::NothingToSendAfterFee { remainder_sat } => {
+                <i32>::sse_encode(4, serializer);
+                <u64>::sse_encode(remainder_sat, serializer);
+            }
+            crate::api::simple::SpError::Other { message } => {
+                <i32>::sse_encode(5, serializer);
                 <String>::sse_encode(message, serializer);
             }
             _ => {
@@ -14429,6 +14461,19 @@ mod io {
                     }
                 }
                 3 => {
+                    let ans = unsafe { self.kind.TooManyCoins };
+                    crate::api::simple::SpError::TooManyCoins {
+                        count: ans.count.cst_decode(),
+                        max: ans.max.cst_decode(),
+                    }
+                }
+                4 => {
+                    let ans = unsafe { self.kind.NothingToSendAfterFee };
+                    crate::api::simple::SpError::NothingToSendAfterFee {
+                        remainder_sat: ans.remainder_sat.cst_decode(),
+                    }
+                }
+                5 => {
                     let ans = unsafe { self.kind.Other };
                     crate::api::simple::SpError::Other {
                         message: ans.message.cst_decode(),
@@ -18954,6 +18999,8 @@ mod io {
     #[derive(Clone, Copy)]
     pub union SpErrorKind {
         SimulationDrifted: wire_cst_SpError_SimulationDrifted,
+        TooManyCoins: wire_cst_SpError_TooManyCoins,
+        NothingToSendAfterFee: wire_cst_SpError_NothingToSendAfterFee,
         Other: wire_cst_SpError_Other,
         nil__: (),
     }
@@ -18961,6 +19008,17 @@ mod io {
     #[derive(Clone, Copy)]
     pub struct wire_cst_SpError_SimulationDrifted {
         detail: *mut wire_cst_list_prim_u_8_strict,
+    }
+    #[repr(C)]
+    #[derive(Clone, Copy)]
+    pub struct wire_cst_SpError_TooManyCoins {
+        count: u32,
+        max: u32,
+    }
+    #[repr(C)]
+    #[derive(Clone, Copy)]
+    pub struct wire_cst_SpError_NothingToSendAfterFee {
+        remainder_sat: u64,
     }
     #[repr(C)]
     #[derive(Clone, Copy)]

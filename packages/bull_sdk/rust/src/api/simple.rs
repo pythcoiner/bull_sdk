@@ -301,6 +301,8 @@ pub enum SpError {
     ScannerAlreadyRunning,
     DisposeTimedOut,
     SimulationDrifted { detail: String },
+    TooManyCoins { count: u32, max: u32 },
+    NothingToSendAfterFee { remainder_sat: u64 },
     Other { message: String },
 }
 
@@ -311,6 +313,12 @@ impl From<dart_bwk::api::types::SpError> for SpError {
             dart_bwk::api::types::SpError::DisposeTimedOut => SpError::DisposeTimedOut,
             dart_bwk::api::types::SpError::SimulationDrifted { detail } => {
                 SpError::SimulationDrifted { detail }
+            }
+            dart_bwk::api::types::SpError::TooManyCoins { count, max } => {
+                SpError::TooManyCoins { count, max }
+            }
+            dart_bwk::api::types::SpError::NothingToSendAfterFee { remainder_sat } => {
+                SpError::NothingToSendAfterFee { remainder_sat }
             }
             dart_bwk::api::types::SpError::Other { message } => SpError::Other { message },
         }

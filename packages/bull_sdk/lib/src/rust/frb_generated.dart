@@ -3369,7 +3369,7 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
         },
         codec: DcoCodec(
           decodeSuccessData: dco_decode_tx_simulation,
-          decodeErrorData: dco_decode_String,
+          decodeErrorData: dco_decode_sp_error,
         ),
         constMeta: kDartBwkApiSpAccountSpAccountPreparePsbtConstMeta,
         argValues: [that, recipients, feerateSatVb],
@@ -9715,6 +9715,15 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
       case 2:
         return SpError_SimulationDrifted(detail: dco_decode_String(raw[1]));
       case 3:
+        return SpError_TooManyCoins(
+          count: dco_decode_u_32(raw[1]),
+          max: dco_decode_u_32(raw[2]),
+        );
+      case 4:
+        return SpError_NothingToSendAfterFee(
+          remainderSat: dco_decode_u_64(raw[1]),
+        );
+      case 5:
         return SpError_Other(message: dco_decode_String(raw[1]));
       default:
         throw Exception("unreachable");
@@ -11745,6 +11754,13 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
         var var_detail = sse_decode_String(deserializer);
         return SpError_SimulationDrifted(detail: var_detail);
       case 3:
+        var var_count = sse_decode_u_32(deserializer);
+        var var_max = sse_decode_u_32(deserializer);
+        return SpError_TooManyCoins(count: var_count, max: var_max);
+      case 4:
+        var var_remainderSat = sse_decode_u_64(deserializer);
+        return SpError_NothingToSendAfterFee(remainderSat: var_remainderSat);
+      case 5:
         var var_message = sse_decode_String(deserializer);
         return SpError_Other(message: var_message);
       default:
@@ -14048,8 +14064,15 @@ class BullSdkApiImpl extends BullSdkApiImplPlatform implements BullSdkApi {
       case SpError_SimulationDrifted(detail: final detail):
         sse_encode_i_32(2, serializer);
         sse_encode_String(detail, serializer);
-      case SpError_Other(message: final message):
+      case SpError_TooManyCoins(count: final count, max: final max):
         sse_encode_i_32(3, serializer);
+        sse_encode_u_32(count, serializer);
+        sse_encode_u_32(max, serializer);
+      case SpError_NothingToSendAfterFee(remainderSat: final remainderSat):
+        sse_encode_i_32(4, serializer);
+        sse_encode_u_64(remainderSat, serializer);
+      case SpError_Other(message: final message):
+        sse_encode_i_32(5, serializer);
         sse_encode_String(message, serializer);
     }
   }

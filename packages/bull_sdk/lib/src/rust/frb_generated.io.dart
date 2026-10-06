@@ -2657,9 +2657,23 @@ abstract class BullSdkApiImplPlatform extends BaseApiImpl<BullSdkWire> {
       wireObj.kind.SimulationDrifted.detail = pre_detail;
       return;
     }
+    if (apiObj is SpError_TooManyCoins) {
+      var pre_count = cst_encode_u_32(apiObj.count);
+      var pre_max = cst_encode_u_32(apiObj.max);
+      wireObj.tag = 3;
+      wireObj.kind.TooManyCoins.count = pre_count;
+      wireObj.kind.TooManyCoins.max = pre_max;
+      return;
+    }
+    if (apiObj is SpError_NothingToSendAfterFee) {
+      var pre_remainder_sat = cst_encode_u_64(apiObj.remainderSat);
+      wireObj.tag = 4;
+      wireObj.kind.NothingToSendAfterFee.remainder_sat = pre_remainder_sat;
+      return;
+    }
     if (apiObj is SpError_Other) {
       var pre_message = cst_encode_String(apiObj.message);
-      wireObj.tag = 3;
+      wireObj.tag = 5;
       wireObj.kind.Other.message = pre_message;
       return;
     }
@@ -11268,12 +11282,29 @@ final class wire_cst_SpError_SimulationDrifted extends ffi.Struct {
   external ffi.Pointer<wire_cst_list_prim_u_8_strict> detail;
 }
 
+final class wire_cst_SpError_TooManyCoins extends ffi.Struct {
+  @ffi.Uint32()
+  external int count;
+
+  @ffi.Uint32()
+  external int max;
+}
+
+final class wire_cst_SpError_NothingToSendAfterFee extends ffi.Struct {
+  @ffi.Uint64()
+  external int remainder_sat;
+}
+
 final class wire_cst_SpError_Other extends ffi.Struct {
   external ffi.Pointer<wire_cst_list_prim_u_8_strict> message;
 }
 
 final class SpErrorKind extends ffi.Union {
   external wire_cst_SpError_SimulationDrifted SimulationDrifted;
+
+  external wire_cst_SpError_TooManyCoins TooManyCoins;
+
+  external wire_cst_SpError_NothingToSendAfterFee NothingToSendAfterFee;
 
   external wire_cst_SpError_Other Other;
 }
