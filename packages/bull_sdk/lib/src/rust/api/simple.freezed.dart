@@ -390,13 +390,15 @@ extension SpErrorPatterns on SpError {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( SpError_ScannerAlreadyRunning value)?  scannerAlreadyRunning,TResult Function( SpError_DisposeTimedOut value)?  disposeTimedOut,TResult Function( SpError_SimulationDrifted value)?  simulationDrifted,TResult Function( SpError_Other value)?  other,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( SpError_ScannerAlreadyRunning value)?  scannerAlreadyRunning,TResult Function( SpError_DisposeTimedOut value)?  disposeTimedOut,TResult Function( SpError_SimulationDrifted value)?  simulationDrifted,TResult Function( SpError_TooManyCoins value)?  tooManyCoins,TResult Function( SpError_NothingToSendAfterFee value)?  nothingToSendAfterFee,TResult Function( SpError_Other value)?  other,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case SpError_ScannerAlreadyRunning() when scannerAlreadyRunning != null:
 return scannerAlreadyRunning(_that);case SpError_DisposeTimedOut() when disposeTimedOut != null:
 return disposeTimedOut(_that);case SpError_SimulationDrifted() when simulationDrifted != null:
-return simulationDrifted(_that);case SpError_Other() when other != null:
+return simulationDrifted(_that);case SpError_TooManyCoins() when tooManyCoins != null:
+return tooManyCoins(_that);case SpError_NothingToSendAfterFee() when nothingToSendAfterFee != null:
+return nothingToSendAfterFee(_that);case SpError_Other() when other != null:
 return other(_that);case _:
   return orElse();
 
@@ -415,13 +417,15 @@ return other(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( SpError_ScannerAlreadyRunning value)  scannerAlreadyRunning,required TResult Function( SpError_DisposeTimedOut value)  disposeTimedOut,required TResult Function( SpError_SimulationDrifted value)  simulationDrifted,required TResult Function( SpError_Other value)  other,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( SpError_ScannerAlreadyRunning value)  scannerAlreadyRunning,required TResult Function( SpError_DisposeTimedOut value)  disposeTimedOut,required TResult Function( SpError_SimulationDrifted value)  simulationDrifted,required TResult Function( SpError_TooManyCoins value)  tooManyCoins,required TResult Function( SpError_NothingToSendAfterFee value)  nothingToSendAfterFee,required TResult Function( SpError_Other value)  other,}){
 final _that = this;
 switch (_that) {
 case SpError_ScannerAlreadyRunning():
 return scannerAlreadyRunning(_that);case SpError_DisposeTimedOut():
 return disposeTimedOut(_that);case SpError_SimulationDrifted():
-return simulationDrifted(_that);case SpError_Other():
+return simulationDrifted(_that);case SpError_TooManyCoins():
+return tooManyCoins(_that);case SpError_NothingToSendAfterFee():
+return nothingToSendAfterFee(_that);case SpError_Other():
 return other(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
@@ -436,13 +440,15 @@ return other(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( SpError_ScannerAlreadyRunning value)?  scannerAlreadyRunning,TResult? Function( SpError_DisposeTimedOut value)?  disposeTimedOut,TResult? Function( SpError_SimulationDrifted value)?  simulationDrifted,TResult? Function( SpError_Other value)?  other,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( SpError_ScannerAlreadyRunning value)?  scannerAlreadyRunning,TResult? Function( SpError_DisposeTimedOut value)?  disposeTimedOut,TResult? Function( SpError_SimulationDrifted value)?  simulationDrifted,TResult? Function( SpError_TooManyCoins value)?  tooManyCoins,TResult? Function( SpError_NothingToSendAfterFee value)?  nothingToSendAfterFee,TResult? Function( SpError_Other value)?  other,}){
 final _that = this;
 switch (_that) {
 case SpError_ScannerAlreadyRunning() when scannerAlreadyRunning != null:
 return scannerAlreadyRunning(_that);case SpError_DisposeTimedOut() when disposeTimedOut != null:
 return disposeTimedOut(_that);case SpError_SimulationDrifted() when simulationDrifted != null:
-return simulationDrifted(_that);case SpError_Other() when other != null:
+return simulationDrifted(_that);case SpError_TooManyCoins() when tooManyCoins != null:
+return tooManyCoins(_that);case SpError_NothingToSendAfterFee() when nothingToSendAfterFee != null:
+return nothingToSendAfterFee(_that);case SpError_Other() when other != null:
 return other(_that);case _:
   return null;
 
@@ -460,12 +466,14 @@ return other(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  scannerAlreadyRunning,TResult Function()?  disposeTimedOut,TResult Function( String detail)?  simulationDrifted,TResult Function( String message)?  other,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  scannerAlreadyRunning,TResult Function()?  disposeTimedOut,TResult Function( String detail)?  simulationDrifted,TResult Function( int count,  int max)?  tooManyCoins,TResult Function( BigInt remainderSat)?  nothingToSendAfterFee,TResult Function( String message)?  other,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case SpError_ScannerAlreadyRunning() when scannerAlreadyRunning != null:
 return scannerAlreadyRunning();case SpError_DisposeTimedOut() when disposeTimedOut != null:
 return disposeTimedOut();case SpError_SimulationDrifted() when simulationDrifted != null:
-return simulationDrifted(_that.detail);case SpError_Other() when other != null:
+return simulationDrifted(_that.detail);case SpError_TooManyCoins() when tooManyCoins != null:
+return tooManyCoins(_that.count,_that.max);case SpError_NothingToSendAfterFee() when nothingToSendAfterFee != null:
+return nothingToSendAfterFee(_that.remainderSat);case SpError_Other() when other != null:
 return other(_that.message);case _:
   return orElse();
 
@@ -484,12 +492,14 @@ return other(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  scannerAlreadyRunning,required TResult Function()  disposeTimedOut,required TResult Function( String detail)  simulationDrifted,required TResult Function( String message)  other,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  scannerAlreadyRunning,required TResult Function()  disposeTimedOut,required TResult Function( String detail)  simulationDrifted,required TResult Function( int count,  int max)  tooManyCoins,required TResult Function( BigInt remainderSat)  nothingToSendAfterFee,required TResult Function( String message)  other,}) {final _that = this;
 switch (_that) {
 case SpError_ScannerAlreadyRunning():
 return scannerAlreadyRunning();case SpError_DisposeTimedOut():
 return disposeTimedOut();case SpError_SimulationDrifted():
-return simulationDrifted(_that.detail);case SpError_Other():
+return simulationDrifted(_that.detail);case SpError_TooManyCoins():
+return tooManyCoins(_that.count,_that.max);case SpError_NothingToSendAfterFee():
+return nothingToSendAfterFee(_that.remainderSat);case SpError_Other():
 return other(_that.message);}
 }
 /// A variant of `when` that fallback to returning `null`
@@ -504,12 +514,14 @@ return other(_that.message);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  scannerAlreadyRunning,TResult? Function()?  disposeTimedOut,TResult? Function( String detail)?  simulationDrifted,TResult? Function( String message)?  other,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  scannerAlreadyRunning,TResult? Function()?  disposeTimedOut,TResult? Function( String detail)?  simulationDrifted,TResult? Function( int count,  int max)?  tooManyCoins,TResult? Function( BigInt remainderSat)?  nothingToSendAfterFee,TResult? Function( String message)?  other,}) {final _that = this;
 switch (_that) {
 case SpError_ScannerAlreadyRunning() when scannerAlreadyRunning != null:
 return scannerAlreadyRunning();case SpError_DisposeTimedOut() when disposeTimedOut != null:
 return disposeTimedOut();case SpError_SimulationDrifted() when simulationDrifted != null:
-return simulationDrifted(_that.detail);case SpError_Other() when other != null:
+return simulationDrifted(_that.detail);case SpError_TooManyCoins() when tooManyCoins != null:
+return tooManyCoins(_that.count,_that.max);case SpError_NothingToSendAfterFee() when nothingToSendAfterFee != null:
+return nothingToSendAfterFee(_that.remainderSat);case SpError_Other() when other != null:
 return other(_that.message);case _:
   return null;
 
@@ -642,6 +654,140 @@ class _$SpError_SimulationDriftedCopyWithImpl<$Res>
   return _then(SpError_SimulationDrifted(
 detail: null == detail ? _self.detail : detail // ignore: cast_nullable_to_non_nullable
 as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class SpError_TooManyCoins extends SpError {
+  const SpError_TooManyCoins({required this.count, required this.max}): super._();
+  
+
+ final  int count;
+ final  int max;
+
+/// Create a copy of SpError
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$SpError_TooManyCoinsCopyWith<SpError_TooManyCoins> get copyWith => _$SpError_TooManyCoinsCopyWithImpl<SpError_TooManyCoins>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SpError_TooManyCoins&&(identical(other.count, count) || other.count == count)&&(identical(other.max, max) || other.max == max));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,count,max);
+
+@override
+String toString() {
+  return 'SpError.tooManyCoins(count: $count, max: $max)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $SpError_TooManyCoinsCopyWith<$Res> implements $SpErrorCopyWith<$Res> {
+  factory $SpError_TooManyCoinsCopyWith(SpError_TooManyCoins value, $Res Function(SpError_TooManyCoins) _then) = _$SpError_TooManyCoinsCopyWithImpl;
+@useResult
+$Res call({
+ int count, int max
+});
+
+
+
+
+}
+/// @nodoc
+class _$SpError_TooManyCoinsCopyWithImpl<$Res>
+    implements $SpError_TooManyCoinsCopyWith<$Res> {
+  _$SpError_TooManyCoinsCopyWithImpl(this._self, this._then);
+
+  final SpError_TooManyCoins _self;
+  final $Res Function(SpError_TooManyCoins) _then;
+
+/// Create a copy of SpError
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? count = null,Object? max = null,}) {
+  return _then(SpError_TooManyCoins(
+count: null == count ? _self.count : count // ignore: cast_nullable_to_non_nullable
+as int,max: null == max ? _self.max : max // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class SpError_NothingToSendAfterFee extends SpError {
+  const SpError_NothingToSendAfterFee({required this.remainderSat}): super._();
+  
+
+ final  BigInt remainderSat;
+
+/// Create a copy of SpError
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$SpError_NothingToSendAfterFeeCopyWith<SpError_NothingToSendAfterFee> get copyWith => _$SpError_NothingToSendAfterFeeCopyWithImpl<SpError_NothingToSendAfterFee>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SpError_NothingToSendAfterFee&&(identical(other.remainderSat, remainderSat) || other.remainderSat == remainderSat));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,remainderSat);
+
+@override
+String toString() {
+  return 'SpError.nothingToSendAfterFee(remainderSat: $remainderSat)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $SpError_NothingToSendAfterFeeCopyWith<$Res> implements $SpErrorCopyWith<$Res> {
+  factory $SpError_NothingToSendAfterFeeCopyWith(SpError_NothingToSendAfterFee value, $Res Function(SpError_NothingToSendAfterFee) _then) = _$SpError_NothingToSendAfterFeeCopyWithImpl;
+@useResult
+$Res call({
+ BigInt remainderSat
+});
+
+
+
+
+}
+/// @nodoc
+class _$SpError_NothingToSendAfterFeeCopyWithImpl<$Res>
+    implements $SpError_NothingToSendAfterFeeCopyWith<$Res> {
+  _$SpError_NothingToSendAfterFeeCopyWithImpl(this._self, this._then);
+
+  final SpError_NothingToSendAfterFee _self;
+  final $Res Function(SpError_NothingToSendAfterFee) _then;
+
+/// Create a copy of SpError
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? remainderSat = null,}) {
+  return _then(SpError_NothingToSendAfterFee(
+remainderSat: null == remainderSat ? _self.remainderSat : remainderSat // ignore: cast_nullable_to_non_nullable
+as BigInt,
   ));
 }
 

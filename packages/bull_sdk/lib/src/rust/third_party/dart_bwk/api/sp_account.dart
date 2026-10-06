@@ -45,6 +45,44 @@ abstract class SpAccount implements RustOpaqueInterface {
 
   BigInt confirmedBalance();
 
+  /// Build a watch-only SP account from its BIP352 scan secret key and
+  /// spend public key, plus the public descriptor of its BIP86 taproot
+  /// sub-account (`tr([fingerprint/86'/coin'/0']xpub/<0;1>/*)`).
+  ///
+  /// The account scans, derives addresses and simulates spends like one
+  /// built from a mnemonic, but holds no spend authority: spends go through
+  /// [finalize_and_sign], which takes the spend keys for that call only. The
+  /// caller derives the keys itself, so no mnemonic crosses into Rust.
+  ///
+  /// Not `#[frb(sync)]` for the same reason as [create_from_mnemonic].
+  static Future<SpAccount> createFromKeys({
+    required String name,
+    required SpNetwork network,
+    required String scanSkHex,
+    required String spendPkHex,
+    required String taprootDescriptor,
+    required String blindbitUrl,
+    required String electrumUrl,
+    required String dataDir,
+    int? birthdayHeight,
+    BigInt? dustLimit,
+    int? fetchConcurrencyFactor,
+    int? matchConcurrencyFactor,
+  }) => BullSdk.instance.api.dartBwkApiSpAccountSpAccountCreateFromKeys(
+    name: name,
+    network: network,
+    scanSkHex: scanSkHex,
+    spendPkHex: spendPkHex,
+    taprootDescriptor: taprootDescriptor,
+    blindbitUrl: blindbitUrl,
+    electrumUrl: electrumUrl,
+    dataDir: dataDir,
+    birthdayHeight: birthdayHeight,
+    dustLimit: dustLimit,
+    fetchConcurrencyFactor: fetchConcurrencyFactor,
+    matchConcurrencyFactor: matchConcurrencyFactor,
+  );
+
   /// Build a hot SP account from a BIP39 mnemonic. SP scan/spend keys are
   /// derived the standard BIP352 way (bwk_sp `new_from_mnemonic`), so the same
   /// mnemonic yields the same SP wallet as other BIP352 software. The taproot
@@ -157,6 +195,25 @@ abstract class SpAccount implements RustOpaqueInterface {
   @override
   Future<void> dispose();
 
+  /// Build, sign and finalize the transaction a confirmed `TxSimulation`
+  /// describes, with spend keys lent for this call only, for an account
+  /// built by [create_from_keys]. Returns the raw serialized transaction;
+  /// hex-encode it before passing it to broadcast().
+  ///
+  /// Like [finalize_psbt], inputs and outputs are pinned to the simulation
+  /// and a drifted coin set returns [`SpError::SimulationDrifted`].
+  ///
+  /// `b_spend_hex` is the BIP352 spend secret key (32 bytes, hex) and
+  /// `taproot_account_xprv` the extended private key of the BIP86 account
+  /// the taproot sub-account descriptor names (`m/86'/coin'/0'`), not the
+  /// master key. Both are refused unless they match the account's spend
+  /// public key and descriptor, and both are dropped when the call returns.
+  Future<Uint8List> finalizeAndSign({
+    required TxSimulation simulation,
+    required String bSpendHex,
+    required String taprootAccountXprv,
+  });
+
   /// Build and serialize an unsigned PSBT ready for signing, consuming the
   /// `TxSimulation` the user confirmed in the previous `prepare_psbt`.
   ///
@@ -226,6 +283,18 @@ abstract class SpAccount implements RustOpaqueInterface {
   /// for backward compatibility; the segwit one is only used internally
   /// (change / payment provenance) and never exposes a hand-out address.
   Future<String> newTaprootAddress();
+
+  /// The outputs of a signed transaction (the raw bytes
+  /// [finalize_and_sign] returns) that this account owns. They are found
+  /// the way the scanner finds payments: the scan key, the transaction's
+  /// input public keys and the account's labels, without the sending-side
+  /// code that derived the change. Call it before broadcast and refuse to
+  /// broadcast a spend whose expected SP change is not reported with
+  /// `is_change`.
+  ///
+  /// Every input must spend a coin of this account (SP or sub-account);
+  /// otherwise the call fails.
+  Future<List<SpOwnedOutput>> ownedOutputs({required List<int> txBytes});
 
   /// Preview a transaction: run coin selection and return fee/change estimates.
   /// Does NOT produce a signable PSBT — use finalize_psbt() for that.

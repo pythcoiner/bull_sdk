@@ -7,7 +7,7 @@ import '../../../api/simple.dart';
 import '../../../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_fields_are_eq`, `assert_fields_are_eq`, `assert_fields_are_eq`, `assert_fields_are_eq`, `assert_fields_are_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_fields_are_eq`, `assert_fields_are_eq`, `assert_fields_are_eq`, `assert_fields_are_eq`, `assert_fields_are_eq`, `assert_fields_are_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`
 
 enum CoinSource { sp, segwit, taproot, other }
 
@@ -111,6 +111,34 @@ class SpCoinView {
 }
 
 enum SpNetwork { bitcoin, signet, testnet, regtest }
+
+/// An output of a signed transaction that the account owns, as
+/// [`crate::api::sp_account::SpAccount::owned_outputs`] finds it.
+class SpOwnedOutput {
+  final int vout;
+  final BigInt amountSat;
+
+  /// Paid to the account's SP change label (`m = 0`).
+  final bool isChange;
+
+  const SpOwnedOutput({
+    required this.vout,
+    required this.amountSat,
+    required this.isChange,
+  });
+
+  @override
+  int get hashCode => vout.hashCode ^ amountSat.hashCode ^ isChange.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SpOwnedOutput &&
+          runtimeType == other.runtimeType &&
+          vout == other.vout &&
+          amountSat == other.amountSat &&
+          isChange == other.isChange;
+}
 
 /// Typed payment direction surfaced to Dart so consumers can `match` on
 /// it exhaustively instead of string-comparing.

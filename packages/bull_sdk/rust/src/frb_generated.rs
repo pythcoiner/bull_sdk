@@ -45,7 +45,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueNom,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.12.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -593266635;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 718148274;
 
 // Section: executor
 
@@ -1723,6 +1723,62 @@ fn wire__dart_bwk__api__sp_account__SpAccount_confirmed_balance_impl(
         },
     )
 }
+fn wire__dart_bwk__api__sp_account__SpAccount_create_from_keys_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    name: impl CstDecode<String>,
+    network: impl CstDecode<dart_bwk::api::types::SpNetwork>,
+    scan_sk_hex: impl CstDecode<String>,
+    spend_pk_hex: impl CstDecode<String>,
+    taproot_descriptor: impl CstDecode<String>,
+    blindbit_url: impl CstDecode<String>,
+    electrum_url: impl CstDecode<String>,
+    data_dir: impl CstDecode<String>,
+    birthday_height: impl CstDecode<Option<u32>>,
+    dust_limit: impl CstDecode<Option<u64>>,
+    fetch_concurrency_factor: impl CstDecode<Option<u32>>,
+    match_concurrency_factor: impl CstDecode<Option<u32>>,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::DcoCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "SpAccount_create_from_keys",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let api_name = name.cst_decode();
+            let api_network = network.cst_decode();
+            let api_scan_sk_hex = scan_sk_hex.cst_decode();
+            let api_spend_pk_hex = spend_pk_hex.cst_decode();
+            let api_taproot_descriptor = taproot_descriptor.cst_decode();
+            let api_blindbit_url = blindbit_url.cst_decode();
+            let api_electrum_url = electrum_url.cst_decode();
+            let api_data_dir = data_dir.cst_decode();
+            let api_birthday_height = birthday_height.cst_decode();
+            let api_dust_limit = dust_limit.cst_decode();
+            let api_fetch_concurrency_factor = fetch_concurrency_factor.cst_decode();
+            let api_match_concurrency_factor = match_concurrency_factor.cst_decode();
+            move |context| {
+                transform_result_dco::<_, _, String>((move || {
+                    let output_ok = dart_bwk::api::sp_account::SpAccount::create_from_keys(
+                        api_name,
+                        api_network,
+                        api_scan_sk_hex,
+                        api_spend_pk_hex,
+                        api_taproot_descriptor,
+                        api_blindbit_url,
+                        api_electrum_url,
+                        api_data_dir,
+                        api_birthday_height,
+                        api_dust_limit,
+                        api_fetch_concurrency_factor,
+                        api_match_concurrency_factor,
+                    )?;
+                    Ok(output_ok)
+                })())
+            }
+        },
+    )
+}
 fn wire__dart_bwk__api__sp_account__SpAccount_create_from_mnemonic_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     name: impl CstDecode<String>,
@@ -1826,6 +1882,54 @@ fn wire__dart_bwk__api__sp_account__SpAccount_dispose_impl(
                     })()
                     .await,
                 )
+            }
+        },
+    )
+}
+fn wire__dart_bwk__api__sp_account__SpAccount_finalize_and_sign_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    that: impl CstDecode<
+        RustOpaqueNom<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<SpAccount>>,
+    >,
+    simulation: impl CstDecode<dart_bwk::api::types::TxSimulation>,
+    b_spend_hex: impl CstDecode<String>,
+    taproot_account_xprv: impl CstDecode<String>,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::DcoCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "SpAccount_finalize_and_sign",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let api_that = that.cst_decode();
+            let api_simulation = simulation.cst_decode();
+            let api_b_spend_hex = b_spend_hex.cst_decode();
+            let api_taproot_account_xprv = taproot_account_xprv.cst_decode();
+            move |context| {
+                transform_result_dco::<_, _, crate::api::simple::SpError>((move || {
+                    let mut api_that_guard = None;
+                    let decode_indices_ =
+                        flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
+                            flutter_rust_bridge::for_generated::LockableOrderInfo::new(
+                                &api_that, 0, false,
+                            ),
+                        ]);
+                    for i in decode_indices_ {
+                        match i {
+                            0 => api_that_guard = Some(api_that.lockable_decode_sync_ref()),
+                            _ => unreachable!(),
+                        }
+                    }
+                    let api_that_guard = api_that_guard.unwrap();
+                    let output_ok = dart_bwk::api::sp_account::SpAccount::finalize_and_sign(
+                        &*api_that_guard,
+                        api_simulation,
+                        api_b_spend_hex,
+                        api_taproot_account_xprv,
+                    )?;
+                    Ok(output_ok)
+                })())
             }
         },
     )
@@ -2148,6 +2252,48 @@ fn wire__dart_bwk__api__sp_account__SpAccount_new_taproot_address_impl(
         },
     )
 }
+fn wire__dart_bwk__api__sp_account__SpAccount_owned_outputs_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    that: impl CstDecode<
+        RustOpaqueNom<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<SpAccount>>,
+    >,
+    tx_bytes: impl CstDecode<Vec<u8>>,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::DcoCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "SpAccount_owned_outputs",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let api_that = that.cst_decode();
+            let api_tx_bytes = tx_bytes.cst_decode();
+            move |context| {
+                transform_result_dco::<_, _, crate::api::simple::SpError>((move || {
+                    let mut api_that_guard = None;
+                    let decode_indices_ =
+                        flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
+                            flutter_rust_bridge::for_generated::LockableOrderInfo::new(
+                                &api_that, 0, false,
+                            ),
+                        ]);
+                    for i in decode_indices_ {
+                        match i {
+                            0 => api_that_guard = Some(api_that.lockable_decode_sync_ref()),
+                            _ => unreachable!(),
+                        }
+                    }
+                    let api_that_guard = api_that_guard.unwrap();
+                    let output_ok = dart_bwk::api::sp_account::SpAccount::owned_outputs(
+                        &*api_that_guard,
+                        api_tx_bytes,
+                    )?;
+                    Ok(output_ok)
+                })())
+            }
+        },
+    )
+}
 fn wire__dart_bwk__api__sp_account__SpAccount_prepare_psbt_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     that: impl CstDecode<
@@ -2169,7 +2315,7 @@ fn wire__dart_bwk__api__sp_account__SpAccount_prepare_psbt_impl(
                 api_recipients.into_iter().map(Into::into).collect();
             let api_feerate_sat_vb = feerate_sat_vb.cst_decode();
             move |context| {
-                transform_result_dco::<_, _, String>((move || {
+                transform_result_dco::<_, _, crate::api::simple::SpError>((move || {
                     let mut api_that_guard = None;
                     let decode_indices_ =
                         flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
@@ -6822,6 +6968,12 @@ const _: fn() = || {
         let _: Option<String> = SpCoinView.label;
     }
     {
+        let SpOwnedOutput = None::<dart_bwk::api::types::SpOwnedOutput>.unwrap();
+        let _: u32 = SpOwnedOutput.vout;
+        let _: u64 = SpOwnedOutput.amount_sat;
+        let _: bool = SpOwnedOutput.is_change;
+    }
+    {
         let SpPaymentView = None::<dart_bwk::api::types::SpPaymentView>.unwrap();
         let _: String = SpPaymentView.txid;
         let _: dart_bwk::api::types::SpPaymentDirection = SpPaymentView.direction;
@@ -8060,6 +8212,20 @@ impl SseDecode for Vec<dart_bwk::api::types::SpCoinView> {
     }
 }
 
+impl SseDecode for Vec<dart_bwk::api::types::SpOwnedOutput> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = Vec::with_capacity(len_ as usize);
+        for idx_ in 0..len_ {
+            ans_.push(<dart_bwk::api::types::SpOwnedOutput>::sse_decode(
+                deserializer,
+            ));
+        }
+        return ans_;
+    }
+}
+
 impl SseDecode for Vec<dart_bwk::api::types::SpPaymentView> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -8663,6 +8829,20 @@ impl SseDecode for crate::api::simple::SpError {
                 return crate::api::simple::SpError::SimulationDrifted { detail: var_detail };
             }
             3 => {
+                let mut var_count = <u32>::sse_decode(deserializer);
+                let mut var_max = <u32>::sse_decode(deserializer);
+                return crate::api::simple::SpError::TooManyCoins {
+                    count: var_count,
+                    max: var_max,
+                };
+            }
+            4 => {
+                let mut var_remainderSat = <u64>::sse_decode(deserializer);
+                return crate::api::simple::SpError::NothingToSendAfterFee {
+                    remainder_sat: var_remainderSat,
+                };
+            }
+            5 => {
                 let mut var_message = <String>::sse_decode(deserializer);
                 return crate::api::simple::SpError::Other {
                     message: var_message,
@@ -8812,6 +8992,20 @@ impl SseDecode for crate::api::simple::SpNotification {
                 unimplemented!("");
             }
         }
+    }
+}
+
+impl SseDecode for dart_bwk::api::types::SpOwnedOutput {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_vout = <u32>::sse_decode(deserializer);
+        let mut var_amountSat = <u64>::sse_decode(deserializer);
+        let mut var_isChange = <bool>::sse_decode(deserializer);
+        return dart_bwk::api::types::SpOwnedOutput {
+            vout: var_vout,
+            amount_sat: var_amountSat,
+            is_change: var_isChange,
+        };
     }
 }
 
@@ -10548,8 +10742,17 @@ impl flutter_rust_bridge::IntoDart for crate::api::simple::SpError {
             crate::api::simple::SpError::SimulationDrifted { detail } => {
                 [2.into_dart(), detail.into_into_dart().into_dart()].into_dart()
             }
+            crate::api::simple::SpError::TooManyCoins { count, max } => [
+                3.into_dart(),
+                count.into_into_dart().into_dart(),
+                max.into_into_dart().into_dart(),
+            ]
+            .into_dart(),
+            crate::api::simple::SpError::NothingToSendAfterFee { remainder_sat } => {
+                [4.into_dart(), remainder_sat.into_into_dart().into_dart()].into_dart()
+            }
             crate::api::simple::SpError::Other { message } => {
-                [3.into_dart(), message.into_into_dart().into_dart()].into_dart()
+                [5.into_dart(), message.into_into_dart().into_dart()].into_dart()
             }
             _ => {
                 unimplemented!("");
@@ -10689,6 +10892,28 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::simple::SpNotification>
 {
     fn into_into_dart(self) -> crate::api::simple::SpNotification {
         self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for FrbWrapper<dart_bwk::api::types::SpOwnedOutput> {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.0.vout.into_into_dart().into_dart(),
+            self.0.amount_sat.into_into_dart().into_dart(),
+            self.0.is_change.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for FrbWrapper<dart_bwk::api::types::SpOwnedOutput>
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<dart_bwk::api::types::SpOwnedOutput>>
+    for dart_bwk::api::types::SpOwnedOutput
+{
+    fn into_into_dart(self) -> FrbWrapper<dart_bwk::api::types::SpOwnedOutput> {
+        self.into()
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
@@ -12038,6 +12263,16 @@ impl SseEncode for Vec<dart_bwk::api::types::SpCoinView> {
     }
 }
 
+impl SseEncode for Vec<dart_bwk::api::types::SpOwnedOutput> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <dart_bwk::api::types::SpOwnedOutput>::sse_encode(item, serializer);
+        }
+    }
+}
+
 impl SseEncode for Vec<dart_bwk::api::types::SpPaymentView> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -12515,8 +12750,17 @@ impl SseEncode for crate::api::simple::SpError {
                 <i32>::sse_encode(2, serializer);
                 <String>::sse_encode(detail, serializer);
             }
-            crate::api::simple::SpError::Other { message } => {
+            crate::api::simple::SpError::TooManyCoins { count, max } => {
                 <i32>::sse_encode(3, serializer);
+                <u32>::sse_encode(count, serializer);
+                <u32>::sse_encode(max, serializer);
+            }
+            crate::api::simple::SpError::NothingToSendAfterFee { remainder_sat } => {
+                <i32>::sse_encode(4, serializer);
+                <u64>::sse_encode(remainder_sat, serializer);
+            }
+            crate::api::simple::SpError::Other { message } => {
+                <i32>::sse_encode(5, serializer);
                 <String>::sse_encode(message, serializer);
             }
             _ => {
@@ -12639,6 +12883,15 @@ impl SseEncode for crate::api::simple::SpNotification {
                 unimplemented!("");
             }
         }
+    }
+}
+
+impl SseEncode for dart_bwk::api::types::SpOwnedOutput {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <u32>::sse_encode(self.vout, serializer);
+        <u64>::sse_encode(self.amount_sat, serializer);
+        <bool>::sse_encode(self.is_change, serializer);
     }
 }
 
@@ -13894,6 +14147,16 @@ mod io {
             vec.into_iter().map(CstDecode::cst_decode).collect()
         }
     }
+    impl CstDecode<Vec<dart_bwk::api::types::SpOwnedOutput>> for *mut wire_cst_list_sp_owned_output {
+        // Codec=Cst (C-struct based), see doc to use other codecs
+        fn cst_decode(self) -> Vec<dart_bwk::api::types::SpOwnedOutput> {
+            let vec = unsafe {
+                let wrap = flutter_rust_bridge::for_generated::box_from_leak_ptr(self);
+                flutter_rust_bridge::for_generated::vec_from_leak_ptr(wrap.ptr, wrap.len)
+            };
+            vec.into_iter().map(CstDecode::cst_decode).collect()
+        }
+    }
     impl CstDecode<Vec<dart_bwk::api::types::SpPaymentView>> for *mut wire_cst_list_sp_payment_view {
         // Codec=Cst (C-struct based), see doc to use other codecs
         fn cst_decode(self) -> Vec<dart_bwk::api::types::SpPaymentView> {
@@ -14198,6 +14461,19 @@ mod io {
                     }
                 }
                 3 => {
+                    let ans = unsafe { self.kind.TooManyCoins };
+                    crate::api::simple::SpError::TooManyCoins {
+                        count: ans.count.cst_decode(),
+                        max: ans.max.cst_decode(),
+                    }
+                }
+                4 => {
+                    let ans = unsafe { self.kind.NothingToSendAfterFee };
+                    crate::api::simple::SpError::NothingToSendAfterFee {
+                        remainder_sat: ans.remainder_sat.cst_decode(),
+                    }
+                }
+                5 => {
                     let ans = unsafe { self.kind.Other };
                     crate::api::simple::SpError::Other {
                         message: ans.message.cst_decode(),
@@ -14305,6 +14581,16 @@ mod io {
                 }
                 16 => crate::api::simple::SpNotification::PaymentHistoryUpdated,
                 _ => unreachable!(),
+            }
+        }
+    }
+    impl CstDecode<dart_bwk::api::types::SpOwnedOutput> for wire_cst_sp_owned_output {
+        // Codec=Cst (C-struct based), see doc to use other codecs
+        fn cst_decode(self) -> dart_bwk::api::types::SpOwnedOutput {
+            dart_bwk::api::types::SpOwnedOutput {
+                vout: self.vout.cst_decode(),
+                amount_sat: self.amount_sat.cst_decode(),
+                is_change: self.is_change.cst_decode(),
             }
         }
     }
@@ -15120,6 +15406,20 @@ mod io {
             Self::new_with_null_ptr()
         }
     }
+    impl NewWithNullPtr for wire_cst_sp_owned_output {
+        fn new_with_null_ptr() -> Self {
+            Self {
+                vout: Default::default(),
+                amount_sat: Default::default(),
+                is_change: Default::default(),
+            }
+        }
+    }
+    impl Default for wire_cst_sp_owned_output {
+        fn default() -> Self {
+            Self::new_with_null_ptr()
+        }
+    }
     impl NewWithNullPtr for wire_cst_sp_payment_view {
         fn new_with_null_ptr() -> Self {
             Self {
@@ -15788,6 +16088,39 @@ mod io {
     }
 
     #[unsafe(no_mangle)]
+    pub extern "C" fn frbgen_bull_sdk_wire__dart_bwk__api__sp_account__SpAccount_create_from_keys(
+        port_: i64,
+        name: *mut wire_cst_list_prim_u_8_strict,
+        network: i32,
+        scan_sk_hex: *mut wire_cst_list_prim_u_8_strict,
+        spend_pk_hex: *mut wire_cst_list_prim_u_8_strict,
+        taproot_descriptor: *mut wire_cst_list_prim_u_8_strict,
+        blindbit_url: *mut wire_cst_list_prim_u_8_strict,
+        electrum_url: *mut wire_cst_list_prim_u_8_strict,
+        data_dir: *mut wire_cst_list_prim_u_8_strict,
+        birthday_height: *mut u32,
+        dust_limit: *mut u64,
+        fetch_concurrency_factor: *mut u32,
+        match_concurrency_factor: *mut u32,
+    ) {
+        wire__dart_bwk__api__sp_account__SpAccount_create_from_keys_impl(
+            port_,
+            name,
+            network,
+            scan_sk_hex,
+            spend_pk_hex,
+            taproot_descriptor,
+            blindbit_url,
+            electrum_url,
+            data_dir,
+            birthday_height,
+            dust_limit,
+            fetch_concurrency_factor,
+            match_concurrency_factor,
+        )
+    }
+
+    #[unsafe(no_mangle)]
     pub extern "C" fn frbgen_bull_sdk_wire__dart_bwk__api__sp_account__SpAccount_create_from_mnemonic(
         port_: i64,
         name: *mut wire_cst_list_prim_u_8_strict,
@@ -15847,6 +16180,23 @@ mod io {
         that: usize,
     ) {
         wire__dart_bwk__api__sp_account__SpAccount_dispose_impl(port_, that)
+    }
+
+    #[unsafe(no_mangle)]
+    pub extern "C" fn frbgen_bull_sdk_wire__dart_bwk__api__sp_account__SpAccount_finalize_and_sign(
+        port_: i64,
+        that: usize,
+        simulation: *mut wire_cst_tx_simulation,
+        b_spend_hex: *mut wire_cst_list_prim_u_8_strict,
+        taproot_account_xprv: *mut wire_cst_list_prim_u_8_strict,
+    ) {
+        wire__dart_bwk__api__sp_account__SpAccount_finalize_and_sign_impl(
+            port_,
+            that,
+            simulation,
+            b_spend_hex,
+            taproot_account_xprv,
+        )
     }
 
     #[unsafe(no_mangle)]
@@ -15916,6 +16266,15 @@ mod io {
         that: usize,
     ) {
         wire__dart_bwk__api__sp_account__SpAccount_new_taproot_address_impl(port_, that)
+    }
+
+    #[unsafe(no_mangle)]
+    pub extern "C" fn frbgen_bull_sdk_wire__dart_bwk__api__sp_account__SpAccount_owned_outputs(
+        port_: i64,
+        that: usize,
+        tx_bytes: *mut wire_cst_list_prim_u_8_loose,
+    ) {
+        wire__dart_bwk__api__sp_account__SpAccount_owned_outputs_impl(port_, that, tx_bytes)
     }
 
     #[unsafe(no_mangle)]
@@ -18036,6 +18395,20 @@ mod io {
     }
 
     #[unsafe(no_mangle)]
+    pub extern "C" fn frbgen_bull_sdk_cst_new_list_sp_owned_output(
+        len: i32,
+    ) -> *mut wire_cst_list_sp_owned_output {
+        let wrap = wire_cst_list_sp_owned_output {
+            ptr: flutter_rust_bridge::for_generated::new_leak_vec_ptr(
+                <wire_cst_sp_owned_output>::new_with_null_ptr(),
+                len,
+            ),
+            len,
+        };
+        flutter_rust_bridge::for_generated::new_leak_box_ptr(wrap)
+    }
+
+    #[unsafe(no_mangle)]
     pub extern "C" fn frbgen_bull_sdk_cst_new_list_sp_payment_view(
         len: i32,
     ) -> *mut wire_cst_list_sp_payment_view {
@@ -18407,6 +18780,12 @@ mod io {
     }
     #[repr(C)]
     #[derive(Clone, Copy)]
+    pub struct wire_cst_list_sp_owned_output {
+        ptr: *mut wire_cst_sp_owned_output,
+        len: i32,
+    }
+    #[repr(C)]
+    #[derive(Clone, Copy)]
     pub struct wire_cst_list_sp_payment_view {
         ptr: *mut wire_cst_sp_payment_view,
         len: i32,
@@ -18620,6 +18999,8 @@ mod io {
     #[derive(Clone, Copy)]
     pub union SpErrorKind {
         SimulationDrifted: wire_cst_SpError_SimulationDrifted,
+        TooManyCoins: wire_cst_SpError_TooManyCoins,
+        NothingToSendAfterFee: wire_cst_SpError_NothingToSendAfterFee,
         Other: wire_cst_SpError_Other,
         nil__: (),
     }
@@ -18627,6 +19008,17 @@ mod io {
     #[derive(Clone, Copy)]
     pub struct wire_cst_SpError_SimulationDrifted {
         detail: *mut wire_cst_list_prim_u_8_strict,
+    }
+    #[repr(C)]
+    #[derive(Clone, Copy)]
+    pub struct wire_cst_SpError_TooManyCoins {
+        count: u32,
+        max: u32,
+    }
+    #[repr(C)]
+    #[derive(Clone, Copy)]
+    pub struct wire_cst_SpError_NothingToSendAfterFee {
+        remainder_sat: u64,
     }
     #[repr(C)]
     #[derive(Clone, Copy)]
@@ -18732,6 +19124,13 @@ mod io {
     #[derive(Clone, Copy)]
     pub struct wire_cst_SpNotification_HeaderProgressFailed {
         phase: i32,
+    }
+    #[repr(C)]
+    #[derive(Clone, Copy)]
+    pub struct wire_cst_sp_owned_output {
+        vout: u32,
+        amount_sat: u64,
+        is_change: bool,
     }
     #[repr(C)]
     #[derive(Clone, Copy)]
